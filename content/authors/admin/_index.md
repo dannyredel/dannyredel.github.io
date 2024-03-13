@@ -36,15 +36,15 @@ interests:
 # Education to show in About widget
 education:
   courses:
-    - course: PhD in Artificial Intelligence
-      institution: Stanford University
-      year: 2012
-    - course: MEng in Artificial Intelligence
-      institution: Massachusetts Institute of Technology
-      year: 2009
-    - course: BSc in Artificial Intelligence
-      institution: Massachusetts Institute of Technology
-      year: 2008
+    - course: MSc in Econometrics & Mathematical Economics
+      institution: Tilburg University
+      year: 2024
+    - course: MSc in Applied Economics
+      institution: PUC Chile
+      year: 2021
+    - course: BSc in Economics & Business Administration
+      institution: PUC Chile
+      year: 2019
 
 # Skills
 # For available icons, see: https://docs.hugoblox.com/getting-started/page-builder/#icons
@@ -120,5 +120,9 @@ social:
 highlight_name: true
 ---
 
-Chien Shiung Wu is a professor of artificial intelligence at the Stanford AI Lab. Her research interests include distributed robotics, mobile computing and programmable matter. She leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Hi I am **{{ site.author.name }}** :wave:,<br>
+passionate about the intersection between Economics and Data Science. Experienced in Competition Economics and Quantitative Research. Currently working as a Junior Data Consultant at [FactX](https://factx.nl/), where I engage in diverse projects across different industries. Oriented toward analytical and interdisciplinary work, with high learning opportunities.
+
+Previously, I did my Thesis Internship at [CPB Netherlands Bureau for Economic Policy Analysis](https://www.cpb.nl/en/about-cpb), where I conducted an impact evaluation of transit-oriented development (TOD) effects on commercial real estate prices, employing both causal inference and machine learning techniques (see [here](https://drive.google.com/file/d/1eexmSSJQyfKPfWoaVycenRmXK9wTZ7Jw/view?usp=sharing)).
+
 {style="text-align: justify;"}
