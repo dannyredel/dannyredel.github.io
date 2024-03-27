@@ -120,7 +120,7 @@ social:
 highlight_name: true
 ---
 
-Hi I am **{{ site.author.name }}** :wave:,<br>
+Hi I am **Daniel** :wave:,<br>
 passionate about the intersection between Economics and Data Science. Experienced in Competition Economics and Quantitative Research. Currently working as a Junior Data Consultant at [FactX](https://factx.nl/), where I engage in diverse projects across different industries. Oriented toward analytical and interdisciplinary work, with high learning opportunities.
 
 Previously, I did my Thesis Internship at [CPB Netherlands Bureau for Economic Policy Analysis](https://www.cpb.nl/en/about-cpb), where I conducted an impact evaluation of transit-oriented development (TOD) effects on commercial real estate prices, employing both causal inference and machine learning techniques (see [here](https://drive.google.com/file/d/1eexmSSJQyfKPfWoaVycenRmXK9wTZ7Jw/view?usp=sharing)).
