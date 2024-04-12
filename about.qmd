@@ -1,0 +1,131 @@
+---
+title: "About Me"
+image: myprofile.jpg
+about:
+  id: about
+  template: jolla
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/DannyRedel
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/daniel-redel-14b052b6/
+    - icon: github
+      text: Github
+      href: https://github.com/dannyredel
+format: 
+  html:
+    css: 
+      - assets/css/styles-coaching.css
+---
+
+
+::: {#about style="text-align: justify"}
+I am passionate about the intersection between Economics and Data Science. Experienced in Competition Economics and Quantitative Research. Currently working as a Junior Data Consultant at [FactX](https://factx.nl/), where I engage in diverse projects across different industries. Oriented toward analytical and interdisciplinary work, with high learning opportunities.
+:::
+
+
+## Skills
+
+```{=html}
+<div class="grid-container">
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-python.png" alt="Logo of Python programming language"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-r.png" alt="Logo of R programming language"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-vscode.png" alt="Logo of VSCode"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-quarto.png" alt="Logo of Quarto"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-jupyter.png" alt="Logo of Jupyter"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-scikitlearn.png" alt="Logo of Scikit Learn"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-sql.png" alt="Logo of SQL programming language"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-github.png" alt="Log of GitHub"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-notion.png" alt="Logo of Notion"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-overleaf.png" alt="Logo of Overleaf"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-powerbi.png" alt="Logo of Power BI"></div></div>
+
+  <div class="grid-item"><div class="grid-item-image"><img src="assets/img/skills-excel.png" alt="Logo of Excel"></div></div>
+
+</div>
+```
+
+## Education
+
+::: {.d-flex .justify-content-between}
+::: {}
+**MSc. in Econometrics & Mathematical Economics**  
+*Tilburg University*
+:::
+::: {.text-end}
+Jan 2024
+:::
+:::
+
+
+::: {.d-flex .justify-content-between}
+::: {}
+**MSc. in Applied Economics**  
+*PUC Chile*
+:::
+::: {.text-end}
+2021
+:::
+:::
+
+
+::: {.d-flex .justify-content-between}
+::: {}
+**BSc. in Economics & Business Administration**  
+*PUC Chile*
+:::
+::: {.text-end}
+2020
+:::
+:::
+
+
+
+## Experience
+
+::: {.d-flex .justify-content-between}
+::: {}
+**Junior Data Consultant**  
+*FactX, Utrecht*
+:::
+::: {.text-end}
+March 2024 – present
+:::
+:::
+
+
+::: {.d-flex .justify-content-between}
+::: {}
+**Thesis Internship**  
+*CPB Netherlands Bureau for Economic Policy Analysis, The Hague*
+:::
+::: {.text-end}
+May 2023 - Oct 2023
+:::
+:::
+
+
+::: {.d-flex .justify-content-between}
+::: {}
+**Research Analyst**  
+*CentroCompetencia, Santiago*
+:::
+::: {.text-end}
+Jul 2021 - Apr 2023
+:::
+:::
+
+
+

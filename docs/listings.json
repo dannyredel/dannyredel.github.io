@@ -1,0 +1,22 @@
+[
+  {
+    "listing": "/projects.html",
+    "items": []
+  },
+  {
+    "listing": "/myposts.html",
+    "items": [
+      "/posts/ab_testing1/1_ab_testing.html",
+      "/posts/nonparametrics/nonparametrics.html",
+      "/posts/jupyter-first/hello.html"
+    ]
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/ab_testing1/1_ab_testing.html",
+      "/posts/nonparametrics/nonparametrics.html",
+      "/posts/jupyter-first/hello.html"
+    ]
+  }
+]

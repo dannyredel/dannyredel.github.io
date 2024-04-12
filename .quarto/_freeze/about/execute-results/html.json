@@ -1,0 +1,12 @@
+{
+  "hash": "bf1f7d3afcbb7c13b00673b89b14a63f",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"About Me\"\nimage: myprofile.jpg\nabout:\n  template: jolla\n  links:\n    - icon: twitter\n      text: Twitter\n      href: https://twitter.com/DannyRedel\n    - icon: linkedin\n      text: LinkedIn\n      href: https://www.linkedin.com/in/daniel-redel-14b052b6/\n    - icon: github\n      text: Github\n      href: https://github.com/dannyredel\n\n---\n\n```{css, echo = FALSE}\n.justify {\n  text-align: justify !important\n}\n```\n\n\n::: {.justify}\nHi I am **Daniel Redel** 👋,<br>\npassionate about the intersection between Economics and Data Science. Experienced in Competition Economics and Quantitative Research. Currently working as a Junior Data Consultant at [FactX](https://factx.nl/), where I engage in diverse projects across different industries. Oriented toward analytical and interdisciplinary work, with high learning opportunities.\n\nPreviously, I did my Thesis Internship at [CPB Netherlands Bureau for Economic Policy Analysis](https://www.cpb.nl/en/about-cpb), where I conducted an impact evaluation of transit-oriented development (TOD) effects on commercial real estate prices, employing both causal inference and machine learning techniques (see [here](https://drive.google.com/file/d/1eexmSSJQyfKPfWoaVycenRmXK9wTZ7Jw/view?usp=sharing)).\n\n:::\n\n## Education\n\nTilburg University | MSc. in Econometrics & Mathematical Economics | Sept 2011 - June 2015\n\nMacalester College | St. Paul MA\nB.A in Economics | Sept 2007 - June 2011\n\n## Experience\n\nFactX | Junior Data Consultant | April 2018 - present\n\nCPB | Thesis Internship | Sept 2012 - April 2018\n\n",
+    "supporting": [
+      "about_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

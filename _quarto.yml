@@ -1,0 +1,36 @@
+project:
+  type: website
+  
+website:
+  title: "Daniel Redel"
+  navbar:
+    #background: "#F0F3FF"
+    right:
+      - href: myposts.qmd
+        text: Posts
+        icon: newspaper
+
+      - href: projects.qmd
+        text: Projects
+        icon: folder
+
+      - href: about.qmd
+        text: About Me
+        icon: person
+
+      - icon: github
+        href: https://github.com/dannyredel
+      - icon: linkedin
+        href: https://www.linkedin.com/in/daniel-redel-14b052b6/  
+      - icon: twitter
+        href: https://twitter.com/DannyRedel
+
+  back-to-top-navigation: true
+  page-footer: 
+    center: "Copyright 2024, Daniel Redel" 
+    #background: light
+format:
+  html:
+    theme: flatly
+    css: styles.css
+

@@ -1,0 +1,55 @@
+---
+title: Projects
+comments: false
+
+listing:
+  - id: projects
+    sort: 
+      - "date desc"
+    sort-ui: [date, author]
+    feed: true
+    type: grid
+    categories: true
+    date-format: "DD MMMM YYYY"
+    fields: [title, description, image, categories, date]
+    contents:
+
+    - title: "Machine Learning with Python: A Quick Guide"
+      #description: "A concise and practical introduction to main machine learning algorithms."
+      categories: [Machine Learning, Python, scikit-learn]
+      date: 2024-03-30
+      path: "https://gorgeous-hamster-347e8f.netlify.app/"
+      image: "assets/cover/ml-with-python.png"
+
+    - title: "Amsterdam Airbnb Price Prediction: A Machine Learning Approach"
+      #description: "A Machine Learning approach to predict Airbnb prices."
+      categories: [Python, Geospatial Analysis, Machine Learning, geopandas, scikit-learn]
+      date: 2024-03-11
+      path: "https://stellar-stroopwafel-ef58af.netlify.app/"
+      image: "assets/cover/airbnb-ml.png"
+
+    - title: "Impact of Transit-Oriented Development on Dutch Commercial Real Estate Prices"
+      #description: "A Machine Learning approach to predict Airbnb prices."
+      categories: [Master Thesis, Econometrics, Causal Inference, Diff-in-Diff]
+      date: 2024-01-02
+      path: "https://drive.google.com/file/d/1eexmSSJQyfKPfWoaVycenRmXK9wTZ7Jw/view?usp=sharing"
+      image: "assets/cover/master-thesis.jpg"
+
+    - title: "Customer Analytics with R"
+      #description: "“Customer Analytics” course tutorial at Tilburg University (2022)."
+      categories: [R & Rstudio, A/B Testing, Machine Learning]
+      date: 2022-12-01
+      path: "https://preeminent-torte-37ddf4.netlify.app/"
+      image: "assets/cover/customer-analytics.png"
+    
+    - title: "Voting Patterns of the Ministers of the Supreme Court in Antitrust Cases: Evidence from Chile"
+      #description: "“Customer Analytics” course tutorial at Tilburg University (2022)."
+      categories: [Article, Competition & Antitrust, R & Rstudio]
+      date: 2022-05-18
+      path: "https://centrocompetencia.com/wp-content/uploads/2022/05/CeCo-2022-Patrones-de-votos-de-los-Ministros-de-la-Corte-Suprema-en-Libre-Competencia-3.pdf"
+      image: "assets/cover/ceco1.png"
+    
+   
+
+
+---

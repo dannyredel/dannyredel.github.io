@@ -1,0 +1,49 @@
+---
+title: 👋 Hey, I'm Daniel
+page-layout: full
+title-block-banner: false
+comments: false
+#toc: true
+
+about:
+  id: about
+  template: jolla
+  image: myprofile.jpg
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/DannyRedel
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/daniel-redel-14b052b6/
+    - icon: github
+      text: Github
+      href: https://github.com/dannyredel
+
+listing:
+  id: posts
+  contents: posts
+  sort: "date desc"
+  type: grid
+  #categories: true
+  #sort-ui: true
+  #filter-ui: true    
+  max-items: 3
+
+---
+
+:::{#about style="text-align: center"}
+I am passionate about the intersection between Economics and Data Science. Experienced in Competition Economics and Quantitative Research. Currently working as a Junior Data Consultant at [FactX](https://factx.nl/), where I engage in diverse projects across different industries. Oriented toward analytical and interdisciplinary work, with high learning opportunities.
+
+:::
+
+
+## Latest Posts
+Click [here](myposts.qmd) to check out more posts.
+
+
+::: {#posts}
+:::
+
+
+

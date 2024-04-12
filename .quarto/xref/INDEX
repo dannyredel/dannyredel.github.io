@@ -1,0 +1,29 @@
+{
+  "index.qmd": {
+    "index.html": "790c253f"
+  },
+  "about.qmd": {
+    "about.html": "db02ac1b"
+  },
+  "posts/post-with-code/index.qmd": {
+    "index.html": "0f5bf73e"
+  },
+  "posts/welcome/index.qmd": {
+    "index.html": "30d93b6d"
+  },
+  "posts/jupyter-first/hello.ipynb": {
+    "hello.html": "37b6756d"
+  },
+  "myposts.qmd": {
+    "myposts.html": "44d42473"
+  },
+  "projects.qmd": {
+    "projects.html": "1847f7ee"
+  },
+  "posts/nonparametrics/nonparametrics.qmd": {
+    "nonparametrics.html": "42eba6be"
+  },
+  "posts/ab_testing1/1_ab_testing.ipynb": {
+    "1_ab_testing.html": "2e954a39"
+  }
+}

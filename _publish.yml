@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: 321eaf5b-055d-45b3-a885-fe6a4ce79767
+      url: 'https://dannyredel.quarto.pub/daniel-redel'
