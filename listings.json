@@ -4,16 +4,18 @@
     "items": []
   },
   {
-    "listing": "/myposts.html",
+    "listing": "/index.html",
     "items": [
+      "/posts/gasoline_merger_did/merger-report.html",
       "/posts/ab_testing1/1_ab_testing.html",
       "/posts/nonparametrics/nonparametrics.html",
       "/posts/jupyter-first/hello.html"
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/myposts.html",
     "items": [
+      "/posts/gasoline_merger_did/merger-report.html",
       "/posts/ab_testing1/1_ab_testing.html",
       "/posts/nonparametrics/nonparametrics.html",
       "/posts/jupyter-first/hello.html"

@@ -1,1 +1,1 @@
-Sitemap: https://321eaf5b-055d-45b3-a885-fe6a4ce79767.netlify.app/sitemap.xml
+Sitemap: https://dannyredel.github.io/sitemap.xml
