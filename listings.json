@@ -6,6 +6,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/ab_test_bayesian/bayesian_ab_test.html",
+      "/posts/merger_simulation/Assignment1.html",
       "/posts/gasoline_merger_did/merger-report.html",
       "/posts/ab_testing1/1_ab_testing.html",
       "/posts/nonparametrics/nonparametrics.html",
@@ -15,6 +17,8 @@
   {
     "listing": "/myposts.html",
     "items": [
+      "/posts/ab_test_bayesian/bayesian_ab_test.html",
+      "/posts/merger_simulation/Assignment1.html",
       "/posts/gasoline_merger_did/merger-report.html",
       "/posts/ab_testing1/1_ab_testing.html",
       "/posts/nonparametrics/nonparametrics.html",
