@@ -6,18 +6,18 @@
   </url>
   <url>
     <loc>https://dannyredel.github.io/posts/merger_simulation/Assignment1.html</loc>
-    <lastmod>2024-05-10T13:52:16.706Z</lastmod>
+    <lastmod>2024-05-20T19:42:39.536Z</lastmod>
   </url>
   <url>
     <loc>https://dannyredel.github.io/posts/gasoline_merger_did/merger-report.html</loc>
     <lastmod>2024-04-22T21:51:02.372Z</lastmod>
   </url>
   <url>
-    <loc>https://dannyredel.github.io/posts/ab_testing1/1_ab_testing.html</loc>
-    <lastmod>2024-04-12T22:09:17.919Z</lastmod>
+    <loc>https://dannyredel.github.io/posts/ab_test_bayesian/bayesian_ab_test.html</loc>
+    <lastmod>2024-05-10T13:59:09.117Z</lastmod>
   </url>
   <url>
-    <loc>https://dannyredel.github.io/index.html</loc>
+    <loc>https://dannyredel.github.io/myposts.html</loc>
     <lastmod>2024-04-12T22:09:17.912Z</lastmod>
   </url>
   <url>
@@ -25,12 +25,16 @@
     <lastmod>2024-04-12T22:09:17.821Z</lastmod>
   </url>
   <url>
-    <loc>https://dannyredel.github.io/myposts.html</loc>
+    <loc>https://dannyredel.github.io/index.html</loc>
     <lastmod>2024-04-12T22:09:17.912Z</lastmod>
   </url>
   <url>
-    <loc>https://dannyredel.github.io/posts/ab_test_bayesian/bayesian_ab_test.html</loc>
-    <lastmod>2024-05-10T13:59:09.117Z</lastmod>
+    <loc>https://dannyredel.github.io/posts/ab_testing1/1_ab_testing.html</loc>
+    <lastmod>2024-04-12T22:09:17.919Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dannyredel.github.io/posts/causal_arima/carima_data.html</loc>
+    <lastmod>2024-05-22T09:40:55.175Z</lastmod>
   </url>
   <url>
     <loc>https://dannyredel.github.io/posts/jupyter-first/hello.html</loc>
