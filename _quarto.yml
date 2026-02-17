@@ -3,34 +3,37 @@ project:
   
 website:
   title: "Daniel Redel"
+  favicon: myprofile.jpg
+  search:
+    location: navbar
+    type: overlay
   navbar:
-    #background: "#F0F3FF"
+    background: dark
     right:
       - href: myposts.qmd
-        text: Posts
-        icon: newspaper
-
+        text: Blog
+        icon: pencil-square
       - href: projects.qmd
         text: Projects
         icon: folder
-
+      - href: research.qmd
+        text: Research
+        icon: journal-text
       - href: about.qmd
-        text: About Me
+        text: About
         icon: person
-
       - icon: github
         href: https://github.com/dannyredel
       - icon: linkedin
         href: https://www.linkedin.com/in/daniel-redel-14b052b6/  
       - icon: twitter
         href: https://twitter.com/DannyRedel
-
   back-to-top-navigation: true
   page-footer: 
-    center: "Copyright 2026, Daniel Redel" 
-    #background: light
+    center: "© 2026 Daniel Redel"
+
 format:
   html:
-    theme: flatly
-    css: styles.css
-
+    theme: [flatly, styles.scss]
+    code-link: true
+    smooth-scroll: true

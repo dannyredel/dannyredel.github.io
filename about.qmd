@@ -14,16 +14,11 @@ about:
     - icon: github
       text: Github
       href: https://github.com/dannyredel
-format: 
-  html:
-    css: 
-      - assets/css/styles-coaching.css
 ---
 
 
 ::: {#about style="text-align: justify"}
-Applied Economist & Data Scientist based in the Netherlands. I work as an Economics Consultant at [Compass Lexecon](https://www.compasslexecon.com/), specializing in econometric analyses for competition economics, mergers, and regulatory disputes. My expertise spans causal inference, machine learning, and applied economics, and I'm increasingly focused on applying data science methods to economic problems. I hold an MSc in Econometrics & Mathematical Economics from Tilburg University and an MSc in Applied Economics from PUC Chile.
-
+I am an Economics Consultant at [Compass Lexecon](https://www.compasslexecon.com/), specializing in **econometric analyses** for competition economics, mergers, and regulatory disputes. My expertise spans **causal inference**, **machine learning**, and **applied economics**, and I'm increasingly focused on applying data science methods to economic problems. I hold an MSc in Econometrics & Mathematical Economics from Tilburg University and an MSc in Applied Economics from PUC Chile.
 :::
 
 

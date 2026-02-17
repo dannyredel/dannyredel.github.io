@@ -1,0 +1,34 @@
+---
+title: Research
+comments: false
+listing:
+  - id: research
+    sort: 
+      - "date desc"
+    type: grid
+    date-format: "YYYY"
+    fields: [title, description, image, date]
+    contents:
+    
+    - title: "Copec-CGL Merger: An Ex-Post Assessment of the FNE Decision"
+      description: "Published analysis evaluating the competitive effects of a retail gasoline merger in Chile using difference-in-differences and spatial econometrics."
+      categories: [Article, Competition & Antitrust, Causal Inference, Diff-in-Diff, Spatial Analysis]
+      date: 2024-10-02
+      path: "https://centrocompetencia.com/copec-cgl-merger-ex-post-assessment-fne-decision/"
+      image: "assets/cover/ceco2.png"
+
+    - title: "Impact of Transit-Oriented Development on Dutch Commercial Real Estate Prices"
+      description: "Master thesis. Econometric analysis using difference-in-differences to assess the causal impact of transit infrastructure on commercial real estate values in the Netherlands."
+      categories: [Master Thesis, Econometrics, Causal Inference, Diff-in-Diff]
+      date: 2024-01-02
+      path: "https://drive.google.com/file/d/1eexmSSJQyfKPfWoaVycenRmXK9wTZ7Jw/view?usp=sharing"
+      image: "assets/cover/master-thesis.jpg"
+
+    - title: "Voting Patterns of the Ministers of the Supreme Court in Antitrust Cases: Evidence from Chile"
+      description: "Published article analyzing judicial voting behavior in competition law cases using statistical methods."
+      categories: [Article, Competition & Antitrust, R & Rstudio]
+      date: 2022-05-18
+      path: "https://centrocompetencia.com/wp-content/uploads/2022/05/CeCo-2022-Patrones-de-votos-de-los-Ministros-de-la-Corte-Suprema-en-Libre-Competencia-3.pdf"
+      image: "assets/cover/ceco1.png"
+   
+---

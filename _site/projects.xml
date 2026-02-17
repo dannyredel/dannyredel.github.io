@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Daniel Redel</title>
+<link>https://dannyredel.github.io/projects.html</link>
+<atom:link href="https://dannyredel.github.io/projects.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.4.553</generator>
+<lastBuildDate>Tue, 17 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Customer Segmentation with Brazilian E-Commerce Data</title>
+  <link>https://dannyredel.github.io/</link>
+  <description></description>
+  <category>Python</category>
+  <category>Machine Learning</category>
+  <category>Clustering</category>
+  <category>scikit-learn</category>
+  <guid>https://dannyredel.github.io/</guid>
+  <pubDate>Tue, 17 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://dannyredel.github.io/assets/cover/customer-segmentation.png" medium="image" type="image/png" height="108" width="144"/>
+</item>
+<item>
+  <title>Machine Learning with Python: A Quick Guide</title>
+  <link>https://dannyredel.github.io/</link>
+  <description></description>
+  <category>Machine Learning</category>
+  <category>Python</category>
+  <category>scikit-learn</category>
+  <guid>https://dannyredel.github.io/</guid>
+  <pubDate>Sat, 30 Mar 2024 00:00:00 GMT</pubDate>
+  <media:content url="https://dannyredel.github.io/assets/cover/ml-with-python.png" medium="image" type="image/png" height="108" width="144"/>
+</item>
+<item>
+  <title>Amsterdam Airbnb Price Prediction: A Machine Learning Approach</title>
+  <link>https://dannyredel.github.io/</link>
+  <description></description>
+  <category>Python</category>
+  <category>Geospatial Analysis</category>
+  <category>Machine Learning</category>
+  <category>geopandas</category>
+  <category>scikit-learn</category>
+  <guid>https://dannyredel.github.io/</guid>
+  <pubDate>Mon, 11 Mar 2024 00:00:00 GMT</pubDate>
+  <media:content url="https://dannyredel.github.io/assets/cover/airbnb-ml.png" medium="image" type="image/png" height="102" width="144"/>
+</item>
+<item>
+  <title>Impact of Transit-Oriented Development on Dutch Commercial Real Estate Prices</title>
+  <link>https://dannyredel.github.io/</link>
+  <description></description>
+  <category>Master Thesis</category>
+  <category>Econometrics</category>
+  <category>Causal Inference</category>
+  <category>Diff-in-Diff</category>
+  <guid>https://dannyredel.github.io/</guid>
+  <pubDate>Tue, 02 Jan 2024 00:00:00 GMT</pubDate>
+  <media:content url="https://dannyredel.github.io/assets/cover/master-thesis.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Customer Analytics with R</title>
+  <link>https://dannyredel.github.io/</link>
+  <description></description>
+  <category>R &amp; Rstudio</category>
+  <category>A/B Testing</category>
+  <category>Machine Learning</category>
+  <guid>https://dannyredel.github.io/</guid>
+  <pubDate>Thu, 01 Dec 2022 00:00:00 GMT</pubDate>
+  <media:content url="https://dannyredel.github.io/assets/cover/customer-analytics.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
+<item>
+  <title>Voting Patterns of the Ministers of the Supreme Court in Antitrust Cases: Evidence from Chile</title>
+  <link>https://dannyredel.github.io/</link>
+  <description></description>
+  <category>Article</category>
+  <category>Competition &amp; Antitrust</category>
+  <category>R &amp; Rstudio</category>
+  <guid>https://dannyredel.github.io/</guid>
+  <pubDate>Wed, 18 May 2022 00:00:00 GMT</pubDate>
+  <media:content url="https://dannyredel.github.io/assets/cover/ceco1.png" medium="image" type="image/png" height="88" width="144"/>
+</item>
+</channel>
+</rss>

@@ -30,6 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./myprofile.jpg" rel="icon" type="image/jpeg">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -50,7 +51,6 @@ ul.task-list li input[type="checkbox"] {
     "/",
     "s"
   ],
-  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -65,10 +65,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
 
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="assets/css/styles-coaching.css">
 </head>
 
 <body class="nav-fixed fullcontent">
@@ -89,9 +88,9 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./myposts.html"> <i class="bi bi-newspaper" role="img">
+    <a class="nav-link" href="./myposts.html"> <i class="bi bi-pencil-square" role="img">
 </i> 
-<span class="menu-text">Posts</span></a>
+<span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./projects.html"> <i class="bi bi-folder" role="img">
@@ -99,9 +98,14 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./research.html"> <i class="bi bi-journal-text" role="img">
+</i> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link active" href="./about.html" aria-current="page"> <i class="bi bi-person" role="img">
 </i> 
-<span class="menu-text">About Me</span></a>
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/dannyredel"> <i class="bi bi-github" role="img">
@@ -146,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
   </div>
 </header><div id="about" style="text-align: justify">
-<p>Applied Economist &amp; Data Scientist based in the Netherlands. I work as an Economics Consultant at <a href="https://www.compasslexecon.com/">Compass Lexecon</a>, specializing in econometric analyses for competition economics, mergers, and regulatory disputes. My expertise spans causal inference, machine learning, and applied economics, and I’m increasingly focused on applying data science methods to economic problems. I hold an MSc in Econometrics &amp; Mathematical Economics from Tilburg University and an MSc in Applied Economics from PUC Chile.</p>
+<p>I am an Economics Consultant at <a href="https://www.compasslexecon.com/">Compass Lexecon</a>, specializing in <strong>econometric analyses</strong> for competition economics, mergers, and regulatory disputes. My expertise spans <strong>causal inference</strong>, <strong>machine learning</strong>, and <strong>applied economics</strong>, and I’m increasingly focused on applying data science methods to economic problems. I hold an MSc in Econometrics &amp; Mathematical Economics from Tilburg University and an MSc in Applied Economics from PUC Chile.</p>
 </div> 
   <hr class="about-sep">
    <div class="about-links">
@@ -342,7 +346,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/dannyredel\.github\.io\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -677,7 +681,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Copyright 2026, Daniel Redel</p>
+<p>© 2026 Daniel Redel</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
@@ -688,4 +692,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
