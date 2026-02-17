@@ -1,47 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://dannyredel.github.io/projects.html</loc>
-    <lastmod>2024-04-12T22:09:18.020Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dannyredel.github.io/posts/merger_simulation/Assignment1.html</loc>
-    <lastmod>2024-05-20T19:42:39.536Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dannyredel.github.io/posts/gasoline_merger_did/merger-report.html</loc>
-    <lastmod>2024-04-22T21:51:02.372Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dannyredel.github.io/posts/ab_test_bayesian/bayesian_ab_test.html</loc>
-    <lastmod>2024-05-10T13:59:09.117Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dannyredel.github.io/myposts.html</loc>
-    <lastmod>2024-04-12T22:09:17.912Z</lastmod>
-  </url>
-  <url>
     <loc>https://dannyredel.github.io/about.html</loc>
-    <lastmod>2024-04-12T22:09:17.821Z</lastmod>
+    <lastmod>2026-02-17T13:11:46.182Z</lastmod>
   </url>
   <url>
     <loc>https://dannyredel.github.io/index.html</loc>
-    <lastmod>2024-04-12T22:09:17.912Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dannyredel.github.io/posts/ab_testing1/1_ab_testing.html</loc>
-    <lastmod>2024-04-12T22:09:17.919Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dannyredel.github.io/posts/causal_arima/carima_data.html</loc>
-    <lastmod>2024-05-22T09:40:55.175Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dannyredel.github.io/posts/jupyter-first/hello.html</loc>
-    <lastmod>2024-04-12T22:09:17.987Z</lastmod>
+    <lastmod>2026-02-17T12:47:21.521Z</lastmod>
   </url>
   <url>
     <loc>https://dannyredel.github.io/posts/nonparametrics/nonparametrics.html</loc>
-    <lastmod>2024-04-12T22:09:18.013Z</lastmod>
+    <lastmod>2026-02-17T12:41:13.932Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dannyredel.github.io/projects.html</loc>
+    <lastmod>2026-02-17T13:04:24.519Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dannyredel.github.io/posts/ab_testing1/1_ab_testing.html</loc>
+    <lastmod>2026-02-17T12:41:13.881Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dannyredel.github.io/posts/jupyter-first/hello.html</loc>
+    <lastmod>2026-02-17T12:41:13.918Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dannyredel.github.io/myposts.html</loc>
+    <lastmod>2026-02-17T12:41:13.872Z</lastmod>
   </url>
 </urlset>

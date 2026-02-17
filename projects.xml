@@ -9,8 +9,20 @@
 <link>https://dannyredel.github.io/projects.html</link>
 <atom:link href="https://dannyredel.github.io/projects.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.4.550</generator>
-<lastBuildDate>Fri, 29 Mar 2024 23:00:00 GMT</lastBuildDate>
+<generator>quarto-1.4.553</generator>
+<lastBuildDate>Tue, 17 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Customer Segmentation with Brazilian E-Commerce Data</title>
+  <link>https://dannyredel.github.io/</link>
+  <description></description>
+  <category>Python</category>
+  <category>Machine Learning</category>
+  <category>Clustering</category>
+  <category>scikit-learn</category>
+  <guid>https://dannyredel.github.io/</guid>
+  <pubDate>Tue, 17 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://dannyredel.github.io/assets/cover/customer-segmentation.png" medium="image" type="image/png" height="108" width="144"/>
+</item>
 <item>
   <title>Machine Learning with Python: A Quick Guide</title>
   <link>https://dannyredel.github.io/</link>
@@ -19,7 +31,7 @@
   <category>Python</category>
   <category>scikit-learn</category>
   <guid>https://dannyredel.github.io/</guid>
-  <pubDate>Fri, 29 Mar 2024 23:00:00 GMT</pubDate>
+  <pubDate>Sat, 30 Mar 2024 00:00:00 GMT</pubDate>
   <media:content url="https://dannyredel.github.io/assets/cover/ml-with-python.png" medium="image" type="image/png" height="108" width="144"/>
 </item>
 <item>
@@ -32,7 +44,7 @@
   <category>geopandas</category>
   <category>scikit-learn</category>
   <guid>https://dannyredel.github.io/</guid>
-  <pubDate>Sun, 10 Mar 2024 23:00:00 GMT</pubDate>
+  <pubDate>Mon, 11 Mar 2024 00:00:00 GMT</pubDate>
   <media:content url="https://dannyredel.github.io/assets/cover/airbnb-ml.png" medium="image" type="image/png" height="102" width="144"/>
 </item>
 <item>
@@ -44,7 +56,7 @@
   <category>Causal Inference</category>
   <category>Diff-in-Diff</category>
   <guid>https://dannyredel.github.io/</guid>
-  <pubDate>Mon, 01 Jan 2024 23:00:00 GMT</pubDate>
+  <pubDate>Tue, 02 Jan 2024 00:00:00 GMT</pubDate>
   <media:content url="https://dannyredel.github.io/assets/cover/master-thesis.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -55,7 +67,7 @@
   <category>A/B Testing</category>
   <category>Machine Learning</category>
   <guid>https://dannyredel.github.io/</guid>
-  <pubDate>Wed, 30 Nov 2022 23:00:00 GMT</pubDate>
+  <pubDate>Thu, 01 Dec 2022 00:00:00 GMT</pubDate>
   <media:content url="https://dannyredel.github.io/assets/cover/customer-analytics.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
@@ -66,7 +78,7 @@
   <category>Competition &amp; Antitrust</category>
   <category>R &amp; Rstudio</category>
   <guid>https://dannyredel.github.io/</guid>
-  <pubDate>Tue, 17 May 2022 22:00:00 GMT</pubDate>
+  <pubDate>Wed, 18 May 2022 00:00:00 GMT</pubDate>
   <media:content url="https://dannyredel.github.io/assets/cover/ceco1.png" medium="image" type="image/png" height="88" width="144"/>
 </item>
 </channel>

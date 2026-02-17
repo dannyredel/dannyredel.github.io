@@ -1,27 +1,19 @@
 [
   {
-    "listing": "/projects.html",
-    "items": []
-  },
-  {
-    "listing": "/myposts.html",
+    "listing": "/index.html",
     "items": [
-      "/posts/causal_arima/carima_data.html",
-      "/posts/ab_test_bayesian/bayesian_ab_test.html",
-      "/posts/merger_simulation/Assignment1.html",
-      "/posts/gasoline_merger_did/merger-report.html",
       "/posts/ab_testing1/1_ab_testing.html",
       "/posts/nonparametrics/nonparametrics.html",
       "/posts/jupyter-first/hello.html"
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/projects.html",
+    "items": []
+  },
+  {
+    "listing": "/myposts.html",
     "items": [
-      "/posts/causal_arima/carima_data.html",
-      "/posts/ab_test_bayesian/bayesian_ab_test.html",
-      "/posts/merger_simulation/Assignment1.html",
-      "/posts/gasoline_merger_did/merger-report.html",
       "/posts/ab_testing1/1_ab_testing.html",
       "/posts/nonparametrics/nonparametrics.html",
       "/posts/jupyter-first/hello.html"
