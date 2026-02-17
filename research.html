@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Daniel Redel - Blog</title>
+<title>Daniel Redel - Research</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,20 +71,20 @@ ul.task-list li input[type="checkbox"] {
 <script>
 
   window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-posts .list');
+    const listingTargetEl = window.document.querySelector('#listing-research .list');
     if (!listingTargetEl) {
       // No listing discovered, do not attach.
       return; 
     }
 
     const options = {
-      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
+      valueNames: ['listing-title','listing-description','listing-image','listing-date',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-title","listing-description","listing-categories","listing-date","listing-image"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-posts'] = new List('listing-posts', options);
+    window['quarto-listings']['listing-research'] = new List('listing-research', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -131,7 +131,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -149,7 +149,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./myposts.html" aria-current="page"> <i class="bi bi-pencil-square" role="img">
+    <a class="nav-link" href="./myposts.html"> <i class="bi bi-pencil-square" role="img">
 </i> 
 <span class="menu-text">Blog</span></a>
   </li>  
@@ -159,7 +159,7 @@ window.Quarto = {
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./research.html"> <i class="bi bi-journal-text" role="img">
+    <a class="nav-link active" href="./research.html" aria-current="page"> <i class="bi bi-journal-text" role="img">
 </i> 
 <span class="menu-text">Research</span></a>
   </li>  
@@ -191,23 +191,21 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-cloud"><div class="category" data-category="A/B Testing"><span class="quarto-category-count category-cloud-4">A/B Testing</span></div><div class="category" data-category="Binary Choice Models"><span class="quarto-category-count category-cloud-4">Binary Choice Models</span></div><div class="category" data-category="Causal Inference"><span class="quarto-category-count category-cloud-4">Causal Inference</span></div><div class="category" data-category="Kernel Density Estimation"><span class="quarto-category-count category-cloud-4">Kernel Density Estimation</span></div><div class="category" data-category="Nonparametric Regression"><span class="quarto-category-count category-cloud-4">Nonparametric Regression</span></div><div class="category" data-category="Python"><span class="quarto-category-count category-cloud-4">Python</span></div><div class="category" data-category="Semiparametric Regression"><span class="quarto-category-count category-cloud-4">Semiparametric Regression</span></div><div class="category" data-category="analysis"><span class="quarto-category-count category-cloud-4">analysis</span></div><div class="category" data-category="code"><span class="quarto-category-count category-cloud-4">code</span></div><div class="category" data-category="python"><span class="quarto-category-count category-cloud-4">python</span></div></div></div>
+    
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Blog</h1>
+<h1 class="title">Research</h1>
 </div>
 
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta">
 
     
   
@@ -219,133 +217,72 @@ window.Quarto = {
 </header>
 
 
-<div id="listing-posts" class="quarto-listing quarto-listing-container-grid">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-     <select id="listing-posts-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-posts'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-       <option value="" disabled="" selected="" hidden="">Order By</option>
-       <option value="index" data-direction="asc">Default</option>
-         <option value="listing-date-sort" data-direction="asc">
-          Date - Oldest
-        </option>
-         <option value="listing-date-sort" data-direction="desc">
-          Date - Newest
-        </option>
-         <option value="listing-title" data-direction="asc">
-          Title
-        </option>
-     </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
+
+
+
+
+<div class="quarto-listing quarto-listing-container-grid" id="listing-research">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="Causal Inference,A/B Testing,Python" data-listing-date-sort="1712275200000" data-listing-file-modified-sort="1771332073881" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2201">
-<a href="./posts/ab_testing1/1_ab_testing.html" class="quarto-grid-link">
+<div class="g-col-1" data-index="0" data-categories="Article,Competition &amp; Antitrust,Causal Inference,Diff-in-Diff,Spatial Analysis" data-listing-date-sort="1727827200000">
+<a href="https://centrocompetencia.com/copec-cgl-merger-ex-post-assessment-fne-decision/" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="./posts/ab_testing1/abtest.png" class="thumbnail-image card-img" style="height: 150px;">
+<img src="assets/cover/ceco2.png" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
-A/B Testing Analysis
+Copec-CGL Merger: An Ex-Post Assessment of the FNE Decision
 </h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Causal Inference'); return false;">
-Causal Inference
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('A/B Testing'); return false;">
-A/B Testing
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Python'); return false;">
-Python
-</div>
-</div>
 <div class="card-text listing-description">
-A/B testing Analysis using Python.
+Published analysis evaluating the competitive effects of a retail gasoline merger in Chile using difference-in-differences and spatial econometrics.
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Daniel Redel
-</div>
+<div class="card-attribution card-text-small end">
 <div class="listing-date">
-Apr 5, 2024
+2024
 </div>
 </div>
 </div>
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="1" data-categories="Nonparametric Regression,Semiparametric Regression,Binary Choice Models,Kernel Density Estimation" data-listing-date-sort="1670716800000" data-listing-file-modified-sort="1771332073932" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2278">
-<a href="./posts/nonparametrics/nonparametrics.html" class="quarto-grid-link">
+<div class="g-col-1" data-index="1" data-categories="Master Thesis,Econometrics,Causal Inference,Diff-in-Diff" data-listing-date-sort="1704153600000">
+<a href="https://drive.google.com/file/d/1eexmSSJQyfKPfWoaVycenRmXK9wTZ7Jw/view?usp=sharing" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="./posts/nonparametrics/fig3.png" class="thumbnail-image card-img" style="height: 150px;">
+<img src="assets/cover/master-thesis.jpg" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
-Nonparametric &amp; Semiparametric Binary-Choice Regressions
+Impact of Transit-Oriented Development on Dutch Commercial Real Estate Prices
 </h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Nonparametric Regression'); return false;">
-Nonparametric Regression
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Semiparametric Regression'); return false;">
-Semiparametric Regression
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Binary Choice Models'); return false;">
-Binary Choice Models
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Kernel Density Estimation'); return false;">
-Kernel Density Estimation
-</div>
-</div>
 <div class="card-text listing-description">
-Nonparametric Kernel Density, Nonparametric Regression and Binary-Choice Models.
+Master thesis. Econometric analysis using difference-in-differences to assess the causal impact of transit infrastructure on commercial real estate values in the Netherlands.
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Daniel Redel
-</div>
+<div class="card-attribution card-text-small end">
 <div class="listing-date">
-Dec 11, 2022
+2024
 </div>
 </div>
 </div>
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="2" data-categories="python,code,analysis" data-listing-date-sort="1621641600000" data-listing-file-modified-sort="1771332073918" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="13">
-<a href="./posts/jupyter-first/hello.html" class="quarto-grid-link">
+<div class="g-col-1" data-index="2" data-categories="Article,Competition &amp; Antitrust,R &amp; Rstudio" data-listing-date-sort="1652832000000">
+<a href="https://centrocompetencia.com/wp-content/uploads/2022/05/CeCo-2022-Patrones-de-votos-de-los-Ministros-de-la-Corte-Suprema-en-Libre-Competencia-3.pdf" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top"><img src="posts/jupyter-first/hello_files/figure-html/fig-polar-output-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top">
+<img src="assets/cover/ceco1.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
-Quarto Basics
+Voting Patterns of the Ministers of the Supreme Court in Antitrust Cases: Evidence from Chile
 </h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('python'); return false;">
-python
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('code'); return false;">
-code
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('analysis'); return false;">
-analysis
-</div>
-</div>
 <div class="card-text listing-description">
-My first Jupyter Notebook
+Published article analyzing judicial voting behavior in competition law cases using statistical methods.
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Daniel Redel
-</div>
+<div class="card-attribution card-text-small end">
 <div class="listing-date">
-May 22, 2021
+2022
 </div>
 </div>
 </div>
@@ -356,12 +293,7 @@ May 22, 2021
 <div class="listing-no-matching d-none">
 No matching items
 </div>
-</div>
-
-
-
-
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+</div><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
