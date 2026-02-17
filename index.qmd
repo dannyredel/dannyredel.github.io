@@ -33,8 +33,7 @@ listing:
 ---
 
 :::{#about style="text-align: center"}
-I am passionate about the intersection between Economics and Data Science. Experienced in Competition Economics and Quantitative Research. Currently working as a Junior Data Consultant at [FactX](https://factx.nl/), where I engage in diverse projects across different industries. Oriented toward analytical and interdisciplinary work, with high learning opportunities.
-
+Applied Economist & Data Scientist. I work as an Economics Consultant at [Compass Lexecon](https://www.compasslexecon.com/), where I conduct econometric analyses in competition economics and regulatory matters. My work sits at the intersection of causal inference, machine learning, and applied economics. I hold an MSc in Econometrics from Tilburg University and an MSc in Applied Economics from PUC Chile.
 :::
 
 

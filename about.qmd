@@ -22,7 +22,8 @@ format:
 
 
 ::: {#about style="text-align: justify"}
-I am passionate about the intersection between Economics and Data Science. Experienced in Competition Economics and Quantitative Research. Currently working as a Junior Data Consultant at [FactX](https://factx.nl/), where I engage in diverse projects across different industries. Oriented toward analytical and interdisciplinary work, with high learning opportunities.
+Applied Economist & Data Scientist based in the Netherlands. I work as an Economics Consultant at [Compass Lexecon](https://www.compasslexecon.com/), specializing in econometric analyses for competition economics, mergers, and regulatory disputes. My expertise spans causal inference, machine learning, and applied economics, and I'm increasingly focused on applying data science methods to economic problems. I hold an MSc in Econometrics & Mathematical Economics from Tilburg University and an MSc in Applied Economics from PUC Chile.
+
 :::
 
 
@@ -57,6 +58,48 @@ I am passionate about the intersection between Economics and Data Science. Exper
 </div>
 ```
 
+## Experience
+
+::: {.d-flex .justify-content-between}
+::: {}
+**Economics Consultant**  
+*Compass Lexecon, Berlin*
+:::
+::: {.text-end}
+Sep 2025 – present
+:::
+:::
+
+::: {.d-flex .justify-content-between}
+::: {}
+**Junior Data Consultant**  
+*FactX, Utrecht*
+:::
+::: {.text-end}
+Feb 2024 – Aug 2025
+:::
+:::
+
+::: {.d-flex .justify-content-between}
+::: {}
+**Thesis Internship**  
+*CPB Netherlands Bureau for Economic Policy Analysis, The Hague*
+:::
+::: {.text-end}
+May 2023 – Oct 2023
+:::
+:::
+
+::: {.d-flex .justify-content-between}
+::: {}
+**Research Analyst**  
+*CentroCompetencia, Santiago*
+:::
+::: {.text-end}
+Jul 2021 – Apr 2023
+:::
+:::
+
 ## Education
 
 ::: {.d-flex .justify-content-between}
@@ -69,7 +112,6 @@ Jan 2024
 :::
 :::
 
-
 ::: {.d-flex .justify-content-between}
 ::: {}
 **MSc. in Applied Economics**  
@@ -80,7 +122,6 @@ Jan 2024
 :::
 :::
 
-
 ::: {.d-flex .justify-content-between}
 ::: {}
 **BSc. in Economics & Business Administration**  
@@ -90,42 +131,4 @@ Jan 2024
 2020
 :::
 :::
-
-
-
-## Experience
-
-::: {.d-flex .justify-content-between}
-::: {}
-**Junior Data Consultant**  
-*FactX, Utrecht*
-:::
-::: {.text-end}
-March 2024 – present
-:::
-:::
-
-
-::: {.d-flex .justify-content-between}
-::: {}
-**Thesis Internship**  
-*CPB Netherlands Bureau for Economic Policy Analysis, The Hague*
-:::
-::: {.text-end}
-May 2023 - Oct 2023
-:::
-:::
-
-
-::: {.d-flex .justify-content-between}
-::: {}
-**Research Analyst**  
-*CentroCompetencia, Santiago*
-:::
-::: {.text-end}
-Jul 2021 - Apr 2023
-:::
-:::
-
-
 

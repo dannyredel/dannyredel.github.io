@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -146,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
   </div>
 </header><div id="about" style="text-align: justify">
-<p>I am passionate about the intersection between Economics and Data Science. Experienced in Competition Economics and Quantitative Research. Currently working as a Junior Data Consultant at <a href="https://factx.nl/">FactX</a>, where I engage in diverse projects across different industries. Oriented toward analytical and interdisciplinary work, with high learning opportunities.</p>
+<p>Applied Economist &amp; Data Scientist based in the Netherlands. I work as an Economics Consultant at <a href="https://www.compasslexecon.com/">Compass Lexecon</a>, specializing in econometric analyses for competition economics, mergers, and regulatory disputes. My expertise spans causal inference, machine learning, and applied economics, and I’m increasingly focused on applying data science methods to economic problems. I hold an MSc in Econometrics &amp; Mathematical Economics from Tilburg University and an MSc in Applied Economics from PUC Chile.</p>
 </div> 
   <hr class="about-sep">
    <div class="about-links">
@@ -194,6 +194,45 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 </section>
+<section id="experience" class="level2">
+<h2 data-anchor-id="experience">Experience</h2>
+<div class="d-flex justify-content-between">
+<div>
+<p><strong>Economics Consultant</strong><br>
+<em>Compass Lexecon, Berlin</em></p>
+</div>
+<div class="text-end">
+<p>Sep 2025 – present</p>
+</div>
+</div>
+<div class="d-flex justify-content-between">
+<div>
+<p><strong>Junior Data Consultant</strong><br>
+<em>FactX, Utrecht</em></p>
+</div>
+<div class="text-end">
+<p>Feb 2024 – Aug 2025</p>
+</div>
+</div>
+<div class="d-flex justify-content-between">
+<div>
+<p><strong>Thesis Internship</strong><br>
+<em>CPB Netherlands Bureau for Economic Policy Analysis, The Hague</em></p>
+</div>
+<div class="text-end">
+<p>May 2023 – Oct 2023</p>
+</div>
+</div>
+<div class="d-flex justify-content-between">
+<div>
+<p><strong>Research Analyst</strong><br>
+<em>CentroCompetencia, Santiago</em></p>
+</div>
+<div class="text-end">
+<p>Jul 2021 – Apr 2023</p>
+</div>
+</div>
+</section>
 <section id="education" class="level2">
 <h2 data-anchor-id="education">Education</h2>
 <div class="d-flex justify-content-between">
@@ -221,36 +260,6 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div class="text-end">
 <p>2020</p>
-</div>
-</div>
-</section>
-<section id="experience" class="level2">
-<h2 data-anchor-id="experience">Experience</h2>
-<div class="d-flex justify-content-between">
-<div>
-<p><strong>Junior Data Consultant</strong><br>
-<em>FactX, Utrecht</em></p>
-</div>
-<div class="text-end">
-<p>March 2024 – present</p>
-</div>
-</div>
-<div class="d-flex justify-content-between">
-<div>
-<p><strong>Thesis Internship</strong><br>
-<em>CPB Netherlands Bureau for Economic Policy Analysis, The Hague</em></p>
-</div>
-<div class="text-end">
-<p>May 2023 - Oct 2023</p>
-</div>
-</div>
-<div class="d-flex justify-content-between">
-<div>
-<p><strong>Research Analyst</strong><br>
-<em>CentroCompetencia, Santiago</em></p>
-</div>
-<div class="text-end">
-<p>Jul 2021 - Apr 2023</p>
 </div>
 </div>
 
@@ -331,6 +340,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -365,7 +392,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -646,7 +677,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Copyright 2024, Daniel Redel</p>
+<p>Copyright 2026, Daniel Redel</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

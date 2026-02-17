@@ -14,6 +14,18 @@ listing:
     fields: [title, description, image, categories, date]
     contents:
 
+    - title: "Customer Segmentation with Brazilian E-Commerce Data"
+      categories: [Python, Machine Learning, Clustering, scikit-learn]
+      date: 2026-02-17
+      path: "https://github.com/dannyredel"
+      image: "assets/cover/customer-segmentation.png"
+
+    - title: "PriceScope: Open-Source Conjoint Analysis with Synthetic Respondents"
+      categories: [Python, Conjoint Analysis, Discrete Choice, PyBLP, FastAPI]
+      date: 2025-01-15
+      path: "https://github.com/dannyredel"
+      image: "assets/cover/pricescope.png"
+
     - title: "Machine Learning with Python: A Quick Guide"
       #description: "A concise and practical introduction to main machine learning algorithms."
       categories: [Machine Learning, Python, scikit-learn]
