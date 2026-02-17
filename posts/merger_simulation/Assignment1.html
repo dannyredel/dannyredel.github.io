@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Daniel Redel">
+<meta name="dcterms.date" content="2024-05-09">
+<title>Merger Simulation of Broadband Internet Services – Daniel Redel</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../myprofile.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-3ad3898019ac633b5dc008510ac09064.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-76702eb7cada84b330ed18131569fa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><style>html{ scroll-behavior: smooth; }</style>
+<script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script><script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+</head>
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Daniel Redel</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../myposts.html"> <i class="bi bi-pencil-square" role="img">
+</i> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html"> <i class="bi bi-folder" role="img">
+</i> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research.html"> <i class="bi bi-journal-text" role="img">
+</i> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-person" role="img">
+</i> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/dannyredel"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/daniel-redel-14b052b6/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/DannyRedel"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Merger Simulation of Broadband Internet Services</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Competition &amp; Antitrust</div>
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">Binary Choice Models</div>
+                <div class="quarto-category">Simulation</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Daniel Redel </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 9, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+   
+  <ul>
+<li>
+<a href="#the-market" id="toc-the-market" class="nav-link active" data-scroll-target="#the-market"><span class="header-section-number">1</span> The Market</a>
+  <ul class="collapse">
+<li><a href="#quantities-and-prices" id="toc-quantities-and-prices" class="nav-link" data-scroll-target="#quantities-and-prices"><span class="header-section-number">1.1</span> Quantities and Prices</a></li>
+  <li><a href="#demand" id="toc-demand" class="nav-link" data-scroll-target="#demand"><span class="header-section-number">1.2</span> Demand</a></li>
+  <li><a href="#firm-ownership" id="toc-firm-ownership" class="nav-link" data-scroll-target="#firm-ownership"><span class="header-section-number">1.3</span> Firm Ownership</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#merger-assessment" id="toc-merger-assessment" class="nav-link" data-scroll-target="#merger-assessment"><span class="header-section-number">2</span> Merger Assessment</a>
+  <ul class="collapse">
+<li><a href="#relevant-market" id="toc-relevant-market" class="nav-link" data-scroll-target="#relevant-market"><span class="header-section-number">2.1</span> Relevant Market</a></li>
+  <li><a href="#structural-analysis" id="toc-structural-analysis" class="nav-link" data-scroll-target="#structural-analysis"><span class="header-section-number">2.2</span> Structural Analysis</a></li>
+  <li>
+<a href="#unilateral-effects" id="toc-unilateral-effects" class="nav-link" data-scroll-target="#unilateral-effects"><span class="header-section-number">2.3</span> Unilateral Effects</a>
+  <ul class="collapse">
+<li><a href="#price-elasticities-product-substitution" id="toc-price-elasticities-product-substitution" class="nav-link" data-scroll-target="#price-elasticities-product-substitution"><span class="header-section-number">2.3.1</span> Price-Elasticities: Product Substitution</a></li>
+  </ul>
+</li>
+  </ul>
+</li>
+  <li>
+<a href="#merger-simulation" id="toc-merger-simulation" class="nav-link" data-scroll-target="#merger-simulation"><span class="header-section-number">3</span> Merger Simulation</a>
+  <ul class="collapse">
+<li><a href="#calibrate-marginal-costs" id="toc-calibrate-marginal-costs" class="nav-link" data-scroll-target="#calibrate-marginal-costs"><span class="header-section-number">3.1</span> Calibrate Marginal Costs</a></li>
+  <li><a href="#first-order-conditions-foc" id="toc-first-order-conditions-foc" class="nav-link" data-scroll-target="#first-order-conditions-foc"><span class="header-section-number">3.2</span> First-Order Conditions (FOC)</a></li>
+  <li><a href="#post-merger-effects" id="toc-post-merger-effects" class="nav-link" data-scroll-target="#post-merger-effects"><span class="header-section-number">3.3</span> Post-Merger Effects</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#entry-countervailing-factors" id="toc-entry-countervailing-factors" class="nav-link" data-scroll-target="#entry-countervailing-factors"><span class="header-section-number">4</span> Entry &amp; Countervailing Factors</a>
+  <ul class="collapse">
+<li><a href="#entry-conditions" id="toc-entry-conditions" class="nav-link" data-scroll-target="#entry-conditions"><span class="header-section-number">4.1</span> Entry Conditions</a></li>
+  <li><a href="#efficiency-claims" id="toc-efficiency-claims" class="nav-link" data-scroll-target="#efficiency-claims"><span class="header-section-number">4.2</span> Efficiency Claims</a></li>
+  </ul>
+</li>
+  <li><a href="#final-decision" id="toc-final-decision" class="nav-link" data-scroll-target="#final-decision"><span class="header-section-number">5</span> Final Decision</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li>
+<a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a>
+  <ul class="collapse">
+<li><a href="#alternative-elasticity-function" id="toc-alternative-elasticity-function" class="nav-link" data-scroll-target="#alternative-elasticity-function">Alternative Elasticity Function</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>Assessing merger competitive effects through merger simulation.</p>
+<p>Let’s assume our industry concerns providers of <strong>broadband internet services</strong>. Some providers offer multiple products (e.g.&nbsp;<em>multiple download speeds</em>). In this case, the industry is best described by a heterogeneous Bertrand competition with 5 firms offering 11 products. Demand follows a simple logit model.</p>
+<p>Providers <strong>A and B want to merge</strong> and we were asked to evaluate the effects of the merger. In this document, we will assess the potential anticompetitive effects that the proposed merger might carry.</p>
+<section id="the-market" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> The Market</h1>
+<p>We start by simulating the competitive structure of the market of broadband internet services.</p>
+<section id="quantities-and-prices" class="level2" data-number="1.1"><h2 data-number="1.1" class="anchored" data-anchor-id="quantities-and-prices">
+<span class="header-section-number">1.1</span> Quantities and Prices</h2>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>provider <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                                <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">LETTERS</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">2</span>, to <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>                                    each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                   product <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"100 Mbit/s"</span>, </span>
+<span>                               <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"400 Mbit/s"</span>, <span class="st">"1000 Mbit/s"</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                               <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"200 Mbit/s"</span>, <span class="st">"400 Mbit/s"</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                   price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">40</span>, <span class="fl">65</span>, <span class="fl">95</span>,<span class="co">#Provider A</span></span>
+<span>                             <span class="fl">50</span>, <span class="fl">70</span>,     <span class="co">#Provider B</span></span>
+<span>                             <span class="fl">70</span>, <span class="fl">98</span>,     <span class="co">#Provider C</span></span>
+<span>                             <span class="fl">40</span>, <span class="fl">50</span>,     <span class="co">#Provider D</span></span>
+<span>                             <span class="fl">35</span>, <span class="fl">45</span><span class="op">)</span>,    <span class="co">#Provider E</span></span>
+<span>                   share <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.26</span>, <span class="fl">0.2</span>, <span class="fl">0.05</span>, <span class="co">#Provider A</span></span>
+<span>                             <span class="fl">0.1</span>, <span class="fl">0.09</span>,       <span class="co">#Provider B</span></span>
+<span>                             <span class="fl">0.08</span>, <span class="fl">0.03</span>,          <span class="co">#Provider C</span></span>
+<span>                             <span class="fl">0.03</span>, <span class="fl">0.05</span>,          <span class="co">#Provider D</span></span>
+<span>                             <span class="fl">0.06</span>, <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span>         <span class="co">#Provider E </span></span>
+<span></span>
+<span><span class="co"># We assume 9 million households, all of them have internet</span></span>
+<span><span class="va">M</span> <span class="op">=</span> <span class="fl">9e6</span></span>
+<span><span class="co"># Volume Quantity</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">%&gt;%</span> <span class="fu">mutate</span><span class="op">(</span>quantity <span class="op">=</span> <span class="va">share</span><span class="op">*</span><span class="va">M</span><span class="op">)</span></span>
+<span><span class="co"># vectors of prices and quantities</span></span>
+<span><span class="va">QQ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">share</span><span class="op">*</span><span class="va">M</span><span class="op">)</span></span>
+<span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">price</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="demand" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="demand">
+<span class="header-section-number">1.2</span> Demand</h2>
+<p>The consumer utility for product <span class="math inline">i</span>:</p>
+<p><span class="math display">
+U_i=V_i+\varepsilon_i
+</span></p>
+<p>Where <span class="math inline">V_i</span> is the observable part of the utility. We assume here that <span class="math inline">V_i</span> takes the following form:</p>
+<p><span class="math display">
+V_i= \delta_i -\alpha p_i+\text{asc}_i
+</span></p>
+<p>We can rearrange the market in such that we end up with:</p>
+<p><span class="math display">
+\ln s_i-\ln s_0 = \delta_i -\alpha p_i+\text{asc}_i
+</span></p>
+<p>The <strong>price sensitivity</strong> is estimated to be <code>-0.1</code>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">0.1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The logit demand contains <strong>alternative-specific constants</strong> (<code>asc</code>) that <em>set the prediction equal to observed market shares</em>. They can be found using the observed prices, quantities and the price sensitivity parameter (if the shares sum to 1, then no outside good is included and by default <span class="math inline">\delta_i</span> is normalized to 0).</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#intercepts are relative to reference (let's pick product 1)</span></span>
+<span><span class="va">data</span><span class="op">$</span><span class="va">asc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">share</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">share</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">-</span> </span>
+<span>  <span class="va">alpha</span><span class="op">*</span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">price</span> <span class="op">-</span> <span class="va">data</span><span class="op">$</span><span class="va">price</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="firm-ownership" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="firm-ownership">
+<span class="header-section-number">1.3</span> Firm Ownership</h2>
+<p><a href="#tbl-1" class="quarto-xref">Table&nbsp;1</a> presents the ownership matrix of which products belong to which providers.</p>
+<div class="cell" data-tbl.align="center">
+<div id="tbl-1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl.align="center">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Pre-Merger Ownership Structure
+</figcaption><div aria-describedby="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section></section><section id="merger-assessment" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> Merger Assessment</h1>
+<p>The proposed transaction gives rise to an <strong>horizontal overlap</strong> between the Parties (A and B) regarding the supply of <strong>broadband internet services</strong> in the Netherlands at the retail level.</p>
+<section id="relevant-market" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="relevant-market">
+<span class="header-section-number">2.1</span> Relevant Market</h2>
+<p>To assess the potential competitive effects of the proposed merger, we will start by discussing briefly the relevant market.</p>
+<p>As already mentioned, providers of internet usually offer multiple products with certain degree of differentiation. In particular, the various internet offerings with <strong>various speeds</strong> could be a plausible segmentation of the market for the retail provision of internet services. According to our data, the actual providers offers four different internet speeds: 100 Megabits per second (Mbps), 200 Mbps, 400 Mbps and 1000 Mbps.</p>
+<p>In recent cases regarding the retail market for internet access, the Dutch competition agency, <em>Authority for Consumers &amp; Markets</em> (<strong>ACM</strong>), had considered that a market segmentation based on download speeds is not appropriate, primarily because there is substitution both at the demand side and at the supply-side of the market (<a href="https://www.acm.nl/sites/default/files/old_publication/publicaties/15087_marktanalyse-ontbundelde-toegang-ACM-17-12-2015.pdf">“Marktanalyse ontbundelde toegang<em>“</em>, 2015</a>). In his view, <em>“the fact that an internet connection, regardless of speed, can be used for the same applications, a distinction based on usage in the market for fixed internet access based on certain speeds is unlikely”</em> (pp.&nbsp;156-157).</p>
+<p>The European Commission had followed the a similar approach by either disregarding the possibility of further market segmentation based on internet speed, or by considering it a “left open” issue (<a href="https://ec.europa.eu/competition/mergers/cases/decisions/m7978_1870_3.pdf">DGCOMP/Case M.7978</a>, <a href="https://ec.europa.eu/competition/mergers/cases/decisions/m5532_20090629_20310_en.pdf">DGCOMP/Case M.5532</a>, <a href="https://ec.europa.eu/competition/mergers/cases/decisions/m6990_571_2.pdf">DGCOMP/Case M.6990</a>).</p>
+<p>As we will see, the quantitative analysis of elasticities and diversion ratios confirms the presence of relevant product substitution between different internet speeds, such that <strong>products with different speeds exert competitive pressure on each other</strong>.</p>
+<p>Therefore, and also in line with previous European jurispudence, we will take the broadband of internet services as the product relevant market, without further distinctions based on internet speed. The geographic relevant market is at the national level.</p>
+</section><section id="structural-analysis" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="structural-analysis">
+<span class="header-section-number">2.2</span> Structural Analysis</h2>
+<p>Once defined the relevant market, we can now study their structure in terms of market concentration. The left-hand side of <a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a> reports the pre-merger market shares measured in terms of units sold (quantity):</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Assignment1_files/figure-html/fig-1-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Market Shares
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>First, we observe a clear leadership of firm A in the market, with an overall market share of 51%. In contrast, the individual market shares of their rivals are between 11% and 19%, with firm B being the second largest provider of internet.</p>
+<p>Note also that firm A is the only firm that still offers low-speed broadband services (100 Mbps), accounting for the 26% of the overall market. On the other hand, all providers participate on the “400 Mbps” segment. More to the point, the Parties (A and B) offers internet with speed of 400 Mbps and 1,000 Mbps, but do not offer 200 Mbps.</p>
+<p>The right-hand side of <a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a> plots the combined market share of the Parties.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> This figure suggests a plausible degree of dominance of the New Entity (AB) as a result of the merger, as the combined market share is now 70%.</p>
+<p>According to Commission’s <a href="https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:C:2004:031:0005:0018:en:PDF">Guidelines on Horizontal Mergers</a> <span class="citation" data-cites="european2004guidelines">(see <a href="#ref-european2004guidelines" role="doc-biblioref">Commission 2004</a>)</span>, market shares of 50% or more might be evidence of the existence of a dominant market position. However, smaller competitors may act as a sufficient constraining influence if, for example, they have the ability and incentive to increase their supplies.</p>
+<p>The overall concentration level in a market may also provide useful information about the competitive situation. Table 1 shows the overall concentration levels in terms of Herfindahl-Hirschman Index (HHI).</p>
+<table class="caption-top table">
+<caption>Herfindahl-Hirschman Index (HHI)</caption>
+<thead><tr class="header">
+<th>HHI</th>
+<th>Value</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Pre-Merger</td>
+<td>3,268</td>
+</tr>
+<tr class="even">
+<td>
+<span class="math inline">\Delta</span> HHI</td>
+<td>1,938</td>
+</tr>
+<tr class="odd">
+<td>Post-Merger</td>
+<td>5,206</td>
+</tr>
+</tbody>
+</table>
+<p>Table 1 also seems to suggest high market concentration (above 2,000).<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> While these results give an initial indication of the competitive concern, further investigation is needed.</p>
+</section><section id="unilateral-effects" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="unilateral-effects">
+<span class="header-section-number">2.3</span> Unilateral Effects</h2>
+<p>We will now study the potential unilateral effects that may arise due to the merger. By removing one competitor from the market, the merger also reduces competitive constraints that in turn lead to price increases in the relevant market.</p>
+<section id="price-elasticities-product-substitution" class="level3" data-number="2.3.1"><h3 data-number="2.3.1" class="anchored" data-anchor-id="price-elasticities-product-substitution">
+<span class="header-section-number">2.3.1</span> Price-Elasticities: Product Substitution</h3>
+<p>The price-elasticity matrix provides a good overview of the competitive pressure each product exerts to each other. On the one hand, both own and cross-elasticities allows us to understand the disciplinary pressure that firms A and B faces from their smaller rivals. On the other hand, elasticities give us information to assess closeness of competition between firm A and B. The underlying idea is that the closer competitors the merging parties are<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, the more likely it is that a merger will give rise to significant unilateral effects.</p>
+<p>We will write a function to calculate elasticities using the given data and price sensitivity. The assumptions underlying Logit demand imply that the probability that a consumer purchases product <span class="math inline">i</span> is given by:</p>
+<p><span class="math display">
+\Pr(U_{ij}&gt;U_{ik})=s_i=\frac{\exp(V_i)}{\sum_{k} \exp(V_k)}
+</span></p>
+<p>with <span class="math inline">V_i=\delta_i+\alpha p_i+\text{asc}_i</span> <span class="citation" data-cites="berry1994">(<a href="#ref-berry1994" role="doc-biblioref">Berry 1994</a>)</span>. The implies elasticities:</p>
+<ul>
+<li>The own-price elasticity for <strong>product</strong> <span class="math inline">i</span> is defined by:</li>
+</ul>
+<p><span class="math display">
+\epsilon_i^{i}=\alpha p_i(1-s_i)
+</span></p>
+<ul>
+<li>The cross-price elasticity for <strong>product</strong> <span class="math inline">i</span> in reaction to change in price for <strong>product</strong> <span class="math inline">j</span>:</li>
+</ul>
+<p><span class="math display">
+\epsilon_j^{i}=-\alpha p_js_j
+</span></p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">elast</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">products</span>, <span class="va">alpha</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">own</span> <span class="op">&lt;-</span> <span class="va">alpha</span><span class="op">*</span><span class="va">products</span><span class="op">$</span><span class="va">price</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">Pr</span><span class="op">)</span></span>
+<span>  <span class="va">cross</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="va">alpha</span><span class="op">*</span><span class="va">products</span><span class="op">$</span><span class="va">price</span> <span class="op"><a href="https://rdrr.io/r/base/outer.html">%o%</a></span> <span class="va">Pr</span></span>
+<span>  <span class="va">E</span> <span class="op">&lt;-</span> <span class="va">cross</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">own</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a> shows the matrix of own and cross-price elasticities between the products involved in the relevant market:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Assignment1_files/figure-html/fig-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" data-fig-pos="H" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Own and Cross-Price Elasticities
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Recall that when the cross elasticity of demand <span class="math inline">\epsilon_{ij}</span> is greater than 1, the cross elasticity of demand is <strong>elastic</strong>: a change in price of product <span class="math inline">j</span> results in a <strong>more than proportionate</strong> change in quantity demanded for product <span class="math inline">i</span>.</p>
+<p>From <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a> we can see <strong>high substitution between the Parties</strong>, specially from the products offered by B towards the products of A. For example, a 1% price increase in 400 Mbps internet offered by B increases by 1.3% the demand for 100 Mbps internet services of firm A. For the 1000 Mbps service offered by B, the demand increase is 2.45% towards firm A (100 Mbps). On the other hand, the elasticity from firm A towards B is less elastic (between 0.6 and 0.95 in the segments where they overlap).</p>
+<p>Finally, it’s important to note that firm C (400 and 1000 Mbps) and to some extent D (200 and 400 Mbps) exerts quite an important competitive pressure on various of the products offered by A (100 Mbps and 400 Mbps). This implies that, even post-merger, there is still high competitive pressure coming from other products from rivals.</p>
+<p>Therefore, we confirm the presence of high substitution across the different products of internet services.</p>
+<div style="page-break-after: always;"></div>
+</section></section></section><section id="merger-simulation" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> Merger Simulation</h1>
+<p>With the given information about the industry, we will carry a merger simulation to better assess their potential competitive effects. To run the simulation we will need to define a number of functions. This is necessary as we search for solution across a very large range of possible input values. A function makes it possible to quickly generate correct output for any change in inputs.</p>
+<section id="calibrate-marginal-costs" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="calibrate-marginal-costs">
+<span class="header-section-number">3.1</span> Calibrate Marginal Costs</h2>
+<p>We will first calibrate the marginal costs.</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#calculate elasticities</span></span>
+<span><span class="va">data</span><span class="op">$</span><span class="va">PCand</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">price</span> <span class="co"># candidate price is current price</span></span>
+<span><span class="va">data</span><span class="op">$</span><span class="va">s</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">share</span> <span class="co"># idem</span></span>
+<span></span>
+<span><span class="va">elas</span> <span class="op">&lt;-</span> <span class="fu">elast</span><span class="op">(</span><span class="va">data</span>, <span class="va">alpha</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#drop columns</span></span>
+<span><span class="va">data</span><span class="op">$</span><span class="va">PCand</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">s</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
+<span></span>
+<span><span class="co">#calculate matrix of marginal effects</span></span>
+<span><span class="va">part</span> <span class="op">&lt;-</span> <span class="va">E</span><span class="op">*</span><span class="op">(</span><span class="va">QQ</span><span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">PP</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#calculate implied marginal costs</span></span>
+<span><span class="va">CC</span> <span class="op">&lt;-</span> <span class="va">PP</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">own_pre</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="va">own_pre</span> <span class="op">*</span> <span class="va">part</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">QQ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="first-order-conditions-foc" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="first-order-conditions-foc">
+<span class="header-section-number">3.2</span> First-Order Conditions (FOC)</h2>
+<p>Second, we define a function calculating the <strong>first order conditions</strong>. The function will give a vector corresponding to FOC value for each product. In equilibrium, we should get a vector of zeros.</p>
+<p>The part calculating the matrix of marginal effects <span class="math inline">\dfrac{\partial Q_i}{\partial p_j}</span> can be calculated by using the following relationship:</p>
+<p><span class="math display">\epsilon_{ij}=\dfrac{\dfrac{\partial Q_i}{\partial p_j}}{\dfrac{Q_i}{p_j}}</span></p>
+<div style="page-break-after: always;"></div>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">FOC</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">delta</span>, <span class="va">products</span>, <span class="va">EIG</span>, <span class="va">C</span>, <span class="va">M</span><span class="op">)</span> <span class="op">{</span> </span>
+<span>  <span class="va">products</span><span class="op">$</span><span class="va">PCand</span> <span class="op">=</span> <span class="va">products</span><span class="op">$</span><span class="va">price</span><span class="op">*</span><span class="va">delta</span></span>
+<span>  <span class="va">products</span><span class="op">$</span><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">products</span><span class="op">$</span><span class="va">asc</span> <span class="op">+</span> </span>
+<span>                     <span class="va">alpha</span><span class="op">*</span><span class="va">products</span><span class="op">$</span><span class="va">PCand</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">products</span><span class="op">$</span><span class="va">asc</span> <span class="op">+</span> </span>
+<span>                                                     <span class="va">alpha</span><span class="op">*</span><span class="va">products</span><span class="op">$</span><span class="va">PCand</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="co">#quantities</span></span>
+<span>  <span class="va">Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">products</span><span class="op">$</span><span class="va">s</span><span class="op">*</span><span class="va">M</span><span class="op">)</span></span>
+<span>  <span class="co">#prices</span></span>
+<span>  <span class="va">P</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">products</span><span class="op">$</span><span class="va">PCand</span><span class="op">)</span></span>
+<span>  <span class="co">#calculate elasticities</span></span>
+<span>  <span class="va">E</span> <span class="op">&lt;-</span> <span class="fu">elast</span><span class="op">(</span><span class="va">products</span>, <span class="va">alpha</span><span class="op">)</span></span>
+<span>  <span class="co">#marginal effects</span></span>
+<span>  <span class="va">PART</span> <span class="op">&lt;-</span> <span class="va">E</span><span class="op">*</span><span class="op">(</span><span class="va">Q</span><span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">P</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="co">#FOCs</span></span>
+<span>  <span class="va">thisFOC</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">EIG</span><span class="op">)</span><span class="op">*</span><span class="va">Q</span> <span class="op">+</span> <span class="op">(</span><span class="va">EIG</span> <span class="op">*</span> <span class="va">PART</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="op">(</span><span class="va">P</span> <span class="op">-</span> <span class="va">C</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="va">thisFOC</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>All we need to do now is to adjust the ownership matrix to reflect the change in market structure due to the merger, as shown in <a href="#tbl-3" class="quarto-xref">Table&nbsp;2</a> .</p>
+<div class="cell" data-tbl.align="center" data-tbl-pos="b">
+<div id="tbl-3" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl.align="center" data-tbl-pos="b">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Post-Merger Ownership Structure
+</figcaption><div aria-describedby="tbl-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+<p>And we now solve the FOC’s with the new ownership structure with the following function:</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#post-merger equilibrium</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">BBsolve</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">11</span><span class="op">)</span>,</span>
+<span>                       <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="fu">FOC</span><span class="op">(</span><span class="va">x</span>,</span>
+<span>                                        products <span class="op">=</span> <span class="va">data</span>,</span>
+<span>                                        EIG <span class="op">=</span> <span class="va">own_post</span>,</span>
+<span>                                        C <span class="op">=</span> <span class="va">CC</span>,</span>
+<span>                                        M <span class="op">=</span> <span class="va">M</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Successful convergence.</code></pre>
+</div>
+</div>
+</section><section id="post-merger-effects" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="post-merger-effects">
+<span class="header-section-number">3.3</span> Post-Merger Effects</h2>
+<div class="callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>a) What is the average estimated price effect?</strong></p>
+</div>
+</div>
+</div>
+<p><a href="#tbl-4" class="quarto-xref">Table&nbsp;3</a> reports the average price effects of the merger according to our simulation exercise. We observe that the the loss of a competitor in the relevant market due to the merger leads to a new equilibrium with higher prices on all products. In particular, <strong>we found a weighted average price effect</strong><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> <strong>of around 1.54 euros, that is, a 3 percentage point increase approximately relative to the pre-merger scenario</strong>. <a href="#fig-3" class="quarto-xref">Figure&nbsp;3</a> reports the post-merger effects of each product that resulted from our simulation:</p>
+<div class="cell" data-tbl.align="center" data-tbl-pos="H">
+<div id="tbl-4" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl.align="center" data-tbl-pos="H">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Post-Merger Price Effects
+</figcaption><div aria-describedby="tbl-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Assignment1_files/figure-html/fig-3-1.png" class="img-fluid figure-img" data-fig-pos="H" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Post-Merger Price Effects
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-3" class="quarto-xref">Figure&nbsp;3</a> shows that most of the price increase is primarily driven by the behavior of the New Entity. The simulation predicts a price-increase of around 4.5% for the 100 Mbps service offered by firm A and 4.3% for the 400 Mbps of firm B.</p>
+<p>To put this in perspective, we can compare it to the results found in <span class="citation" data-cites="grzybowski2007">Grzybowski and Pereira (<a href="#ref-grzybowski2007" role="doc-biblioref">2007</a>)</span>, were the authors carried a merger simulation in the Portuguese mobile telephony market. They found an average price increase of 7–10% without cost efficiencies. One firm could increase the price by as much as 13–22%.</p>
+<p>According to these results, the competitive pressure exerted from rivals is not enough to prevent the New Entity to raise their prices. These results, though modest, suggests competitive risk in the relevant market.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-12" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Assignment1_files/figure-html/fig-12-1.png" class="img-fluid figure-img" style="width:100.0%" data-fig-pos="H">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Predicted Market Shares
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Finally, we can also estimate the new market shares, as shown in <a href="#fig-12" class="quarto-xref">Figure&nbsp;4</a>. Here we see that practically the same results found in our initial assessment based on simple combined market share between the Parties (<a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a>). Taken all into account, we conclude the existence of unilateral price effects on the relevant market.</p>
+</section></section><section id="entry-countervailing-factors" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> Entry &amp; Countervailing Factors</h1>
+<div class="callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>b) How would you improve the analysis?</strong></p>
+</div>
+</div>
+</div>
+<p>Our simulation has not take into account entry conditions and possible countervailing factors associated to the merger. One way to improve our analysis is to study barriers of entry and merger-specific efficiencies related to the proposed merger.</p>
+<section id="entry-conditions" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="entry-conditions">
+<span class="header-section-number">4.1</span> Entry Conditions</h2>
+<p>Typically, antitrust agencies evaluate whether entry will be likely, timely, and of sufficient magnitude as to discipline post-merger exercise of market power <span class="citation" data-cites="european2004guidelines">(see <a href="#ref-european2004guidelines" role="doc-biblioref">Commission 2004</a>)</span>. When entering a market is sufficiently easy, a merger is unlikely to pose any significant anti-competitive risk.</p>
+<p>Potential barriers to entry in the broadband internet market could be related to technical advantages that incumbents enjoy, for example, access to <strong>essential facilities</strong> (network infrastructure, local loops, etc.), which make it difficult for potential entrants to compete successfully. All these investments presents high sunk costs for entrants. This could also implies the presence of <strong>large economies of scale and scope</strong>, that may also constitute barriers to entry.</p>
+<p>For example, in <span class="citation" data-cites="xiao2011">Xiao and Orazem (<a href="#ref-xiao2011" role="doc-biblioref">2011</a>)</span>, the authors study the importance of sunk costs in determining entry conditions. In the conventional framework, entrants incur sunk costs to enter, while incumbents disregard these costs in deciding on continuation or exit. The authors apply this framework to study entry and competition in the local U.S. broadband markets and find that <strong>entry costs for early entrants are smaller than for later entrants,</strong> <strong>implying the existence of early mover advantages in this market</strong>. They also find that entry conditions for the 4th firm and subsequent entrants are stable. This implies that, once the market has between one to three incumbent firms, the fourth entrant has little effect on competitive conduct in the local broadband market.</p>
+<p>There is also literature that suggests that mergers create new incentives on incumbents to actually create entry barriers in a profitable way. For example, <span class="citation" data-cites="dasvarma2022">Das Varma and De Stefano (<a href="#ref-dasvarma2022" role="doc-biblioref">2022</a>)</span> introduced the idea that entry deterrence is a public good amongst incumbents, having the incentive to free-ride on each other’s efforts to deter entry. According to authors, a merger between two incumbents eliminates free-riding between the merging firms, leading to an increase in post-merger investment in entry deterrence.</p>
+<p>On the other hand, we need to recall that the relevant market in our case is at the <em>retail level</em>. Because of the <strong>unbundling regulation</strong> that generally applies in the network industries in the Netherlands (<a href="https://www.cpb.nl/sites/default/files/publicaties/download/memo131.pdf">CPB, 2005</a>), new entrants can compete with incumbents (such as KPN) on the market for service provision without needing to invest in the essential network facilities. In this case, unbundling means that other firms have access to the local loop, which requires incumbents to allow competitors to install their own equipment on both sides of the loop to provide their own services (<a href="https://www.cpb.nl/sites/default/files/publicaties/download/memo131.pdf">CPB, 2005</a>).</p>
+<p>This is an important factor to consider when assessing entry barriers in the market of broadband internet services, as it would mean lower barriers for entrants in the services market or retail market. An interesting aspect to analyze is whether cable network providers can provide easy access to their connections or if other technical or compatibility barriers still exist.</p>
+</section><section id="efficiency-claims" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="efficiency-claims">
+<span class="header-section-number">4.2</span> Efficiency Claims</h2>
+<p>Its likely that the Parties had presented efficiencies that may counteract the effects on competition and in particular the potential harm to consumers that it might otherwise have. According to the <a href="https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:C:2004:031:0005:0018:en:PDF">Guidelines</a>, for the Commission to take account of efficiency claims, the efficiencies have to <em>benefit consumers</em>, be <em>merger-specific</em> and be <em>verifiable</em>. These conditions are cumulative.</p>
+<p>Some theoretical research on the effects of mergers in the telecommunications industry has found the presence of relevant cost-reduction efficiencies. For example, <span class="citation" data-cites="houngbonon2019">Houngbonon and Jeanjean (<a href="#ref-houngbonon2019" role="doc-biblioref">2019</a>)</span> studied mobile internet traffic from 18 European markets and found that consumer surplus is maximized in generally markets with 3 symmetric operators. They also suggested that, in mobile mergers, <strong>dynamic efficiencies from investment outweigh static efficiencies from market power</strong> (except in the case of “3-to-2 mergers”).</p>
+<p>A useful way to take efficiencies into account is to incorporate them in our merger simulation model. For example, in <span class="citation" data-cites="grzybowski2007">Grzybowski and Pereira (<a href="#ref-grzybowski2007" role="doc-biblioref">2007</a>)</span>, the authors simulated the post-merger effects of the Portuguese mobile telephony market and considered three scenarios: (i) there are no cost efficiencies, (ii) a 5% marginal cost reduction in the costs of the Parties, and (iii) a 10% reduction. On average, the authors found price increases of about 6–10% with a 10% marginal cost reduction.</p>
+<p>According the <span class="citation" data-cites="taragin2012antitrust">Taragin and Sandfort (<a href="#ref-taragin2012antitrust" role="doc-biblioref">2012</a>)</span>, we can update our model to evaluate these efficiencies in two different ways. First, when computing the post-merger equilibrium prices, we can insert post-merger marginal costs by multiplying pre-merger marginal costs with the claimed proportional reduction in marginal costs, <span class="math inline">1+\Delta mc</span> (“mcDelta”).</p>
+<p>Second, we can compute the compensating marginal cost reduction (CMCR) on the merging parties’ products. CMCR is the percentage decrease in the marginal costs of the merging parties’ products necessary to prevent a post-merger price increase <span class="citation" data-cites="miller2021">(<a href="#ref-miller2021" role="doc-biblioref">Miller and Sheu 2021</a>)</span>. For the Bertrand case, the matrix formula of the compensating marginal cost reduction, expressed as a percentage of pre-merger costs, is:</p>
+<p><span class="math display">
+\text{CMCR}= (m_{\text{post}}-m_{\text{pre}}) \circ \frac{1}{1-m_{\text{pre}}}
+</span></p>
+</section></section><section id="final-decision" class="level1" data-number="5"><h1 data-number="5">
+<span class="header-section-number">5</span> Final Decision</h1>
+<div class="callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>c) Would you approve this merger or not? Why?</strong></p>
+</div>
+</div>
+</div>
+<p>We observe that the the loss of a competitor in the relevant market due to the merger leads to 3 percentage point increase approximately relative to the pre-merger scenario. Are these effects really significant? The US Horizontal Merger Guidelines (2010) indicates that a merger is unlikely to raise significant unilateral effects concerns if the <a href="https://media.crai.com/wp-content/uploads/2020/09/16163618/the-use-of-UPPIs-in-merger-analysis-Moresi-Feb-2010.pdf"><em>Gross Upward Pricing Pressure Index</em></a> (GUPPI) is proportionately small. In practice, that amount is often considered to be less than 5%. <a href="https://www.stern.nyu.edu/sites/default/files/2023-05/Mergers.pdf">Bhattacharya, Illanes and Stillerman (2023)</a> found that competition agencies challenge mergers they expect would increase average prices more than 8–9% . Even though moving to a 5% threshold would reduce aggregate price increases by about 1 percentage point, this threshold would lead to significantly higher administrative burden, nearly tripling the number of mergers the agencies must challenge.</p>
+<p>In either case, these findings suggest that the <strong>simulated effects are too low to raise competitive concerns</strong>. Furthermore, these results do not account for potential pro-competitive effects, such as cost-reduction efficiencies, which could offset any negative impacts.</p>
+<p>Therefore, <strong>we would not prohibit this merger</strong>.</p>
+</section><section id="references" class="level1 unnumbered"><h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-berry1994" class="csl-entry" role="listitem">
+Berry, Steven T. 1994. <span>“Estimating Discrete-Choice Models of Product Differentiation.”</span> <em>The RAND Journal of Economics</em> 25 (2): 242. <a href="https://doi.org/10.2307/2555829">https://doi.org/10.2307/2555829</a>.
+</div>
+<div id="ref-european2004guidelines" class="csl-entry" role="listitem">
+Commission, European. 2004. <span>“Guidelines on the Assessment of Horizontal Mergers Under the Council Regulation on the Control of Concentrations Between Undertakings.”</span> <em>Official Journal of the European Union</em> 100: 5–18.
+</div>
+<div id="ref-dasvarma2022" class="csl-entry" role="listitem">
+Das Varma, Gopal, and Martino De Stefano. 2022. <span>“Entry Deterrence, Concentration, and Merger Policy.”</span> <em>Review of Industrial Organization</em> 61 (2): 199–222. <a href="https://doi.org/10.1007/s11151-022-09865-y">https://doi.org/10.1007/s11151-022-09865-y</a>.
+</div>
+<div id="ref-grzybowski2007" class="csl-entry" role="listitem">
+Grzybowski, Lukasz, and Pedro Pereira. 2007. <span>“Merger Simulation in Mobile Telephony in Portugal.”</span> <em>Review of Industrial Organization</em> 31 (3): 205–20. <a href="https://doi.org/10.1007/s11151-008-9155-2">https://doi.org/10.1007/s11151-008-9155-2</a>.
+</div>
+<div id="ref-houngbonon2019" class="csl-entry" role="listitem">
+Houngbonon, Georges V., and Francois Jeanjean. 2019. <span>“Investment and Market Power in Mobile Mergers.”</span> <em>Journal of Industrial and Business Economics</em> 46 (1): 65–81. <a href="https://doi.org/10.1007/s40812-019-00110-4">https://doi.org/10.1007/s40812-019-00110-4</a>.
+</div>
+<div id="ref-miller2021" class="csl-entry" role="listitem">
+Miller, Nathan H., and Gloria Sheu. 2021. <span>“Quantitative Methods for Evaluating the Unilateral Effects of Mergers.”</span> <em>Review of Industrial Organization</em> 58 (1): 143–77. <a href="https://doi.org/10.1007/s11151-020-09805-8">https://doi.org/10.1007/s11151-020-09805-8</a>.
+</div>
+<div id="ref-taragin2012antitrust" class="csl-entry" role="listitem">
+Taragin, Charles, and Michael Sandfort. 2012. <span>“The Antitrust Package.”</span>
+</div>
+<div id="ref-xiao2011" class="csl-entry" role="listitem">
+Xiao, Mo, and Peter F. Orazem. 2011. <span>“Does the Fourth Entrant Make Any Difference?”</span> <em>International Journal of Industrial Organization</em> 29 (5): 547–61. <a href="https://doi.org/10.1016/j.ijindorg.2010.11.005">https://doi.org/10.1016/j.ijindorg.2010.11.005</a>.
+</div>
+</div>
+</section><section id="appendix" class="level1 unnumbered"><h1 class="unnumbered">Appendix</h1>
+<section id="alternative-elasticity-function" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="alternative-elasticity-function">Alternative Elasticity Function</h2>
+<p>Another way to calculate the elasticities is to just plug-in the market shares <span class="math inline">s_i</span> into the formula in the following way:</p>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">elast1</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">products</span>, <span class="va">alpha</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">own</span> <span class="op">&lt;-</span> <span class="va">alpha</span><span class="op">*</span><span class="va">products</span><span class="op">$</span><span class="va">price</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">products</span><span class="op">$</span><span class="va">share</span><span class="op">)</span></span>
+<span>  <span class="va">cross</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="va">alpha</span><span class="op">*</span><span class="va">products</span><span class="op">$</span><span class="va">price</span> <span class="op"><a href="https://rdrr.io/r/base/outer.html">%o%</a></span> <span class="va">products</span><span class="op">$</span><span class="va">share</span></span>
+<span>  <span class="va">E</span> <span class="op">&lt;-</span> <span class="va">cross</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">own</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-2a" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-2a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Assignment1_files/figure-html/fig-2a-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" data-fig-pos="H" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2a-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Own and Cross-Price Elasticities
+</figcaption></figure>
+</div>
+</div>
+</div>
+
+
+</section></section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<ol>
+<li id="fn1"><p>As in current practice, post-merger market shares are calculated on the assumption that the post-merger combined market share of the merging parties is the sum of their pre-merger market shares.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>As stated in the Guidelines, the Commission is unlikely to identify horizontal competition concerns in a merger with a post-merger HHI between 1000 and 2000 and a delta below 250, or a merger with a post-merger HHI above 2000 and a delta below 150<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Closeness of competition is defined with reference to the propensity of the customers of one of the merging parties to switch to products supplied by the other merging party. The greater that propensity, the closer competitors the two firms are said to be. See paragraph 28, EC Merger Guidelines.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>The product-price effects are averaged using the post-merger market shares as weights.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/dannyredel\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2026 Daniel Redel</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
