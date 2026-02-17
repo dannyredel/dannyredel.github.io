@@ -31,5 +31,20 @@
   },
   "posts/ab_test_bayesian/bayesian_ab_test.ipynb": {
     "bayesian_ab_test.html": "372da3e3"
+  },
+  "posts/customer-segmentation/index.qmd": {
+    "index.html": "7dd7ef26"
+  },
+  "posts/causal_arima/carima_data.qmd": {
+    "carima_data.html": "2b780dde"
+  },
+  "posts/gasoline_merger_did/merger-report.ipynb": {
+    "merger-report.html": "e5756665"
+  },
+  "posts/merger_simulation/Assignment1.qmd": {
+    "Assignment1.html": "d348a9c1"
+  },
+  "posts/causal_forests/causal_forests.ipynb": {
+    "causal_forests.html": "a7470f7d"
   }
 }

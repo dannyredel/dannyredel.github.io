@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Daniel Redel">
+<meta name="dcterms.date" content="2024-05-22">
+<title>Causal ARIMA Approach to Estimate Price Policy Changes on Sales – Daniel Redel</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../myprofile.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-3ad3898019ac633b5dc008510ac09064.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-76702eb7cada84b330ed18131569fa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><style>html{ scroll-behavior: smooth; }</style>
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script><script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+</head>
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Daniel Redel</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="../../myposts.html"> <i class="bi bi-pencil-square" role="img">
+</i> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html"> <i class="bi bi-folder" role="img">
+</i> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research.html"> <i class="bi bi-journal-text" role="img">
+</i> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-person" role="img">
+</i> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/dannyredel"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/daniel-redel-14b052b6/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/DannyRedel"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Causal ARIMA Approach to Estimate Price Policy Changes on Sales</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Causal Inference</div>
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">Time Series</div>
+                <div class="quarto-category">ARIMA</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Daniel Redel </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 22, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+   
+  <ul>
+<li><a href="#online-book-sales-simulated-data" id="toc-online-book-sales-simulated-data" class="nav-link active" data-scroll-target="#online-book-sales-simulated-data"><span class="header-section-number">1</span> Online Book Sales: Simulated Data</a></li>
+  <li>
+<a href="#causal-arima-time-series" id="toc-causal-arima-time-series" class="nav-link" data-scroll-target="#causal-arima-time-series"><span class="header-section-number">2</span> Causal ARIMA Time Series</a>
+  <ul class="collapse">
+<li><a href="#estimation-procedure-and-inference" id="toc-estimation-procedure-and-inference" class="nav-link" data-scroll-target="#estimation-procedure-and-inference"><span class="header-section-number">2.1</span> Estimation Procedure and Inference</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#application" id="toc-application" class="nav-link" data-scroll-target="#application"><span class="header-section-number">3</span> Application</a>
+  <ul class="collapse">
+<li>
+<a href="#c-arima-using-fable-package" id="toc-c-arima-using-fable-package" class="nav-link" data-scroll-target="#c-arima-using-fable-package"><span class="header-section-number">3.1</span> C-ARIMA using <code>fable</code> package</a>
+  <ul class="collapse">
+<li><a href="#point-causal-effects" id="toc-point-causal-effects" class="nav-link" data-scroll-target="#point-causal-effects"><span class="header-section-number">3.1.1</span> Point Causal Effects</a></li>
+  <li><a href="#average-causal-effects" id="toc-average-causal-effects" class="nav-link" data-scroll-target="#average-causal-effects"><span class="header-section-number">3.1.2</span> Average Causal Effects</a></li>
+  <li><a href="#bootstrapped-confidence-intervals" id="toc-bootstrapped-confidence-intervals" class="nav-link" data-scroll-target="#bootstrapped-confidence-intervals"><span class="header-section-number">3.1.3</span> Bootstrapped Confidence Intervals</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#the-causalarima-package" id="toc-the-causalarima-package" class="nav-link" data-scroll-target="#the-causalarima-package"><span class="header-section-number">3.2</span> The <code>CausalARIMA</code> Package</a>
+  <ul class="collapse">
+<li><a href="#inference" id="toc-inference" class="nav-link" data-scroll-target="#inference"><span class="header-section-number">3.2.1</span> Inference</a></li>
+  </ul>
+</li>
+  </ul>
+</li>
+  <li>
+<a href="#causal-prophet" id="toc-causal-prophet" class="nav-link" data-scroll-target="#causal-prophet"><span class="header-section-number">4</span> Causal <code>Prophet</code></a>
+  <ul class="collapse">
+<li><a href="#point-causal-effects-1" id="toc-point-causal-effects-1" class="nav-link" data-scroll-target="#point-causal-effects-1"><span class="header-section-number">4.0.1</span> Point Causal Effects</a></li>
+  <li><a href="#average-causal-effects-1" id="toc-average-causal-effects-1" class="nav-link" data-scroll-target="#average-causal-effects-1"><span class="header-section-number">4.0.2</span> Average Causal Effects</a></li>
+  </ul>
+</li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">5</span> Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><p>C-ARIMA to estimate the causal effects in time series settings where no control unit is available.</p>
+<p><strong>What is the effect of price reduction on sales?</strong> Imagine you are a popular e-commerce platform for books, such as <a href="https://www.waterstones.com/">Waterstones</a>. As a part of your marketing strategy, you decide to reduce prices on all books. Now, you’re eager to assess the impact of this decision on the daily volume of sales. How can you measure this effect?</p>
+<p>Observational studies such as this pose significant challenges to identifying and estimating <strong>causal effects</strong>. Unlike <a href="https://dannyredel.github.io/posts/ab_testing1/1_ab_testing.html"><strong>A/B testing</strong></a> or randomized experiments, where the assignment mechanism (the process determining which units receive treatment and which receive control) is controlled and known, observational studies lack this clarity.</p>
+<p>Popular methods such as <a href="https://en.wikipedia.org/wiki/Difference_in_differences">Difference-in-Differences (DiD)</a> <span class="citation" data-cites="angrist2008">(<a href="#ref-angrist2008" role="doc-biblioref">Angrist and Pischke 2008</a>)</span> and <a href="https://en.wikipedia.org/wiki/Synthetic_control_method">Synthetic Control Methods (SCM)</a> <span class="citation" data-cites="abadie2010">(<a href="#ref-abadie2010" role="doc-biblioref">Abadie, Diamond, and Hainmueller 2010</a>)</span> have been extensively used to evaluate the impact of interventions in the absence of experimental data across various fields, including economics and marketing. Recent advancements even combine these approaches, as seen in the <a href="https://matheusfacure.github.io/python-causality-handbook/25-Synthetic-Diff-in-Diff.html">Synthetic Difference-in-Differences (SDiD)</a> <span class="citation" data-cites="arkhangelsky2019">(<a href="#ref-arkhangelsky2019" role="doc-biblioref">Arkhangelsky et al. 2019</a>)</span> estimator.</p>
+<p>However, <strong>these methods require the presence of control units</strong> that did not experience the intervention. In cases of widespread policy changes affecting <em>all units</em>—such as our book price reduction example—finding untreated units is often impossible.</p>
+<p>On a recent article published in <em>The Econometrics Journal</em> (<a href="https://academic.oup.com/ectj/issue/26/1">Volume 26, Issue 1</a>), <span class="citation" data-cites="menchetti2022">Menchetti, Cipollini, and Mealli (<a href="#ref-menchetti2022" role="doc-biblioref">2022</a>)</span> propose a novel approach, <strong>Causal-ARIMA (C-ARIMA)</strong>, to estimate the causal effect of an intervention in observational time series settings where no control unit is available.</p>
+<p>In this post, we will explore how to use <code>C-ARIMA</code> in <code>R</code> estimate the impact of a treatment in settings where no controls or comparisons are available. We will demonstrate that, under certain structural assumptions, the Causal ARIMA approach can effectively recover the average treatment effect, providing insights for decision-making in scenarios where traditional methods may not suffice.</p>
+<section id="online-book-sales-simulated-data" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> Online Book Sales: Simulated Data</h1>
+<p>We illustrate how the approach can be applied by estimating the causal effect of a <strong>permanent price reduction on daily online book sales</strong>. I generated a simulated dataset in which we observe a time series of daily sales overtime (<code>y</code>) and additional characteristics summarized in our variable <code>x1</code>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Simulate data</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fl">100</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/arima.sim.html">arima.sim</a></span><span class="op">(</span>model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>ar <span class="op">=</span> <span class="fl">0.999</span><span class="op">)</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1.2</span> <span class="op">*</span> <span class="va">x1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">y</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="fl">0.71</span><span class="op">)</span><span class="op">:</span><span class="va">n</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">y</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="fl">0.71</span><span class="op">)</span><span class="op">:</span><span class="va">n</span><span class="op">]</span> <span class="op">+</span> <span class="fl">10</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">x1</span><span class="op">)</span>  <span class="co"># Instead of cbind</span></span>
+<span><span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.Date.html">seq.Date</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2014-01-05"</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"days"</span>, length.out <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strptime.html">strftime</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="va">dates</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="st">"%Y-%m-%d"</span><span class="op">)</span>, <span class="st">"%u"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Adding a fictional intervention</span></span>
+<span><span class="va">int.date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2014-03-16"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Combine data and dates into a dataframe</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Date <span class="op">=</span> <span class="va">dates</span>, <span class="va">data</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Add day of the week as a column</span></span>
+<span><span class="va">df</span><span class="op">$</span><span class="va">DayOfWeek</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/weekday.POSIXt.html">weekdays</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We turn this into a <code>tsibble</code> object using the <code>tsibble()</code> function from the <code>fable</code> package <span class="citation" data-cites="hyndman2018">(<a href="#ref-hyndman2018" role="doc-biblioref">Hyndman and Athanasopoulos 2018</a>)</span>. This allows us to integrate closely with the <code>tidyverse</code> collection of packages.</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="va">df</span>  <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">as_tsibble</span><span class="op">(</span>index <span class="op">=</span> <span class="va">Date</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="#tbl-1" class="quarto-xref">Table&nbsp;1</a> shows a glimpse of the dataset:</p>
+<div class="cell" data-tbl.align="center">
+<div id="tbl-1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl.align="center">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Simulated Sales Dataset Overview
+</figcaption><div aria-describedby="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Date</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">y</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">x1</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">DayOfWeek</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2014-01-05</td>
+<td style="text-align: left;">105.2950</td>
+<td style="text-align: left;">88.21513</td>
+<td style="text-align: left;">Sunday</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2014-01-06</td>
+<td style="text-align: left;">105.8943</td>
+<td style="text-align: left;">88.48415</td>
+<td style="text-align: left;">Monday</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2014-01-07</td>
+<td style="text-align: left;">106.6209</td>
+<td style="text-align: left;">87.87684</td>
+<td style="text-align: left;">Tuesday</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2014-01-08</td>
+<td style="text-align: left;">106.1572</td>
+<td style="text-align: left;">86.77954</td>
+<td style="text-align: left;">Wednesday</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#fig-sales" class="quarto-xref">Figure&nbsp;1</a> shows the time series of volume of sales. with the intervention date starting on <em>March 15, 2014</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-sales" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="carima_data_files/figure-html/fig-sales-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Volume of Sales ($) Evolution
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>In this example, appropriate control series could be the sales of products that are not impacted by the <em>‘price reduction’</em> policy. However, if <strong><em>all products were impacted</em></strong> by the intervention, finding a valid comparison group becomes challenging.</p>
+<p>Let’s also assume all products received the intervention <strong><em>simultaneously</em></strong>, thereby precluding the adoption of the DiD estimators developed under variation in timing. Therefore, in our setting none of the methods mentioned above is applicable.</p>
+</section><section id="causal-arima-time-series" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> Causal ARIMA Time Series</h1>
+<div class="callout callout-style-simple callout-warning no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>The main idea behind the C-ARIMA methods consists of exploiting the time dynamics in the pre-intervention period to predict the series in the absence of intervention.</em></p>
+</div>
+</div>
+</div>
+<p><strong>Autoregressive Integrated Moving Average</strong> (<strong>ARIMA</strong>) models are classic statistical approaches to time series forecasting, when we are usually interested in <strong>predicting future scenarios</strong>. ARIMA models have desirable properties (tractability, consistency of the estimator of model parameters), and are suited to describe a wide variety of time series generated by complex, non-stationary processes.</p>
+<p>In Contrast, <strong>C-ARIMA</strong> is used to estimate the <strong>causal effect</strong> of an intervention in observational time series settings under a potential outcomes approach. Therefore, it complements the set of tools for causal inference on <strong>observational time series data</strong>.</p>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>C-ARIMA</strong> is tailored to estimate the effect of an intervention <strong>when no control series is available</strong> and when the number of <strong>pre-treatment periods is large</strong>, since it allows to fully exploit useful information provided by the pre-intervention dynamics. Conversely, by focusing on a few time points, DiD estimators and SCM have a limited ability to exploit long pre-treatment periods.</p>
+</div>
+</div>
+</div>
+<p>Oftentimes researchers are interested in a <strong>cumulative sum of point effects</strong>, e.g., Papadogeorgou et al.&nbsp;(2018) focus on estimating the total number of hospital readmissions due to the Hospital Readmission Reduction Program over the entire post-intervention period. Therefore, we also provide test statistics for two additional effects: the <strong>cumulative</strong> and the <strong>temporal average effect</strong>.</p>
+<section id="estimation-procedure-and-inference" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="estimation-procedure-and-inference">
+<span class="header-section-number">2.1</span> Estimation Procedure and Inference</h2>
+<p>In order to estimate the causal effects with C-ARIMA, we need to follow a three-step process:</p>
+<ol type="1">
+<li>Estimate the ARIMA model only in the <strong>pre-intervention period</strong>, so as to learn the dynamics of the dependent variable and the links with the covariates without being influenced by the treatment;</li>
+<li>Based on the process learned in the pre-intervention period, <strong>perform a prediction step</strong> and obtain an estimate of the counterfactual outcome during the post-intervention period in the absence of intervention;</li>
+<li>By comparing the <em>observations</em> with the corresponding <em>forecasts</em> at any time point in the post-intervention period, <strong>evaluate the resulting differences</strong>, which represent the <strong>estimated point causal effects</strong>.</li>
+</ol>
+<p>Let <span class="math inline">W_{i,t} ∈ (0, 1)</span> be a random variable describing the <strong>treatment assignment</strong> of unit <span class="math inline">i ∈ {1, . . . , N}</span> at time <span class="math inline">t ∈ {1, . . . , T}</span>, where <span class="math inline">1</span> denotes that a “treatment” (or “intervention”) has taken place and <span class="math inline">0</span> denotes control. Then, our <strong>estimands of interest</strong> are:</p>
+<p><span class="math display">
+\text{Point Causal Effect: } \tau_t(w,w') = Y_t(w) - Y_t(w') \\
+\text{Cumulative Causal Effect: } \Delta_t(w,w') = \sum^{t}_{s+t^*+1} \tau_t(w,w') \\
+\text{Average Causal Effect: } \bar\tau_t(w,w') = \frac{\Delta_t(w,w')}{t-t^*}
+</span></p>
+<p>Then, we have two options to perform inference on the estimated effects: (i) we can rely in the <strong>Normality</strong> of the error terms, or (ii) we can resort to a <strong>Bootstrap Strategy</strong> by using resampled residuals in order to compute empirical critical values.</p>
+</section></section><section id="application" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> Application</h1>
+<section id="c-arima-using-fable-package" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="c-arima-using-fable-package">
+<span class="header-section-number">3.1</span> C-ARIMA using <code>fable</code> package</h2>
+<p>Let’s start by fitting an ARIMA model on our pre-intervention period (between January and March 15):</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="va">df1</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">filter_index</span><span class="op">(</span><span class="st">"2014-01-05"</span> <span class="op">~</span> <span class="st">"2014-03-15"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">model</span><span class="op">(</span><span class="fu">ARIMA</span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">report</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="co">## ARIMA(0,0,0)(0,0,1)[7]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: y 
+Model: LM w/ ARIMA(0,0,0)(0,0,1)[7] errors 
+
+Coefficients:
+        sma1      x1
+      0.2050  1.1993
+s.e.  0.1229  0.0019
+
+sigma^2 estimated as 1.429:  log likelihood=-110.95
+AIC=227.9   AICc=228.26   BIC=234.64</code></pre>
+</div>
+</div>
+<p>Now we estimate the counterfactual outcome during the post-intervention period in the absence of intervention. For this, we first need to include the post-intervention evolution of the <code>x1</code> regressor:</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df1_x1</span> <span class="op">&lt;-</span> <span class="va">df1</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">Date</span>, <span class="va">x1</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">filter_index</span><span class="op">(</span><span class="st">"2014-03-16"</span> <span class="op">~</span> <span class="st">"2014-04-14"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we generate the forecasted values:</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generate the forecasted values using the fitted model</span></span>
+<span><span class="va">forecast_result</span> <span class="op">&lt;-</span> <span class="fu">forecast</span><span class="op">(</span><span class="va">fit</span>, new_data <span class="op">=</span> <span class="va">df1_x1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-carima1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-carima1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="carima_data_files/figure-html/fig-carima1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-carima1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Sales ($) ARIMA Forecast
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-carima1" class="quarto-xref">Figure&nbsp;2</a> provides a graphical representation of the observed time series and the forecasted series in the absence of intervention. At the 1-month time horizon, the causal effect is significantly positive at the 5% level. Additionally, our ARIMA model is able to closely follow the series during the pre-intervention period. We can summarize this fitness level by calculating RMSE and R-Squared scores:</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">##RMSE &amp; R2_Score</span></span>
+<span><span class="va">fore1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">select</span><span class="op">(</span><span class="va">Date</span>, <span class="va">.fitted</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">accuracy1</span> <span class="op">&lt;-</span> <span class="va">df1</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">left_join</span><span class="op">(</span><span class="va">fore1</span>, by<span class="op">=</span><span class="st">"Date"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">filter_index</span><span class="op">(</span><span class="st">"2014-01-05"</span> <span class="op">~</span> <span class="st">"2014-03-15"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">RMSE_CARIMA</span> <span class="op">&lt;-</span> <span class="fu">RMSE</span><span class="op">(</span><span class="va">accuracy1</span><span class="op">$</span><span class="va">.fitted</span>, <span class="va">accuracy1</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
+<span><span class="va">R2_CARIMA</span> <span class="op">&lt;-</span> <span class="fu">R2_Score</span><span class="op">(</span><span class="va">accuracy1</span><span class="op">$</span><span class="va">.fitted</span>, <span class="va">accuracy1</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Pre-Intervention RMSE: 1.178076 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pre-Intervention R-Squared: 0.8794006 </code></pre>
+</div>
+</div>
+<section id="point-causal-effects" class="level3" data-number="3.1.1"><h3 data-number="3.1.1" class="anchored" data-anchor-id="point-causal-effects">
+<span class="header-section-number">3.1.1</span> Point Causal Effects</h3>
+<p>The point causal effect at time <span class="math inline">t</span> can be estimated with the following code:</p>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ATE_df</span> <span class="op">&lt;-</span> <span class="va">df1</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Date</span> <span class="op">&gt;=</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"2014-03-16"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">Date</span> <span class="op">&lt;=</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"2014-04-14"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Point Effect</span></span>
+<span><span class="va">point_effect</span> <span class="op">&lt;-</span> <span class="va">ATE_df</span><span class="op">$</span><span class="va">y</span> <span class="op">-</span> <span class="va">forecast_result</span><span class="op">$</span><span class="va">y</span></span>
+<span></span>
+<span><span class="co"># Calculate the point estimate</span></span>
+<span><span class="va">point_estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">point_effect</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate the lower bound of the 95% confidence interval</span></span>
+<span><span class="va">lower_bound</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">point_effect</span>, <span class="fl">0.025</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate the upper bound of the 95% confidence interval</span></span>
+<span><span class="va">upper_bound</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">point_effect</span>, <span class="fl">0.975</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create a data frame</span></span>
+<span><span class="va">causal_effect_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  Date <span class="op">=</span> <span class="va">ATE_df</span><span class="op">$</span><span class="va">Date</span>,</span>
+<span>  Point_Estimate <span class="op">=</span> <span class="va">point_estimate</span>,</span>
+<span>  Lower_Bound <span class="op">=</span> <span class="va">lower_bound</span>,</span>
+<span>  Upper_Bound <span class="op">=</span> <span class="va">upper_bound</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-point_effect1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-point_effect1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="carima_data_files/figure-html/fig-point_effect1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-point_effect1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Causal Effect with 95% Confidence Intervals
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-point_effect1" class="quarto-xref">Figure&nbsp;3</a> we observe that the impact of the price policy change is quite constant in time, around $10.</p>
+</section><section id="average-causal-effects" class="level3" data-number="3.1.2"><h3 data-number="3.1.2" class="anchored" data-anchor-id="average-causal-effects">
+<span class="header-section-number">3.1.2</span> Average Causal Effects</h3>
+<p>The temporal average effect indicates the number of additional books sold daily, on average, due to the permanent price reduction. We also want to do some inference, standard errors and confidence intervals. A confidence interval gives an interval within which we expect <span class="math inline">y_t</span> to lie with a specified probability. For example, assuming that distribution of observations is normal, a 95% prediction interval for the <span class="math inline">h</span>- step forecast is:</p>
+<p><span class="math display">
+\hat{y}_{T+h|T} ± (1.96) \hat \sigma_h
+</span></p>
+<p>Let’s code this:</p>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calculate the point estimate</span></span>
+<span><span class="va">average_treatment_effect</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">point_estimate</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Standard error of the point estimates</span></span>
+<span><span class="va">variance_point_effect</span> <span class="op">&lt;-</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/variance.html">variance</a></span><span class="op">(</span><span class="va">point_effect</span><span class="op">)</span></span>
+<span><span class="va">standard_deviation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">variance_point_effect</span><span class="op">)</span></span>
+<span><span class="va">standard_error</span> <span class="op">&lt;-</span> <span class="va">standard_deviation</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">point_effect</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Confidence interval for the average treatment effect</span></span>
+<span><span class="va">ci_lower</span> <span class="op">&lt;-</span> <span class="va">average_treatment_effect</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">standard_error</span><span class="op">)</span></span>
+<span><span class="va">ci_upper</span> <span class="op">&lt;-</span> <span class="va">average_treatment_effect</span> <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">standard_error</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Average Causal Effect: 10.39115 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard Error: 0.2217059 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>95% Confidence Interval: [ 9.956609 ,  10.8257 ]</code></pre>
+</div>
+</div>
+</section><section id="bootstrapped-confidence-intervals" class="level3" data-number="3.1.3"><h3 data-number="3.1.3" class="anchored" data-anchor-id="bootstrapped-confidence-intervals">
+<span class="header-section-number">3.1.3</span> Bootstrapped Confidence Intervals</h3>
+<p>When a normal distribution for the residuals is an unreasonable assumption, one alternative is to use <strong>bootstrapping</strong>, which only assumes that the residuals are uncorrelated with constant variance. This is easily achieved by simply adding&nbsp;<code>bootstrap=TRUE</code>&nbsp;in the&nbsp;<code><a href="https://generics.r-lib.org/reference/forecast.html">forecast()</a></code>&nbsp;function.</p>
+<div class="cell">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">forecast_result</span> <span class="op">&lt;-</span> <span class="fu">forecast</span><span class="op">(</span><span class="va">fit</span>, new_data <span class="op">=</span> <span class="va">df1_x1</span>, bootstrap<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Point Effect</span></span>
+<span><span class="va">point_effect</span> <span class="op">&lt;-</span> <span class="va">ATE_df</span><span class="op">$</span><span class="va">y</span> <span class="op">-</span> <span class="va">forecast_result</span><span class="op">$</span><span class="va">y</span></span>
+<span></span>
+<span><span class="co"># Calculate the point estimate</span></span>
+<span><span class="va">point_estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">point_effect</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate the point estimate</span></span>
+<span><span class="va">average_treatment_effect</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">point_estimate</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Standard error of the point estimates</span></span>
+<span><span class="va">variance_point_effect</span> <span class="op">&lt;-</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/variance.html">variance</a></span><span class="op">(</span><span class="va">point_effect</span><span class="op">)</span></span>
+<span><span class="va">standard_deviation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">variance_point_effect</span><span class="op">)</span></span>
+<span><span class="va">standard_error</span> <span class="op">&lt;-</span> <span class="va">standard_deviation</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">point_effect</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Confidence interval for the average treatment effect</span></span>
+<span><span class="va">ci_lower</span> <span class="op">&lt;-</span> <span class="va">average_treatment_effect</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">standard_error</span><span class="op">)</span></span>
+<span><span class="va">ci_upper</span> <span class="op">&lt;-</span> <span class="va">average_treatment_effect</span> <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">standard_error</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Average Treatment Effect: 10.38964 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard Error: 0.2178212 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>95% Confidence Interval: [ 9.962708 ,  10.81657 ]</code></pre>
+</div>
+</div>
+<p>The results are quite similar in this case.</p>
+</section></section><section id="the-causalarima-package" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="the-causalarima-package">
+<span class="header-section-number">3.2</span> The <code>CausalARIMA</code> Package</h2>
+<p>The authors of the paper are developing an <code>R</code> package called <code>CausalArima</code> for easier and faster application of the proposed method. The development version of the package can be accessed from <a href="https://github.com/FMenchetti/CausalArima" class="uri">https://github.com/FMenchetti/CausalArima</a>.</p>
+<p>Let’s see how it works:</p>
+<div class="cell">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Install the missing dependencies first</span></span>
+<span><span class="co"># install.packages(c("tidybayes", "forecast", "ggplot2", "gridExtra", "quantmod"))</span></span>
+<span></span>
+<span><span class="co"># First update the locked packages (now that nothing holds them)</span></span>
+<span><span class="co"># install.packages(c("xfun", "stringi", "jsonlite", "rlang", "cli", </span></span>
+<span><span class="co">#                    "digest", "glue", "Rcpp", "vctrs", "stringr", "ggplot2"))</span></span>
+<span></span>
+<span><span class="co"># Then install CausalArima</span></span>
+<span><span class="co">#devtools::install_github("FMenchetti/CausalArima")</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">CausalArima</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Causal effect estimation</span></span>
+<span><span class="co"># fit the model - Causal effect estimation</span></span>
+<span><span class="va">ce</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CausalArima/man/CausalArima.html">CausalArima</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="va">y</span>, start <span class="op">=</span> <span class="va">start</span>, frequency <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
+<span>                  dates <span class="op">=</span> <span class="va">dates</span>, </span>
+<span>                  int.date <span class="op">=</span> <span class="va">int.date</span>,</span>
+<span>                  xreg <span class="op">=</span><span class="va">x1</span>, </span>
+<span>                  nboot <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>How to obtain the plot of the forecast:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-carima2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-carima2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="carima_data_files/figure-html/fig-carima2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-carima2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Sales ($) ARIMA Forecast
+</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">impact_p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ce</span>, type<span class="op">=</span><span class="st">"impact"</span>, color_line<span class="op">=</span><span class="va">mycolors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, color_intervals<span class="op">=</span><span class="st">"#91D1C2B2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html">grid.arrange</a></span><span class="op">(</span><span class="va">impact_p</span><span class="op">$</span><span class="va">plot</span>, <span class="va">impact_p</span><span class="op">$</span><span class="va">cumulative_plot</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="carima_data_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="inference" class="level3" data-number="3.2.1"><h3 data-number="3.2.1" class="anchored" data-anchor-id="inference">
+<span class="header-section-number">3.2.1</span> Inference</h3>
+<p>Doing inference with this package is straightforward, with the options of using the normality assumption or the bootstrap alternative:</p>
+<div class="cell">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">ce</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                      
+Point causal effect            12.257 
+Standard error                 1.211  
+Left-sided p-value             1      
+Bidirectional p-value          0      
+Right-sided p-value            0      
+                                      
+Cumulative causal effect       310.709
+Standard error                 6.634  
+Left-sided p-value             1      
+Bidirectional p-value          0      
+Right-sided p-value            0      
+                                      
+Temporal average causal effect 10.357 
+Standard error                 0.221  
+Left-sided p-value             1      
+Bidirectional p-value          0      
+Right-sided p-value            0      </code></pre>
+</div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">summary_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CausalArima/man/impact.html">impact</a></span><span class="op">(</span><span class="va">ce</span>, format<span class="op">=</span><span class="st">"html"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">summary_model</span><span class="op">$</span><span class="va">impact_norm</span><span class="op">$</span><span class="va">average</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead><tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sd</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p_value_left</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p_value_bidirectional</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p_value_right</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td style="text-align: right;">10.357</td>
+<td style="text-align: right;">0.221</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">summary_model</span><span class="op">$</span><span class="va">impact_boot</span><span class="op">$</span><span class="va">average</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">estimates</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">inf</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sup</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">sd</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">observed</td>
+<td style="text-align: right;">117.049</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">forecasted</td>
+<td style="text-align: right;">106.692</td>
+<td style="text-align: right;">106.264</td>
+<td style="text-align: right;">107.142</td>
+<td style="text-align: right;">0.222</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">absolute_effect</td>
+<td style="text-align: right;">10.357</td>
+<td style="text-align: right;">9.907</td>
+<td style="text-align: right;">10.784</td>
+<td style="text-align: right;">0.222</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">relative_effect</td>
+<td style="text-align: right;">0.097</td>
+<td style="text-align: right;">0.093</td>
+<td style="text-align: right;">0.101</td>
+<td style="text-align: right;">0.002</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section></section></section><section id="causal-prophet" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> Causal <code>Prophet</code>
+</h1>
+<p>So far, we have learned how to apply this framework using ARIMA models to identify causal effects.</p>
+<p>However, this approach can be <strong>generalized beyond ARIMA models</strong> to include other methods such as Neural Networks, Random Forest, and Exponential Smoothing.</p>
+<p>A recent proposal is the <strong>Prophet model</strong>, available via the&nbsp;<code>fable.prophet</code>&nbsp;package. This model was introduced by Facebook <span class="citation" data-cites="taylor2018">(<a href="#ref-taylor2018" role="doc-biblioref">Taylor and Letham 2018</a>)</span>, originally designed for forecasting daily data with weekly and yearly seasonality, including holiday effects. It has since been extended to accommodate various types of seasonal data. The Prophet model works best with time series that exhibit strong seasonality and have multiple seasons of historical data.</p>
+<p>We can use the same estimation procedure explained in the previous section, but replacing <code>ARIMA()</code> with the <code><a href="https://pkg.mitchelloharawild.com/fable.prophet/reference/prophet.html">prophet()</a></code> function:</p>
+<div class="cell">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#install.packages("fable.prophet")</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkg.mitchelloharawild.com/fable.prophet/">fable.prophet</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="va">df1</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">filter_index</span><span class="op">(</span><span class="st">"2014-01-05"</span> <span class="op">~</span> <span class="st">"2014-03-15"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://fabletools.tidyverts.org/reference/model.html">model</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://pkg.mitchelloharawild.com/fable.prophet/reference/prophet.html">prophet</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="fu">season</span><span class="op">(</span>period <span class="op">=</span> <span class="fl">1</span>, order <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generate the forecasted values using the fitted model</span></span>
+<span><span class="va">forecast_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/forecast.html">forecast</a></span><span class="op">(</span><span class="va">fit</span>, new_data <span class="op">=</span> <span class="va">df1_x1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-prohet1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-prohet1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="carima_data_files/figure-html/fig-prohet1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prohet1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Sales ($) PROPHET Forecast
+</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">##RMSE &amp; R2_Score</span></span>
+<span><span class="va">fore1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">select</span><span class="op">(</span><span class="va">Date</span>, <span class="va">.fitted</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">accuracy1</span> <span class="op">&lt;-</span> <span class="va">df1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">left_join</span><span class="op">(</span><span class="va">fore1</span>, by<span class="op">=</span><span class="st">"Date"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">filter_index</span><span class="op">(</span><span class="st">"2014-01-05"</span> <span class="op">~</span> <span class="st">"2014-03-15"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">RMSE_CARIMA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://fabletools.tidyverts.org/reference/point_accuracy_measures.html">RMSE</a></span><span class="op">(</span><span class="va">accuracy1</span><span class="op">$</span><span class="va">.fitted</span>, <span class="va">accuracy1</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
+<span><span class="va">R2_CARIMA</span> <span class="op">&lt;-</span> <span class="fu">R2_Score</span><span class="op">(</span><span class="va">accuracy1</span><span class="op">$</span><span class="va">.fitted</span>, <span class="va">accuracy1</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Pre-Intervention RMSE: 1.167918 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pre-Intervention R-Squared: 0.8814713 </code></pre>
+</div>
+</div>
+<section id="point-causal-effects-1" class="level3" data-number="4.0.1"><h3 data-number="4.0.1" class="anchored" data-anchor-id="point-causal-effects-1">
+<span class="header-section-number">4.0.1</span> Point Causal Effects</h3>
+<div class="cell">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ATE_df</span> <span class="op">&lt;-</span> <span class="va">df1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Date</span> <span class="op">&gt;=</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"2014-03-16"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">Date</span> <span class="op">&lt;=</span> <span class="fu">ymd</span><span class="op">(</span><span class="st">"2014-04-14"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Point Effect</span></span>
+<span><span class="va">point_effect</span> <span class="op">&lt;-</span> <span class="va">ATE_df</span><span class="op">$</span><span class="va">y</span> <span class="op">-</span> <span class="va">forecast_result</span><span class="op">$</span><span class="va">y</span></span>
+<span></span>
+<span><span class="co"># Calculate the point estimate</span></span>
+<span><span class="va">point_estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">point_effect</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate the lower bound of the 95% confidence interval</span></span>
+<span><span class="va">lower_bound</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">point_effect</span>, <span class="fl">0.025</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate the upper bound of the 95% confidence interval</span></span>
+<span><span class="va">upper_bound</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">point_effect</span>, <span class="fl">0.975</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create a data frame</span></span>
+<span><span class="va">causal_effect_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  Date <span class="op">=</span> <span class="va">ATE_df</span><span class="op">$</span><span class="va">Date</span>,</span>
+<span>  Point_Estimate <span class="op">=</span> <span class="va">point_estimate</span>,</span>
+<span>  Lower_Bound <span class="op">=</span> <span class="va">lower_bound</span>,</span>
+<span>  Upper_Bound <span class="op">=</span> <span class="va">upper_bound</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-point_effect2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-point_effect2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="carima_data_files/figure-html/fig-point_effect2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-point_effect2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Causal Effect with 95% Confidence Intervals
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section id="average-causal-effects-1" class="level3" data-number="4.0.2"><h3 data-number="4.0.2" class="anchored" data-anchor-id="average-causal-effects-1">
+<span class="header-section-number">4.0.2</span> Average Causal Effects</h3>
+<div class="cell">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calculate the point estimate</span></span>
+<span><span class="va">average_treatment_effect</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">point_estimate</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Standard error of the point estimates</span></span>
+<span><span class="va">variance_point_effect</span> <span class="op">&lt;-</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/variance.html">variance</a></span><span class="op">(</span><span class="va">point_effect</span><span class="op">)</span></span>
+<span><span class="va">standard_deviation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">variance_point_effect</span><span class="op">)</span></span>
+<span><span class="va">standard_error</span> <span class="op">&lt;-</span> <span class="va">standard_deviation</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">point_effect</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Confidence interval for the average treatment effect</span></span>
+<span><span class="va">ci_lower</span> <span class="op">&lt;-</span> <span class="va">average_treatment_effect</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">standard_error</span><span class="op">)</span></span>
+<span><span class="va">ci_upper</span> <span class="op">&lt;-</span> <span class="va">average_treatment_effect</span> <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">standard_error</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Average Treatment Effect: 11.22149 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard Error: 0.2129367 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>95% Confidence Interval: [ 10.80413 ,  11.63884 ]</code></pre>
+</div>
+</div>
+<p>In the end, we found a slightly higher average causal effect compared to C-ARIMA, but really similar in terms of economic significance.</p>
+</section></section><section id="conclusion" class="level1" data-number="5"><h1 data-number="5">
+<span class="header-section-number">5</span> Conclusion</h1>
+<p>In this article, we demonstrated how to estimate the causal effect of interventions using the <strong>Causal-ARIMA approach</strong>, a useful methods for when control groups are not available. We applied this method to a simulated dataset, showing the impact of a permanent price reduction on daily online book sales.</p>
+<p>Additionally, we explored the potential for generalizing this framework to other time series models, including the <strong>Prophet</strong> model. These tools provide novel solutions for causal inference in observational studies, with many potential applications.</p>
+</section><section id="references" class="level1 unnumbered"><h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-abadie2010" class="csl-entry" role="listitem">
+Abadie, Alberto, Alexis Diamond, and Jens Hainmueller. 2010. <span>“Synthetic Control Methods for Comparative Case Studies: Estimating the Effect of California<span>’</span>s Tobacco Control Program.”</span> <em>Journal of the American Statistical Association</em> 105 (490): 493–505. <a href="https://doi.org/10.1198/jasa.2009.ap08746">https://doi.org/10.1198/jasa.2009.ap08746</a>.
+</div>
+<div id="ref-angrist2008" class="csl-entry" role="listitem">
+Angrist, Joshua D., and Jörn-Steffen Pischke. 2008. <span>“Mostly Harmless Econometrics,”</span> December. <a href="https://doi.org/10.2307/j.ctvcm4j72">https://doi.org/10.2307/j.ctvcm4j72</a>.
+</div>
+<div id="ref-arkhangelsky2019" class="csl-entry" role="listitem">
+Arkhangelsky, Dmitry, Susan Athey, David Hirshberg, Guido Imbens, and Stefan Wager. 2019. <span>“Synthetic Difference in Differences.”</span> <a href="https://doi.org/10.3386/w25532">https://doi.org/10.3386/w25532</a>.
+</div>
+<div id="ref-hyndman2018" class="csl-entry" role="listitem">
+Hyndman, Rob J, and George Athanasopoulos. 2018. <em>Forecasting: Principles and Practice</em>. OTexts.
+</div>
+<div id="ref-menchetti2022" class="csl-entry" role="listitem">
+Menchetti, Fiammetta, Fabrizio Cipollini, and Fabrizia Mealli. 2022. <span>“Combining Counterfactual Outcomes and ARIMA Models for Policy Evaluation.”</span> <em>The Econometrics Journal</em> 26 (1): 1–24. <a href="https://doi.org/10.1093/ectj/utac024">https://doi.org/10.1093/ectj/utac024</a>.
+</div>
+<div id="ref-taylor2018" class="csl-entry" role="listitem">
+Taylor, Sean J., and Benjamin Letham. 2018. <span>“Forecasting at Scale.”</span> <em>The American Statistician</em> 72 (1): 37–45. <a href="https://doi.org/10.1080/00031305.2017.1380080">https://doi.org/10.1080/00031305.2017.1380080</a>.
+</div>
+</div>
+
+
+</section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/dannyredel\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2026 Daniel Redel</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

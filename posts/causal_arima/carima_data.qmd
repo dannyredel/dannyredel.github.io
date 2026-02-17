@@ -1,0 +1,546 @@
+---
+title: "Causal ARIMA Approach to Estimate Price Policy Changes on Sales"
+author: Daniel Redel
+date: "2024-05-22"
+categories: [Causal Inference, R, Time Series, ARIMA]
+image: "carima_cover.png"
+format: 
+  html:
+    toc: true
+    code-fold: false
+    html-math-method: katex
+    number-sections: true
+    colorlinks: true
+    link-citations: true
+bibliography: references.bib
+---
+
+C-ARIMA to estimate the causal effects in time series settings where no control unit is available.
+
+```{r setup, include=FALSE}
+rm(list=ls())
+library(tidyverse)
+library(kableExtra)
+library(modelsummary)
+library(gtsummary)
+library(ggpubr)
+library(devtools)
+library(distributional)
+library(fpp3)
+
+library(MLmetrics)
+
+mycolors <- c("#019875", "#3D5A80", "orange", "#E64B35B2", "#4DBBD5B2", "#00A087B2", "#3C5488B2", "#F39B7FB2", "#7E6148B2", "#91D1C2B2", "#DC0000B2", "#8491B4B2")
+```
+
+**What is the effect of price reduction on sales?** Imagine you are a popular e-commerce platform for books, such as [Waterstones](https://www.waterstones.com/). As a part of your marketing strategy, you decide to reduce prices on all books. Now, you're eager to assess the impact of this decision on the daily volume of sales. How can you measure this effect?
+
+Observational studies such as this pose significant challenges to identifying and estimating **causal effects**. Unlike [**A/B testing**](https://dannyredel.github.io/posts/ab_testing1/1_ab_testing.html) or randomized experiments, where the assignment mechanism (the process determining which units receive treatment and which receive control) is controlled and known, observational studies lack this clarity.
+
+Popular methods such as [Difference-in-Differences (DiD)](https://en.wikipedia.org/wiki/Difference_in_differences) [@angrist2008] and [Synthetic Control Methods (SCM)](https://en.wikipedia.org/wiki/Synthetic_control_method) [@abadie2010] have been extensively used to evaluate the impact of interventions in the absence of experimental data across various fields, including economics and marketing. Recent advancements even combine these approaches, as seen in the [Synthetic Difference-in-Differences (SDiD)](https://matheusfacure.github.io/python-causality-handbook/25-Synthetic-Diff-in-Diff.html) [@arkhangelsky2019] estimator.
+
+However, **these methods require the presence of control units** that did not experience the intervention. In cases of widespread policy changes affecting *all units*—such as our book price reduction example—finding untreated units is often impossible.
+
+On a recent article published in *The Econometrics Journal* ([Volume 26, Issue 1](https://academic.oup.com/ectj/issue/26/1)), @menchetti2022 propose a novel approach, **Causal-ARIMA (C-ARIMA)**, to estimate the causal effect of an intervention in observational time series settings where no control unit is available.
+
+In this post, we will explore how to use `C-ARIMA` in `R` estimate the impact of a treatment in settings where no controls or comparisons are available. We will demonstrate that, under certain structural assumptions, the Causal ARIMA approach can effectively recover the average treatment effect, providing insights for decision-making in scenarios where traditional methods may not suffice.
+
+# Online Book Sales: Simulated Data
+
+We illustrate how the approach can be applied by estimating the causal effect of a **permanent price reduction on daily online book sales**. I generated a simulated dataset in which we observe a time series of daily sales overtime (`y`) and additional characteristics summarized in our variable `x1`.
+
+```{r}
+# Simulate data
+n <- 100
+set.seed(1)
+x1 <- 100 + arima.sim(model = list(ar = 0.999), n = n)
+y <- 1.2 * x1 + rnorm(n)
+y[floor(n * 0.71):n] <- y[floor(n * 0.71):n] + 10
+data <- data.frame(y, x1)  # Instead of cbind
+dates <- seq.Date(from = as.Date("2014-01-05"), by = "days", length.out = n)
+start <- as.numeric(strftime(as.Date(dates[1], "%Y-%m-%d"), "%u"))
+
+# Adding a fictional intervention
+int.date <- as.Date("2014-03-16")
+
+# Combine data and dates into a dataframe
+df <- data.frame(Date = dates, data, stringsAsFactors = FALSE)
+
+# Add day of the week as a column
+df$DayOfWeek <- weekdays(df$Date)
+```
+
+We turn this into a `tsibble` object using the `tsibble()` function from the `fable` package [@hyndman2018]. This allows us to integrate closely with the `tidyverse` collection of packages.
+
+```{r}
+df1 <- df  %>% 
+  as_tsibble(index = Date)
+```
+
+@tbl-1 shows a glimpse of the dataset:
+
+```{r, tbl.align='center', echo=FALSE}
+#| label: tbl-1
+#| tbl-cap: "Simulated Sales Dataset Overview"
+#| fig-pos: "H"
+
+head(df1,4) %>% 
+  knitr::kable(
+    format = "html",
+    align = "l",
+    booktabs = TRUE,
+    #longtable = TRUE,
+    linesep = "",
+    ) %>%
+  kableExtra::kable_styling(
+      position = "left",
+      latex_options = c("striped", "repeat_header"),
+      stripe_color = "gray!15"
+    )
+```
+
+@fig-sales shows the time series of volume of sales. with the intervention date starting on *March 15, 2014*:
+
+```{r, fig.align='center', fig.width = 7, fig.height = 3.5, echo=FALSE}
+#| label: fig-sales
+#| fig-cap: "Volume of Sales ($) Evolution"
+
+df1 |>
+  #filter_index("2014-01-05" ~ "2014-03-15") |>
+    autoplot(y, colour = mycolors[1], size=0.6) +
+      labs(x="", y="Volume of Sales ($)") +
+        geom_vline(xintercept = as.numeric(ymd("2014-03-15")), 
+                   alpha=0.75, linewidth=0.8, linetype=6) + theme_minimal()
+```
+
+In this example, appropriate control series could be the sales of products that are not impacted by the *'price reduction'* policy. However, if ***all products were impacted*** by the intervention, finding a valid comparison group becomes challenging.
+
+Let's also assume all products received the intervention ***simultaneously***, thereby precluding the adoption of the DiD estimators developed under variation in timing. Therefore, in our setting none of the methods mentioned above is applicable.
+
+# Causal ARIMA Time Series
+
+::: {.callout-warning appearance="minimal"}
+*The main idea behind the C-ARIMA methods consists of exploiting the time dynamics in the pre-intervention period to predict the series in the absence of intervention.*
+:::
+
+**Autoregressive Integrated Moving Average** (**ARIMA**) models are classic statistical approaches to time series forecasting, when we are usually interested in **predicting future scenarios**. ARIMA models have desirable properties (tractability, consistency of the estimator of model parameters), and are suited to describe a wide variety of time series generated by complex, non-stationary processes.
+
+In Contrast, **C-ARIMA** is used to estimate the **causal effect** of an intervention in observational time series settings under a potential outcomes approach. Therefore, it complements the set of tools for causal inference on **observational time series data**.
+
+::: {.callout-caution appearance="minimal"}
+**C-ARIMA** is tailored to estimate the effect of an intervention **when no control series is available** and when the number of **pre-treatment periods is large**, since it allows to fully exploit useful information provided by the pre-intervention dynamics. Conversely, by focusing on a few time points, DiD estimators and SCM have a limited ability to exploit long pre-treatment periods.
+:::
+
+Oftentimes researchers are interested in a **cumulative sum of point effects**, e.g., Papadogeorgou et al. (2018) focus on estimating the total number of hospital readmissions due to the Hospital Readmission Reduction Program over the entire post-intervention period. Therefore, we also provide test statistics for two additional effects: the **cumulative** and the **temporal average effect**.
+
+## Estimation Procedure and Inference
+
+In order to estimate the causal effects with C-ARIMA, we need to follow a three-step process:
+
+1.  Estimate the ARIMA model only in the **pre-intervention period**, so as to learn the dynamics of the dependent variable and the links with the covariates without being influenced by the treatment;
+2.  Based on the process learned in the pre-intervention period, **perform a prediction step** and obtain an estimate of the counterfactual outcome during the post-intervention period in the absence of intervention;
+3.  By comparing the *observations* with the corresponding *forecasts* at any time point in the post-intervention period, **evaluate the resulting differences**, which represent the **estimated point causal effects**.
+
+Let $W_{i,t} ∈ (0, 1)$ be a random variable describing the **treatment assignment** of unit $i ∈ {1, . . . , N}$ at time $t ∈ {1, . . . , T}$, where $1$ denotes that a “treatment” (or “intervention”) has taken place and $0$ denotes control. Then, our **estimands of interest** are:
+
+$$
+\text{Point Causal Effect: } \tau_t(w,w') = Y_t(w) - Y_t(w') \\
+\text{Cumulative Causal Effect: } \Delta_t(w,w') = \sum^{t}_{s+t^*+1} \tau_t(w,w') \\
+\text{Average Causal Effect: } \bar\tau_t(w,w') = \frac{\Delta_t(w,w')}{t-t^*}
+$$
+
+Then, we have two options to perform inference on the estimated effects: (i) we can rely in the **Normality** of the error terms, or (ii) we can resort to a **Bootstrap Strategy** by using resampled residuals in order to compute empirical critical values.
+
+# Application
+
+## C-ARIMA using `fable` package
+
+Let's start by fitting an ARIMA model on our pre-intervention period (between January and March 15):
+
+```{r}
+fit <- df1 |>
+    filter_index("2014-01-05" ~ "2014-03-15") |>
+    model(ARIMA(y ~ x1)
+)
+
+report(fit) ## ARIMA(0,0,0)(0,0,1)[7]
+```
+
+Now we estimate the counterfactual outcome during the post-intervention period in the absence of intervention. For this, we first need to include the post-intervention evolution of the `x1` regressor:
+
+```{r}
+df1_x1 <- df1 %>% 
+  select(Date, x1) %>% 
+  filter_index("2014-03-16" ~ "2014-04-14")
+```
+
+Now we generate the forecasted values:
+
+```{r}
+# Generate the forecasted values using the fitted model
+forecast_result <- forecast(fit, new_data = df1_x1)
+```
+
+```{r, fig.align='center', fig.width = 7, fig.height = 4.5, echo=FALSE}
+#| label: fig-carima1
+#| fig-cap: "Sales ($) ARIMA Forecast"
+
+df1 %>%
+  ggplot(aes(x = Date)) +
+  geom_line(aes(y = y, colour = "Observed"), linewidth=0.6) +
+  
+  geom_line(data = fitted(fit), aes(y = .fitted, colour = "Forecast"), linetype=6, linewidth=0.6) +
+  
+  autolayer(forecast_result, alpha = 0.8, level = 95, show.legend = FALSE,
+            colour=mycolors[1], linewidth=0.6, linetype=6) +
+  
+  scale_colour_manual(values=c(Observed=mycolors[2], Forecast=mycolors[1])) +
+
+  geom_vline(xintercept = as.numeric(ymd("2014-03-16")), 
+             alpha = 0.75, linewidth=0.8, linetype=6) +
+  
+  labs(y = "Volume of Sales ($)", x="", colour = "Series") +
+  theme_minimal() +
+  theme(legend.position = "bottom") 
+```
+
+@fig-carima1 provides a graphical representation of the observed time series and the forecasted series in the absence of intervention. At the 1-month time horizon, the causal effect is significantly positive at the 5% level. Additionally, our ARIMA model is able to closely follow the series during the pre-intervention period. We can summarize this fitness level by calculating RMSE and R-Squared scores:
+
+```{r}
+##RMSE & R2_Score
+fore1 <- fitted(fit) %>% select(Date, .fitted)
+
+accuracy1 <- df1 %>% 
+  left_join(fore1, by="Date") %>% 
+  filter_index("2014-01-05" ~ "2014-03-15")
+
+RMSE_CARIMA <- RMSE(accuracy1$.fitted, accuracy1$y)
+R2_CARIMA <- R2_Score(accuracy1$.fitted, accuracy1$y)
+```
+
+```{r, echo=FALSE}
+cat("Pre-Intervention RMSE:", RMSE_CARIMA, "\n")
+cat("Pre-Intervention R-Squared:", R2_CARIMA, "\n")
+```
+
+### Point Causal Effects
+
+The point causal effect at time $t$ can be estimated with the following code:
+
+```{r}
+ATE_df <- df1 %>% 
+  filter(Date >= ymd("2014-03-16") & Date <= ymd("2014-04-14"))
+
+# Point Effect
+point_effect <- ATE_df$y - forecast_result$y
+
+# Calculate the point estimate
+point_estimate <- mean(point_effect)
+
+# Calculate the lower bound of the 95% confidence interval
+lower_bound <- quantile(point_effect, 0.025)
+
+# Calculate the upper bound of the 95% confidence interval
+upper_bound <- quantile(point_effect, 0.975)
+
+# Create a data frame
+causal_effect_df <- data.frame(
+  Date = ATE_df$Date,
+  Point_Estimate = point_estimate,
+  Lower_Bound = lower_bound,
+  Upper_Bound = upper_bound
+)
+```
+
+```{r, fig.align='center', fig.width = 7, fig.height = 3, echo=FALSE}
+#| label: fig-point_effect1
+#| fig-cap: "Causal Effect with 95% Confidence Intervals"
+
+# Plot the causal effect with confidence intervals
+ggplot(causal_effect_df, aes(x = Date, y = Point_Estimate)) +
+  geom_line(linewidth=0.6, colour=mycolors[1]) +
+  geom_ribbon(aes(ymin = Lower_Bound, ymax = Upper_Bound), 
+              alpha = 0.2, fill = mycolors[1]) +
+  labs(y = "Point Causal Effect", x="") +
+  theme_minimal()
+```
+
+In @fig-point_effect1 we observe that the impact of the price policy change is quite constant in time, around \$10.
+
+### Average Causal Effects
+
+The temporal average effect indicates the number of additional books sold daily, on average, due to the permanent price reduction. We also want to do some inference, standard errors and confidence intervals. A confidence interval gives an interval within which we expect $y_t$ to lie with a specified probability. For example, assuming that distribution of observations is normal, a 95% prediction interval for the $h$- step forecast is:
+
+$$
+\hat{y}_{T+h|T} ± (1.96) \hat \sigma_h
+$$
+
+Let's code this:
+
+```{r}
+# Calculate the point estimate
+average_treatment_effect  <- mean(point_estimate)
+
+# Standard error of the point estimates
+variance_point_effect <- distributional::variance(point_effect)
+standard_deviation <- sqrt(variance_point_effect)
+standard_error <- standard_deviation / sqrt(length(point_effect))
+
+# Confidence interval for the average treatment effect
+ci_lower <- average_treatment_effect - 1.96 * mean(standard_error)
+ci_upper <- average_treatment_effect + 1.96 * mean(standard_error)
+```
+
+```{r, echo=FALSE}
+# Print the results
+cat("Average Causal Effect:", average_treatment_effect, "\n")
+cat("Standard Error:", mean(standard_error), "\n")
+cat("95% Confidence Interval: [", ci_lower, ", ", ci_upper, "]\n")
+```
+
+### Bootstrapped Confidence Intervals
+
+When a normal distribution for the residuals is an unreasonable assumption, one alternative is to use **bootstrapping**, which only assumes that the residuals are uncorrelated with constant variance. This is easily achieved by simply adding `bootstrap=TRUE` in the `forecast()` function.
+
+```{r}
+forecast_result <- forecast(fit, new_data = df1_x1, bootstrap=TRUE)
+
+# Point Effect
+point_effect <- ATE_df$y - forecast_result$y
+
+# Calculate the point estimate
+point_estimate <- mean(point_effect)
+
+# Calculate the point estimate
+average_treatment_effect  <- mean(point_estimate)
+
+# Standard error of the point estimates
+variance_point_effect <- distributional::variance(point_effect)
+standard_deviation <- sqrt(variance_point_effect)
+standard_error <- standard_deviation / sqrt(length(point_effect))
+
+
+# Confidence interval for the average treatment effect
+ci_lower <- average_treatment_effect - 1.96 * mean(standard_error)
+ci_upper <- average_treatment_effect + 1.96 * mean(standard_error)
+```
+
+```{r, echo=FALSE}
+# Print the results
+cat("Average Treatment Effect:", average_treatment_effect, "\n")
+cat("Standard Error:", mean(standard_error), "\n")
+cat("95% Confidence Interval: [", ci_lower, ", ", ci_upper, "]\n")
+```
+
+The results are quite similar in this case.
+
+## The `CausalARIMA` Package
+
+The authors of the paper are developing an `R` package called `CausalArima` for easier and faster application of the proposed method. The development version of the package can be accessed from <https://github.com/FMenchetti/CausalArima>.
+
+Let's see how it works:
+
+```{r, warning=FALSE, output=FALSE}
+# Install the missing dependencies first
+# install.packages(c("tidybayes", "forecast", "ggplot2", "gridExtra", "quantmod"))
+
+# First update the locked packages (now that nothing holds them)
+# install.packages(c("xfun", "stringi", "jsonlite", "rlang", "cli", 
+#                    "digest", "glue", "Rcpp", "vctrs", "stringr", "ggplot2"))
+
+# Then install CausalArima
+#devtools::install_github("FMenchetti/CausalArima")
+
+library(CausalArima)
+```
+
+```{r}
+# Causal effect estimation
+# fit the model - Causal effect estimation
+ce <- CausalArima(y = ts(y, start = start, frequency = 1), 
+                  dates = dates, 
+                  int.date = int.date,
+                  xreg =x1, 
+                  nboot = 1000)
+```
+
+How to obtain the plot of the forecast:
+
+```{r, fig.align='center', fig.width = 7, fig.height = 4.5, echo=FALSE}
+#| label: fig-carima2
+#| fig-cap: "Sales ($) ARIMA Forecast"
+
+forecasted <- plot(ce, type="forecast", fill_colour="#91D1C2B2",
+               colours=c(mycolors[1], mycolors[2]), lines_size=0.6)
+forecasted + theme_minimal() + theme(legend.position="bottom")
+```
+
+```{r}
+impact_p <- plot(ce, type="impact", color_line=mycolors[1], color_intervals="#91D1C2B2")
+grid.arrange(impact_p$plot, impact_p$cumulative_plot)
+```
+
+### Inference
+
+Doing inference with this package is straightforward, with the options of using the normality assumption or the bootstrap alternative:
+
+```{r}
+summary(ce)
+summary_model <- impact(ce, format="html")
+```
+
+```{r}
+summary_model$impact_norm$average
+```
+
+```{r}
+summary_model$impact_boot$average
+```
+
+# Causal `Prophet`
+
+So far, we have learned how to apply this framework using ARIMA models to identify causal effects.
+
+However, this approach can be **generalized beyond ARIMA models** to include other methods such as Neural Networks, Random Forest, and Exponential Smoothing.
+
+A recent proposal is the **Prophet model**, available via the `fable.prophet` package. This model was introduced by Facebook [@taylor2018], originally designed for forecasting daily data with weekly and yearly seasonality, including holiday effects. It has since been extended to accommodate various types of seasonal data. The Prophet model works best with time series that exhibit strong seasonality and have multiple seasons of historical data.
+
+We can use the same estimation procedure explained in the previous section, but replacing `ARIMA()` with the `prophet()` function:
+
+```{r, warning=FALSE, output=FALSE}
+#install.packages("fable.prophet")
+library(fable.prophet)
+```
+
+```{r}
+fit <- df1 |>
+    filter_index("2014-01-05" ~ "2014-03-15") |>
+    model(
+      prophet(y ~ x1 + season(period = 1, order = 2)
+    )
+)
+```
+
+```{r}
+# Generate the forecasted values using the fitted model
+forecast_result <- forecast(fit, new_data = df1_x1)
+```
+
+```{r, fig.align='center', fig.width = 7, fig.height = 4.5, echo=FALSE}
+#| label: fig-prohet1
+#| fig-cap: "Sales ($) PROPHET Forecast"
+
+df1 %>%
+  ggplot(aes(x = Date)) +
+  geom_line(aes(y = y, colour = "Observed"), linewidth=0.6) +
+  
+  geom_line(data = fitted(fit), aes(y = .fitted, colour = "Forecast"), linetype=6, linewidth=0.6) +
+  
+  autolayer(forecast_result, alpha = 0.8, level = 95, show.legend = FALSE,
+            colour=mycolors[1], linewidth=0.6, linetype=6) +
+  
+  scale_colour_manual(values=c(Observed=mycolors[2], Forecast=mycolors[1])) +
+
+  geom_vline(xintercept = as.numeric(ymd("2014-03-16")), 
+             alpha = 0.75, linewidth=0.8, linetype=6) +
+  
+  labs(y = "Volume of Sales ($)", x="", colour = "Series") +
+  theme_minimal() +
+  theme(legend.position = "bottom") 
+```
+
+```{r}
+##RMSE & R2_Score
+fore1 <- fitted(fit) %>% select(Date, .fitted)
+
+accuracy1 <- df1 %>% 
+  left_join(fore1, by="Date") %>% 
+  filter_index("2014-01-05" ~ "2014-03-15")
+
+RMSE_CARIMA <- RMSE(accuracy1$.fitted, accuracy1$y)
+R2_CARIMA <- R2_Score(accuracy1$.fitted, accuracy1$y)
+```
+
+```{r, echo=FALSE}
+cat("Pre-Intervention RMSE:", RMSE_CARIMA, "\n")
+cat("Pre-Intervention R-Squared:", R2_CARIMA, "\n")
+```
+
+### Point Causal Effects
+
+```{r}
+ATE_df <- df1 %>% 
+  filter(Date >= ymd("2014-03-16") & Date <= ymd("2014-04-14"))
+
+# Point Effect
+point_effect <- ATE_df$y - forecast_result$y
+
+# Calculate the point estimate
+point_estimate <- mean(point_effect)
+
+# Calculate the lower bound of the 95% confidence interval
+lower_bound <- quantile(point_effect, 0.025)
+
+# Calculate the upper bound of the 95% confidence interval
+upper_bound <- quantile(point_effect, 0.975)
+
+# Create a data frame
+causal_effect_df <- data.frame(
+  Date = ATE_df$Date,
+  Point_Estimate = point_estimate,
+  Lower_Bound = lower_bound,
+  Upper_Bound = upper_bound
+)
+```
+
+```{r, fig.align='center', fig.width = 7, fig.height = 3, echo=FALSE}
+#| label: fig-point_effect2
+#| fig-cap: "Causal Effect with 95% Confidence Intervals"
+
+# Plot the causal effect with confidence intervals
+ggplot(causal_effect_df, aes(x = Date, y = Point_Estimate)) +
+  geom_line(linewidth=0.6, colour=mycolors[1]) +
+  geom_ribbon(aes(ymin = Lower_Bound, ymax = Upper_Bound), 
+              alpha = 0.2, fill = mycolors[1]) +
+  labs(y = "Point Causal Effect", x="") +
+  theme_minimal()
+
+```
+
+### Average Causal Effects
+
+```{r}
+# Calculate the point estimate
+average_treatment_effect  <- mean(point_estimate)
+
+# Standard error of the point estimates
+variance_point_effect <- distributional::variance(point_effect)
+standard_deviation <- sqrt(variance_point_effect)
+standard_error <- standard_deviation / sqrt(length(point_effect))
+
+
+# Confidence interval for the average treatment effect
+ci_lower <- average_treatment_effect - 1.96 * mean(standard_error)
+ci_upper <- average_treatment_effect + 1.96 * mean(standard_error)
+
+```
+
+```{r, echo=FALSE}
+# Print the results
+cat("Average Treatment Effect:", average_treatment_effect, "\n")
+cat("Standard Error:", mean(standard_error), "\n")
+cat("95% Confidence Interval: [", ci_lower, ", ", ci_upper, "]\n")
+```
+
+In the end, we found a slightly higher average causal effect compared to C-ARIMA, but really similar in terms of economic significance.
+
+# Conclusion
+
+In this article, we demonstrated how to estimate the causal effect of interventions using the **Causal-ARIMA approach**, a useful methods for when control groups are not available. We applied this method to a simulated dataset, showing the impact of a permanent price reduction on daily online book sales.
+
+Additionally, we explored the potential for generalizing this framework to other time series models, including the **Prophet** model. These tools provide novel solutions for causal inference in observational studies, with many potential applications.
+
+# References {.unnumbered}
+
+::: {#refs}
+:::
