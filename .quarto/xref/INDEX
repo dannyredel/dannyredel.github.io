@@ -28,5 +28,8 @@
   },
   "research.qmd": {
     "research.html": "b252a61a"
+  },
+  "posts/ab_test_bayesian/bayesian_ab_test.ipynb": {
+    "bayesian_ab_test.html": "372da3e3"
   }
 }

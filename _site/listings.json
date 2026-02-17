@@ -2,6 +2,7 @@
   {
     "listing": "/myposts.html",
     "items": [
+      "/posts/ab_test_bayesian/bayesian_ab_test.html",
       "/posts/ab_testing1/1_ab_testing.html",
       "/posts/nonparametrics/nonparametrics.html",
       "/posts/jupyter-first/hello.html"
@@ -14,6 +15,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/ab_test_bayesian/bayesian_ab_test.html",
       "/posts/ab_testing1/1_ab_testing.html",
       "/posts/nonparametrics/nonparametrics.html",
       "/posts/jupyter-first/hello.html"
