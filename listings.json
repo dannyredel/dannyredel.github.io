@@ -4,10 +4,11 @@
     "items": []
   },
   {
-    "listing": "/myposts.html",
+    "listing": "/index.html",
     "items": [
       "/posts/event_study_best_practices/event_study_best_practices.html",
       "/posts/event_study_comparison/event_study_comparison.html",
+      "/posts/parallel_trends_sensitivity/parallel_trends_sensitivity.html",
       "/posts/synthetic_did/synthetic_did.html",
       "/posts/causal_forests/causal_forests.html",
       "/posts/causal_arima/carima_data.html",
@@ -19,10 +20,11 @@
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/myposts.html",
     "items": [
       "/posts/event_study_best_practices/event_study_best_practices.html",
       "/posts/event_study_comparison/event_study_comparison.html",
+      "/posts/parallel_trends_sensitivity/parallel_trends_sensitivity.html",
       "/posts/synthetic_did/synthetic_did.html",
       "/posts/causal_forests/causal_forests.html",
       "/posts/causal_arima/carima_data.html",
