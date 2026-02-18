@@ -46,5 +46,8 @@
   },
   "posts/causal_forests/causal_forests.ipynb": {
     "causal_forests.html": "a7470f7d"
+  },
+  "posts/synthetic_did/synthetic_did.ipynb": {
+    "synthetic_did.html": "15521baa"
   }
 }

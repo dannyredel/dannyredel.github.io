@@ -4,8 +4,9 @@
     "items": []
   },
   {
-    "listing": "/index.html",
+    "listing": "/myposts.html",
     "items": [
+      "/posts/synthetic_did/synthetic_did.html",
       "/posts/causal_forests/causal_forests.html",
       "/posts/causal_arima/carima_data.html",
       "/posts/ab_test_bayesian/bayesian_ab_test.html",
@@ -16,8 +17,9 @@
     ]
   },
   {
-    "listing": "/myposts.html",
+    "listing": "/index.html",
     "items": [
+      "/posts/synthetic_did/synthetic_did.html",
       "/posts/causal_forests/causal_forests.html",
       "/posts/causal_arima/carima_data.html",
       "/posts/ab_test_bayesian/bayesian_ab_test.html",
