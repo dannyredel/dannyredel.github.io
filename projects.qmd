@@ -14,11 +14,11 @@ listing:
     fields: [title, description, image, categories, date]
     contents:
 
-    - title: "diff-diff: Visualization & Honest Inference Extensions"
-      description: "Contributing ggfixest-inspired plotting tools and honest inference layers to the diff-diff Python package. Features include ribbon/nested CIs, multi-model dodge & facet plots, simultaneous confidence bands, smoothest confounding paths, functional SCBs, and aggregate effect overlays."
+    - title: "didkit: Enhanced Plotting & Inference for Difference-in-Differences"
+      description: "A Python package bringing R's ggfixest plotting capabilities and HonestDiD inference tools to Python. Features event study plots with nested CIs, simultaneous confidence bands, pre-trend testing, smoothest confounding paths, and multi-model comparisons. Companion library to diff-diff."
       categories: [Python, Causal Inference, Difference-in-Differences, Data Visualization, Open Source]
       date: 2026-02-18
-      path: "https://github.com/igerber/diff-diff"
+      path: "https://github.com/dannyredel/didkit"
       image: "assets/cover/diff-diff.png"
 
     - title: "Customer Segmentation & Recommendation Engine"

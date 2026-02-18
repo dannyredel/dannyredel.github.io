@@ -392,6 +392,41 @@
     "text": "Education\n\n\nMSc. in Econometrics & Mathematical Economics\nTilburg University\n\n\nJan 2024\n\n\n\n\nMSc. in Applied Economics\nPUC Chile\n\n\n2021\n\n\n\n\nBSc. in Economics & Business Administration\nPUC Chile\n\n\n2020"
   },
   {
+    "objectID": "BLOG_PLAN.html",
+    "href": "BLOG_PLAN.html",
+    "title": "Blog Post Plan — DiD Series",
+    "section": "",
+    "text": "#\nPost\nFile\nStatus\n\n\n\n\n1\nInterpreting Event Studies Across Modern DiD Methods\nposts/event_study_comparison/event_study_comparison.ipynb\nDone\n\n\n2\nFive Ways to Improve Your Event Study Plots\nposts/event_study_best_practices/event_study_best_practices.ipynb\nDone\n\n\n3\nSensitivity Analysis for Parallel Trends\nposts/parallel_trends_sensitivity/parallel_trends_sensitivity.ipynb\nDone\n\n\n—\nSynthDiD post updated with TROP (Athey et al. 2025)\nposts/synthetic_did/synthetic_did.ipynb\nDone\n\n\n—\nProject entry for diff-diff contribution\nprojects.qmd\nDone\n\n\n\n\n\n\n\n\n\nCluster-robust, heteroskedasticity-robust, bootstrap, Wild Cluster Bootstrap\nHansen (2025) — “Standard Errors for Difference-in-Difference Regression”\nReference PDF in notebooks/J of Applied Econometrics - 2025 - Hansen...pdf\n\n\n\n\n\nCover images needed for all new posts:\n\nposts/event_study_comparison/ (referenced as event_study_cover.png)\nposts/event_study_best_practices/ (referenced as best_practices_cover.png)\nposts/parallel_trends_sensitivity/ (referenced as sensitivity_cover.png)\nassets/cover/diff-diff.png (project card)\n\n\n\n\n\n\n\nnotebooks/diff_diff_plotting_exploration.ipynb — ggfixest gap analysis, iplot_data(), ggiplot() prototypes\nnotebooks/honest_inference_exploration.ipynb — sup-t bands, smoothest path, functional SCBs, multi-model fairness\n\n\n\n\n\nBuilt at C:\\Users\\danny\\OneDrive\\Profesional\\diff-diff-contrib\nVisualization & honest inference extensions for the diff-diff package"
+  },
+  {
+    "objectID": "BLOG_PLAN.html#completed",
+    "href": "BLOG_PLAN.html#completed",
+    "title": "Blog Post Plan — DiD Series",
+    "section": "",
+    "text": "#\nPost\nFile\nStatus\n\n\n\n\n1\nInterpreting Event Studies Across Modern DiD Methods\nposts/event_study_comparison/event_study_comparison.ipynb\nDone\n\n\n2\nFive Ways to Improve Your Event Study Plots\nposts/event_study_best_practices/event_study_best_practices.ipynb\nDone\n\n\n3\nSensitivity Analysis for Parallel Trends\nposts/parallel_trends_sensitivity/parallel_trends_sensitivity.ipynb\nDone\n\n\n—\nSynthDiD post updated with TROP (Athey et al. 2025)\nposts/synthetic_did/synthetic_did.ipynb\nDone\n\n\n—\nProject entry for diff-diff contribution\nprojects.qmd\nDone"
+  },
+  {
+    "objectID": "BLOG_PLAN.html#remaining",
+    "href": "BLOG_PLAN.html#remaining",
+    "title": "Blog Post Plan — DiD Series",
+    "section": "",
+    "text": "Cluster-robust, heteroskedasticity-robust, bootstrap, Wild Cluster Bootstrap\nHansen (2025) — “Standard Errors for Difference-in-Difference Regression”\nReference PDF in notebooks/J of Applied Econometrics - 2025 - Hansen...pdf\n\n\n\n\n\nCover images needed for all new posts:\n\nposts/event_study_comparison/ (referenced as event_study_cover.png)\nposts/event_study_best_practices/ (referenced as best_practices_cover.png)\nposts/parallel_trends_sensitivity/ (referenced as sensitivity_cover.png)\nassets/cover/diff-diff.png (project card)"
+  },
+  {
+    "objectID": "BLOG_PLAN.html#exploration-notebooks-source-material",
+    "href": "BLOG_PLAN.html#exploration-notebooks-source-material",
+    "title": "Blog Post Plan — DiD Series",
+    "section": "",
+    "text": "notebooks/diff_diff_plotting_exploration.ipynb — ggfixest gap analysis, iplot_data(), ggiplot() prototypes\nnotebooks/honest_inference_exploration.ipynb — sup-t bands, smoothest path, functional SCBs, multi-model fairness"
+  },
+  {
+    "objectID": "BLOG_PLAN.html#python-package-separate-project",
+    "href": "BLOG_PLAN.html#python-package-separate-project",
+    "title": "Blog Post Plan — DiD Series",
+    "section": "",
+    "text": "Built at C:\\Users\\danny\\OneDrive\\Profesional\\diff-diff-contrib\nVisualization & honest inference extensions for the diff-diff package"
+  },
+  {
     "objectID": "myposts.html",
     "href": "myposts.html",
     "title": "Blog",
@@ -865,6 +900,6 @@
     "href": "projects.html",
     "title": "Projects",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\ndiff-diff: Visualization & Honest Inference Extensions\n\n\n\nPython\n\nCausal Inference\n\nDifference-in-Differences\n\nData Visualization\n\nOpen Source\n\n\n\nContributing ggfixest-inspired plotting tools and honest inference layers to the diff-diff Python package. Features include ribbon/nested CIs, multi-model dodge & facet…\n\n\n\n18 February 2026\n\n\n\n\n\n\n\n\n\n\n\n\n\nCustomer Segmentation & Recommendation Engine\n\n\n\nPython\n\nPySpark\n\nMachine Learning\n\nNLP\n\nDocker\n\nGCP\n\nFastAPI\n\nscikit-learn\n\n\n\nEnd-to-end ML system: PySpark feature engineering, BERT sentiment analysis, K-Means segmentation, and hybrid recommendation engine. Deployed as a live API on GCP Cloud Run…\n\n\n\n17 February 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nPriceScope: Open-Source Conjoint Analysis with Synthetic Respondents\n\n\n\nPython\n\nConjoint Analysis\n\nDiscrete Choice\n\nPyBLP\n\nFastAPI\n\n\n\n\n15 January 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning with Python: A Quick Guide\n\n\n\nMachine Learning\n\nPython\n\nscikit-learn\n\n\n\n\n30 March 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\nAmsterdam Airbnb Price Prediction: A Machine Learning Approach\n\n\n\nPython\n\nGeospatial Analysis\n\nMachine Learning\n\ngeopandas\n\nscikit-learn\n\n\n\n\n11 March 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\nCustomer Analytics with R\n\n\n\nR & Rstudio\n\nA/B Testing\n\nMachine Learning\n\n\n\n\n01 December 2022\n\n\n\n\n\n\nNo matching items\n Back to top"
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\ndidkit: Enhanced Plotting & Inference for Difference-in-Differences\n\n\n\nPython\n\nCausal Inference\n\nDifference-in-Differences\n\nData Visualization\n\nOpen Source\n\n\n\nA Python package bringing R’s ggfixest plotting capabilities and HonestDiD inference tools to Python. Features event study plots with nested CIs, simultaneous confidence…\n\n\n\n18 February 2026\n\n\n\n\n\n\n\n\n\n\n\n\n\nCustomer Segmentation & Recommendation Engine\n\n\n\nPython\n\nPySpark\n\nMachine Learning\n\nNLP\n\nDocker\n\nGCP\n\nFastAPI\n\nscikit-learn\n\n\n\nEnd-to-end ML system: PySpark feature engineering, BERT sentiment analysis, K-Means segmentation, and hybrid recommendation engine. Deployed as a live API on GCP Cloud Run…\n\n\n\n17 February 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nPriceScope: Open-Source Conjoint Analysis with Synthetic Respondents\n\n\n\nPython\n\nConjoint Analysis\n\nDiscrete Choice\n\nPyBLP\n\nFastAPI\n\n\n\n\n15 January 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nMachine Learning with Python: A Quick Guide\n\n\n\nMachine Learning\n\nPython\n\nscikit-learn\n\n\n\n\n30 March 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\nAmsterdam Airbnb Price Prediction: A Machine Learning Approach\n\n\n\nPython\n\nGeospatial Analysis\n\nMachine Learning\n\ngeopandas\n\nscikit-learn\n\n\n\n\n11 March 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\nCustomer Analytics with R\n\n\n\nR & Rstudio\n\nA/B Testing\n\nMachine Learning\n\n\n\n\n01 December 2022\n\n\n\n\n\n\nNo matching items\n Back to top"
   }
 ]
