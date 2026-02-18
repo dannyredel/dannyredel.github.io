@@ -80,7 +80,8 @@ ul.task-list li input[type="checkbox"] {
 
     const options = {
       valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
-      
+      page: 9,
+    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
       searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
     };
 
@@ -197,7 +198,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-cloud"><div class="category" data-category="QSUyRkIlMjBUZXN0aW5n"><span class="quarto-category-count category-cloud-3">A/B Testing</span></div><div class="category" data-category="QVJJTUE="><span class="quarto-category-count category-cloud-2">ARIMA</span></div><div class="category" data-category="QmF5ZXNpYW4lMjBTdGF0aXN0aWNz"><span class="quarto-category-count category-cloud-2">Bayesian Statistics</span></div><div class="category" data-category="QmluYXJ5JTIwQ2hvaWNlJTIwTW9kZWxz"><span class="quarto-category-count category-cloud-3">Binary Choice Models</span></div><div class="category" data-category="Q2F1c2FsJTIwSW5mZXJlbmNl"><span class="quarto-category-count category-cloud-8">Causal Inference</span></div><div class="category" data-category="Q29tcGV0aXRpb24lMjAlMjYlMjBBbnRpdHJ1c3Q="><span class="quarto-category-count category-cloud-3">Competition &amp; Antitrust</span></div><div class="category" data-category="RGlmZi1pbi1EaWZm"><span class="quarto-category-count category-cloud-2">Diff-in-Diff</span></div><div class="category" data-category="RGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcw=="><span class="quarto-category-count category-cloud-2">Difference-in-Differences</span></div><div class="category" data-category="RWNvbm9tZXRyaWNz"><span class="quarto-category-count category-cloud-2">Econometrics</span></div><div class="category" data-category="R2Fzb2xpbmUlMjBJbmR1c3RyeQ=="><span class="quarto-category-count category-cloud-2">Gasoline Industry</span></div><div class="category" data-category="SGV0ZXJvZ2VuZW91cyUyMFRyZWF0bWVudCUyMEVmZmVjdHM="><span class="quarto-category-count category-cloud-2">Heterogeneous Treatment Effects</span></div><div class="category" data-category="S2VybmVsJTIwRGVuc2l0eSUyMEVzdGltYXRpb24="><span class="quarto-category-count category-cloud-2">Kernel Density Estimation</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n"><span class="quarto-category-count category-cloud-2">Machine Learning</span></div><div class="category" data-category="Tm9ucGFyYW1ldHJpYyUyMFJlZ3Jlc3Npb24="><span class="quarto-category-count category-cloud-2">Nonparametric Regression</span></div><div class="category" data-category="UHl0aG9u"><span class="quarto-category-count category-cloud-5">Python</span></div><div class="category" data-category="Ug=="><span class="quarto-category-count category-cloud-3">R</span></div><div class="category" data-category="U2VtaXBhcmFtZXRyaWMlMjBSZWdyZXNzaW9u"><span class="quarto-category-count category-cloud-2">Semiparametric Regression</span></div><div class="category" data-category="U2ltdWxhdGlvbg=="><span class="quarto-category-count category-cloud-2">Simulation</span></div><div class="category" data-category="U3BhdGlhbCUyMEFuYWx5c2lz"><span class="quarto-category-count category-cloud-2">Spatial Analysis</span></div><div class="category" data-category="U3ludGhldGljJTIwQ29udHJvbA=="><span class="quarto-category-count category-cloud-2">Synthetic Control</span></div><div class="category" data-category="VGltZSUyMFNlcmllcw=="><span class="quarto-category-count category-cloud-2">Time Series</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-cloud"><div class="category" data-category="QSUyRkIlMjBUZXN0aW5n"><span class="quarto-category-count category-cloud-2">A/B Testing</span></div><div class="category" data-category="QVJJTUE="><span class="quarto-category-count category-cloud-1">ARIMA</span></div><div class="category" data-category="QmF5ZXNpYW4lMjBTdGF0aXN0aWNz"><span class="quarto-category-count category-cloud-1">Bayesian Statistics</span></div><div class="category" data-category="QmluYXJ5JTIwQ2hvaWNlJTIwTW9kZWxz"><span class="quarto-category-count category-cloud-2">Binary Choice Models</span></div><div class="category" data-category="Q2F1c2FsJTIwSW5mZXJlbmNl"><span class="quarto-category-count category-cloud-8">Causal Inference</span></div><div class="category" data-category="Q29tcGV0aXRpb24lMjAlMjYlMjBBbnRpdHJ1c3Q="><span class="quarto-category-count category-cloud-2">Competition &amp; Antitrust</span></div><div class="category" data-category="RGlmZi1pbi1EaWZm"><span class="quarto-category-count category-cloud-1">Diff-in-Diff</span></div><div class="category" data-category="RGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcw=="><span class="quarto-category-count category-cloud-3">Difference-in-Differences</span></div><div class="category" data-category="RWNvbm9tZXRyaWNz"><span class="quarto-category-count category-cloud-1">Econometrics</span></div><div class="category" data-category="RXZlbnQlMjBTdHVkaWVz"><span class="quarto-category-count category-cloud-2">Event Studies</span></div><div class="category" data-category="R2Fzb2xpbmUlMjBJbmR1c3RyeQ=="><span class="quarto-category-count category-cloud-1">Gasoline Industry</span></div><div class="category" data-category="SGV0ZXJvZ2VuZW91cyUyMFRyZWF0bWVudCUyMEVmZmVjdHM="><span class="quarto-category-count category-cloud-1">Heterogeneous Treatment Effects</span></div><div class="category" data-category="S2VybmVsJTIwRGVuc2l0eSUyMEVzdGltYXRpb24="><span class="quarto-category-count category-cloud-1">Kernel Density Estimation</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n"><span class="quarto-category-count category-cloud-1">Machine Learning</span></div><div class="category" data-category="Tm9ucGFyYW1ldHJpYyUyMFJlZ3Jlc3Npb24="><span class="quarto-category-count category-cloud-1">Nonparametric Regression</span></div><div class="category" data-category="UHl0aG9u"><span class="quarto-category-count category-cloud-6">Python</span></div><div class="category" data-category="Ug=="><span class="quarto-category-count category-cloud-2">R</span></div><div class="category" data-category="U2VtaXBhcmFtZXRyaWMlMjBSZWdyZXNzaW9u"><span class="quarto-category-count category-cloud-1">Semiparametric Regression</span></div><div class="category" data-category="U2ltdWxhdGlvbg=="><span class="quarto-category-count category-cloud-1">Simulation</span></div><div class="category" data-category="U3BhdGlhbCUyMEFuYWx5c2lz"><span class="quarto-category-count category-cloud-1">Spatial Analysis</span></div><div class="category" data-category="U3ludGhldGljJTIwQ29udHJvbA=="><span class="quarto-category-count category-cloud-1">Synthetic Control</span></div><div class="category" data-category="VGltZSUyMFNlcmllcw=="><span class="quarto-category-count category-cloud-1">Time Series</span></div></div></div>
 <!-- main -->
 <main class="content column-page-left" id="quarto-document-content">
 
@@ -244,7 +245,77 @@ window.Quarto = {
     </div>
 </div>
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDRGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcyUyQ1N5bnRoZXRpYyUyMENvbnRyb2wlMkNQeXRob24=" data-listing-date-sort="1771369200000" data-listing-file-modified-sort="1771409418388" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2362">
+<div class="g-col-1" data-index="0" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDRGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcyUyQ0V2ZW50JTIwU3R1ZGllcyUyQ1B5dGhvbg==" data-listing-date-sort="1771369200000" data-listing-file-modified-sort="1771427112610" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1167">
+<a href="./posts/event_study_best_practices/event_study_best_practices.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./posts/event_study_best_practices/event_study_bp_cover.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Five Ways to Improve Your Event Study Plots
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2F1c2FsJTIwSW5mZXJlbmNl'); return false;">Causal Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcw=='); return false;">Difference-in-Differences</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RXZlbnQlMjBTdHVkaWVz'); return false;">Event Studies</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+</div>
+<div class="card-text listing-description delink">
+The standard event study plot — point estimates with 95% pointwise confidence intervals — is ubiquitous in applied economics. But it leaves a surprising amount of…
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Daniel Redel
+</div>
+<div class="listing-date">
+Feb 18, 2026
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDRGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcyUyQ0V2ZW50JTIwU3R1ZGllcyUyQ1B5dGhvbg==" data-listing-date-sort="1771369200000" data-listing-file-modified-sort="1771425421576" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2631">
+<a href="./posts/event_study_comparison/event_study_comparison.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="./posts/event_study_comparison/event_study_cover.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Interpreting Event Studies Across Modern DiD Methods
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2F1c2FsJTIwSW5mZXJlbmNl'); return false;">Causal Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcw=='); return false;">Difference-in-Differences</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RXZlbnQlMjBTdHVkaWVz'); return false;">Event Studies</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+</div>
+<div class="card-text listing-description delink">
+Modern event study plots are the go-to visualization for Difference-in-Differences analysis. But when you overlay results from multiple estimators — Dynamic TWFE…<strong></strong>
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Daniel Redel
+</div>
+<div class="listing-date">
+Feb 18, 2026
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="2" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDRGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcyUyQ1N5bnRoZXRpYyUyMENvbnRyb2wlMkNQeXRob24=" data-listing-date-sort="1771369200000" data-listing-file-modified-sort="1771409418388" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2362">
 <a href="./posts/synthetic_did/synthetic_did.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -279,7 +350,7 @@ Feb 18, 2026
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="1" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDSGV0ZXJvZ2VuZW91cyUyMFRyZWF0bWVudCUyMEVmZmVjdHMlMkNQeXRob24=" data-listing-date-sort="1771282800000" data-listing-file-modified-sort="1771404336632" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2687">
+<div class="g-col-1" data-index="3" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDSGV0ZXJvZ2VuZW91cyUyMFRyZWF0bWVudCUyMEVmZmVjdHMlMkNQeXRob24=" data-listing-date-sort="1771282800000" data-listing-file-modified-sort="1771404336632" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2687">
 <a href="./posts/causal_forests/causal_forests.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -314,7 +385,7 @@ Feb 17, 2026
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="2" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDUiUyQ1RpbWUlMjBTZXJpZXMlMkNBUklNQQ==" data-listing-date-sort="1716328800000" data-listing-file-modified-sort="1771364155624" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2838">
+<div class="g-col-1" data-index="4" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDUiUyQ1RpbWUlMjBTZXJpZXMlMkNBUklNQQ==" data-listing-date-sort="1716328800000" data-listing-file-modified-sort="1771364155624" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2838">
 <a href="./posts/causal_arima/carima_data.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -349,7 +420,7 @@ May 22, 2024
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="3" data-categories="QmF5ZXNpYW4lMjBTdGF0aXN0aWNzJTJDQ2F1c2FsJTIwSW5mZXJlbmNlJTJDQSUyRkIlMjBUZXN0aW5nJTJDUHl0aG9u" data-listing-date-sort="1715292000000" data-listing-file-modified-sort="1771362118115" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2236">
+<div class="g-col-1" data-index="5" data-categories="QmF5ZXNpYW4lMjBTdGF0aXN0aWNzJTJDQ2F1c2FsJTIwSW5mZXJlbmNlJTJDQSUyRkIlMjBUZXN0aW5nJTJDUHl0aG9u" data-listing-date-sort="1715292000000" data-listing-file-modified-sort="1771362118115" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2236">
 <a href="./posts/ab_test_bayesian/bayesian_ab_test.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -384,7 +455,7 @@ May 10, 2024
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="4" data-categories="Q29tcGV0aXRpb24lMjAlMjYlMjBBbnRpdHJ1c3QlMkNSJTJDQmluYXJ5JTIwQ2hvaWNlJTIwTW9kZWxzJTJDU2ltdWxhdGlvbg==" data-listing-date-sort="1715205600000" data-listing-file-modified-sort="1771364736802" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5349">
+<div class="g-col-1" data-index="6" data-categories="Q29tcGV0aXRpb24lMjAlMjYlMjBBbnRpdHJ1c3QlMkNSJTJDQmluYXJ5JTIwQ2hvaWNlJTIwTW9kZWxzJTJDU2ltdWxhdGlvbg==" data-listing-date-sort="1715205600000" data-listing-file-modified-sort="1771364736802" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5349">
 <a href="./posts/merger_simulation/Assignment1.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -419,7 +490,7 @@ May 9, 2024
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="5" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDQ29tcGV0aXRpb24lMjAlMjYlMjBBbnRpdHJ1c3QlMkNEaWZmLWluLURpZmYlMkNFY29ub21ldHJpY3MlMkNTcGF0aWFsJTIwQW5hbHlzaXMlMkNHYXNvbGluZSUyMEluZHVzdHJ5" data-listing-date-sort="1713736800000" data-listing-file-modified-sort="1713822662000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2327">
+<div class="g-col-1" data-index="7" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDQ29tcGV0aXRpb24lMjAlMjYlMjBBbnRpdHJ1c3QlMkNEaWZmLWluLURpZmYlMkNFY29ub21ldHJpY3MlMkNTcGF0aWFsJTIwQW5hbHlzaXMlMkNHYXNvbGluZSUyMEluZHVzdHJ5" data-listing-date-sort="1713736800000" data-listing-file-modified-sort="1713822662000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2327">
 <a href="./posts/gasoline_merger_did/merger-report.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -458,7 +529,7 @@ Apr 22, 2024
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="6" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDQSUyRkIlMjBUZXN0aW5nJTJDUHl0aG9u" data-listing-date-sort="1712268000000" data-listing-file-modified-sort="1771362118126" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2201">
+<div class="g-col-1" data-index="8" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDQSUyRkIlMjBUZXN0aW5nJTJDUHl0aG9u" data-listing-date-sort="1712268000000" data-listing-file-modified-sort="1771362118126" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2201">
 <a href="./posts/ab_testing1/1_ab_testing.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -491,11 +562,11 @@ Apr 5, 2024
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="7" data-categories="Tm9ucGFyYW1ldHJpYyUyMFJlZ3Jlc3Npb24lMkNTZW1pcGFyYW1ldHJpYyUyMFJlZ3Jlc3Npb24lMkNCaW5hcnklMjBDaG9pY2UlMjBNb2RlbHMlMkNLZXJuZWwlMjBEZW5zaXR5JTIwRXN0aW1hdGlvbg==" data-listing-date-sort="1670713200000" data-listing-file-modified-sort="1771362118197" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2278">
+<div class="g-col-1" data-index="9" data-categories="Tm9ucGFyYW1ldHJpYyUyMFJlZ3Jlc3Npb24lMkNTZW1pcGFyYW1ldHJpYyUyMFJlZ3Jlc3Npb24lMkNCaW5hcnklMjBDaG9pY2UlMjBNb2RlbHMlMkNLZXJuZWwlMjBEZW5zaXR5JTIwRXN0aW1hdGlvbg==" data-listing-date-sort="1670713200000" data-listing-file-modified-sort="1771362118197" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2278">
 <a href="./posts/nonparametrics/nonparametrics.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img loading="lazy" src="./posts/nonparametrics/fig3.png" class="thumbnail-image card-img" style="height: 150px;">
+<img loading="lazy" data-src="./posts/nonparametrics/fig3.png" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
@@ -528,6 +599,9 @@ Dec 11, 2022
 </div>
 </div>
 <div class="listing-no-matching d-none">No matching items</div>
+<nav id="posts-pagination" class="listing-pagination" aria-label="Page Navigation">
+  <ul class="pagination"></ul>
+</nav>
 </div>
 
 

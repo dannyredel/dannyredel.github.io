@@ -49,5 +49,17 @@
   },
   "posts/synthetic_did/synthetic_did.ipynb": {
     "synthetic_did.html": "15521baa"
+  },
+  "posts/event_study_comparison/event_study_comparison.ipynb": {
+    "event_study_comparison.html": "dee9d726"
+  },
+  "notebooks/diff_diff_plotting_exploration.ipynb": {
+    "diff_diff_plotting_exploration.html": "ec6b4a02"
+  },
+  "notebooks/honest_inference_exploration.ipynb": {
+    "honest_inference_exploration.html": "725a40f1"
+  },
+  "posts/event_study_best_practices/event_study_best_practices.ipynb": {
+    "event_study_best_practices.html": "19fadb53"
   }
 }

@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Daniel Redel">
+<meta name="dcterms.date" content="2026-02-18">
+
+<title>Interpreting Event Studies Across Modern DiD Methods – Daniel Redel</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../myprofile.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-3ad3898019ac633b5dc008510ac09064.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-76702eb7cada84b330ed18131569fa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Daniel Redel</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../myposts.html"> <i class="bi bi-pencil-square" role="img">
+</i> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html"> <i class="bi bi-folder" role="img">
+</i> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research.html"> <i class="bi bi-journal-text" role="img">
+</i> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-person" role="img">
+</i> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/dannyredel"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/daniel-redel-14b052b6/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/DannyRedel"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Interpreting Event Studies Across Modern DiD Methods</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Causal Inference</div>
+                <div class="quarto-category">Difference-in-Differences</div>
+                <div class="quarto-category">Event Studies</div>
+                <div class="quarto-category">Python</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Daniel Redel </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 18, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup"><span class="header-section-number">1</span> Setup</a></li>
+  <li><a href="#which-estimator-when" id="toc-which-estimator-when" class="nav-link" data-scroll-target="#which-estimator-when"><span class="header-section-number">2</span> Which Estimator When?</a>
+  <ul class="collapse">
+  <li><a href="#the-landscape" id="toc-the-landscape" class="nav-link" data-scroll-target="#the-landscape"><span class="header-section-number">2.1</span> The Landscape</a></li>
+  <li><a href="#decision-tree" id="toc-decision-tree" class="nav-link" data-scroll-target="#decision-tree"><span class="header-section-number">2.2</span> Decision Tree</a></li>
+  <li><a href="#when-results-should-agree" id="toc-when-results-should-agree" class="nav-link" data-scroll-target="#when-results-should-agree"><span class="header-section-number">2.3</span> When Results Should Agree</a></li>
+  </ul></li>
+  <li><a href="#long-vs.-short-differences" id="toc-long-vs.-short-differences" class="nav-link" data-scroll-target="#long-vs.-short-differences"><span class="header-section-number">3</span> Long vs.&nbsp;Short Differences</a>
+  <ul class="collapse">
+  <li><a href="#numerical-example" id="toc-numerical-example" class="nav-link" data-scroll-target="#numerical-example"><span class="header-section-number">3.1</span> Numerical Example</a></li>
+  </ul></li>
+  <li><a href="#how-each-estimator-constructs-event-study-coefficients" id="toc-how-each-estimator-constructs-event-study-coefficients" class="nav-link" data-scroll-target="#how-each-estimator-constructs-event-study-coefficients"><span class="header-section-number">4</span> How Each Estimator Constructs Event Study Coefficients</a>
+  <ul class="collapse">
+  <li><a href="#dynamic-twfe" id="toc-dynamic-twfe" class="nav-link" data-scroll-target="#dynamic-twfe"><span class="header-section-number">4.1</span> Dynamic TWFE</a></li>
+  <li><a href="#sun-abraham" id="toc-sun-abraham" class="nav-link" data-scroll-target="#sun-abraham"><span class="header-section-number">4.2</span> Sun-Abraham</a></li>
+  <li><a href="#callaway-santanna" id="toc-callaway-santanna" class="nav-link" data-scroll-target="#callaway-santanna"><span class="header-section-number">4.3</span> Callaway-Sant’Anna</a>
+  <ul class="collapse">
+  <li><a href="#base_perioduniversal" id="toc-base_perioduniversal" class="nav-link" data-scroll-target="#base_perioduniversal"><span class="header-section-number">4.3.1</span> <code>base_period='universal'</code></a></li>
+  <li><a href="#base_periodvarying-the-default" id="toc-base_periodvarying-the-default" class="nav-link" data-scroll-target="#base_periodvarying-the-default"><span class="header-section-number">4.3.2</span> <code>base_period='varying'</code> (the default)</a></li>
+  </ul></li>
+  <li><a href="#imputation-did-borusyak-jaravel-spiess-and-two-stage-did-gardner" id="toc-imputation-did-borusyak-jaravel-spiess-and-two-stage-did-gardner" class="nav-link" data-scroll-target="#imputation-did-borusyak-jaravel-spiess-and-two-stage-did-gardner"><span class="header-section-number">4.4</span> Imputation DiD (Borusyak-Jaravel-Spiess) and Two-Stage DiD (Gardner)</a></li>
+  </ul></li>
+  <li><a href="#the-kink-artifact" id="toc-the-kink-artifact" class="nav-link" data-scroll-target="#the-kink-artifact"><span class="header-section-number">5</span> The “Kink” Artifact</a></li>
+  <li><a href="#practical-guide-which-comparisons-are-fair" id="toc-practical-guide-which-comparisons-are-fair" class="nav-link" data-scroll-target="#practical-guide-which-comparisons-are-fair"><span class="header-section-number">6</span> Practical Guide: Which Comparisons Are Fair?</a>
+  <ul class="collapse">
+  <li><a href="#rules-of-thumb" id="toc-rules-of-thumb" class="nav-link" data-scroll-target="#rules-of-thumb"><span class="header-section-number">6.1</span> Rules of Thumb</a></li>
+  </ul></li>
+  <li><a href="#sec-control-group" id="toc-sec-control-group" class="nav-link" data-scroll-target="#sec-control-group"><span class="header-section-number">7</span> Control Group Choice: Never-Treated vs.&nbsp;Not-Yet-Treated</a>
+  <ul class="collapse">
+  <li><a href="#why-this-matters-for-multi-model-comparisons" id="toc-why-this-matters-for-multi-model-comparisons" class="nav-link" data-scroll-target="#why-this-matters-for-multi-model-comparisons"><span class="header-section-number">7.1</span> Why This Matters for Multi-Model Comparisons</a></li>
+  <li><a href="#when-does-the-choice-matter" id="toc-when-does-the-choice-matter" class="nav-link" data-scroll-target="#when-does-the-choice-matter"><span class="header-section-number">7.2</span> When Does the Choice Matter?</a></li>
+  <li><a href="#practical-recommendation" id="toc-practical-recommendation" class="nav-link" data-scroll-target="#practical-recommendation"><span class="header-section-number">7.3</span> Practical Recommendation</a></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions"><span class="header-section-number">8</span> Conclusions</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">9</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Modern event study plots are the go-to visualization for Difference-in-Differences analysis. But when you overlay results from multiple estimators — Dynamic TWFE, Sun-Abraham, Callaway-Sant’Anna, Imputation DiD — <strong>the coefficients may not mean the same thing</strong>, even if they look the same visually.</p>
+<p>Multi-model comparisons can go wrong in several ways. In this post, we focus on three practical questions:</p>
+<ol type="1">
+<li><strong>Which estimator should I use?</strong> A quick guide to when each modern DiD estimator is appropriate</li>
+<li><strong>How are event study coefficients constructed?</strong> The long vs.&nbsp;short difference distinction, and the “kink” artifact it creates (<a href="https://doi.org/10.48550/arXiv.2401.12309">Roth, 2026</a>)</li>
+<li><strong>What about the control group?</strong> Why the choice of never-treated vs.&nbsp;not-yet-treated matters for cross-estimator comparisons</li>
+</ol>
+<p>We use the <a href="https://github.com/igerber/diff-diff"><code>diff-diff</code></a> Python package throughout.</p>
+<section id="setup" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Setup</h1>
+<div id="imports" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>c:\Users\danny\anaconda3\Lib\site-packages\pandas\core\computation\expressions.py:22: UserWarning: Pandas requires version '2.10.2' or newer of 'numexpr' (version '2.8.7' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+c:\Users\danny\anaconda3\Lib\site-packages\pandas\core\arrays\masked.py:56: UserWarning: Pandas requires version '1.4.2' or newer of 'bottleneck' (version '1.3.7' currently installed).
+  from pandas.core import (</code></pre>
+</div>
+</div>
+</section>
+<section id="which-estimator-when" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Which Estimator When?</h1>
+<p>Before diving into the technical details, here is a practical guide. Modern DiD offers six main estimators for staggered designs. They differ in how they handle treatment effect heterogeneity, what comparison group they use, and how efficient they are.</p>
+<section id="the-landscape" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="the-landscape"><span class="header-section-number">2.1</span> The Landscape</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 41%">
+<col style="width: 16%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Estimator</th>
+<th>Approach</th>
+<th>Handles Heterogeneous Effects?</th>
+<th>Efficiency</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Dynamic TWFE</strong></td>
+<td>Single regression with time dummies</td>
+<td>No — biased under heterogeneity</td>
+<td>High (if valid)</td>
+<td>Simultaneous adoption only</td>
+</tr>
+<tr class="even">
+<td><strong>Callaway-Sant’Anna</strong></td>
+<td>2$$2 DiD aggregation</td>
+<td>Yes</td>
+<td>Moderate</td>
+<td>Primary staggered estimator; flexible aggregation</td>
+</tr>
+<tr class="odd">
+<td><strong>Sun-Abraham</strong></td>
+<td>Interaction-weighted regression</td>
+<td>Yes</td>
+<td>Moderate</td>
+<td>Robustness check alongside CS</td>
+</tr>
+<tr class="even">
+<td><strong>Imputation / BJS</strong></td>
+<td>Impute counterfactuals, then aggregate</td>
+<td>Yes</td>
+<td><strong>Highest</strong> (~50% shorter CIs)</td>
+<td>Preferred when efficiency matters</td>
+</tr>
+<tr class="odd">
+<td><strong>Two-Stage DiD (Gardner)</strong></td>
+<td>Residualize on untreated, then regress</td>
+<td>Yes</td>
+<td><strong>Highest</strong> (same point estimates as BJS)</td>
+<td>Alternative to BJS with GMM variance</td>
+</tr>
+<tr class="even">
+<td><strong>Synthetic DiD</strong></td>
+<td>Reweight controls to match treated pre-trends</td>
+<td>Yes</td>
+<td>Varies</td>
+<td>Few treated units; questionable parallel trends</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="decision-tree" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="decision-tree"><span class="header-section-number">2.2</span> Decision Tree</h2>
+<p><strong>Is treatment adopted at the same time by all units?</strong></p>
+<ul>
+<li><strong>Yes</strong> <span class="math inline">\rightarrow</span> Dynamic TWFE is fine (no staggered-adoption bias). Use <code>MultiPeriodDiD</code>.</li>
+<li><strong>No (staggered)</strong> <span class="math inline">\rightarrow</span> continue below.</li>
+</ul>
+<p><strong>Do you want the most efficient estimates?</strong></p>
+<ul>
+<li><strong>Yes</strong> <span class="math inline">\rightarrow</span> <strong>Imputation DiD</strong> (or equivalently Two-Stage DiD). These produce the shortest confidence intervals under homogeneous treatment effects. Use as your primary estimator.</li>
+<li><strong>No / want robustness</strong> <span class="math inline">\rightarrow</span> continue below.</li>
+</ul>
+<p><strong>Primary analysis or robustness check?</strong></p>
+<ul>
+<li><strong>Primary</strong> <span class="math inline">\rightarrow</span> <strong>Callaway-Sant’Anna</strong>. Most flexible: supports doubly robust estimation, covariates, and multiple aggregation schemes.</li>
+<li><strong>Robustness</strong> <span class="math inline">\rightarrow</span> <strong>Sun-Abraham</strong>. If CS and SA agree, results are more credible. If they disagree, investigate heterogeneity.</li>
+</ul>
+<p><strong>Very few treated units or poor parallel trends?</strong></p>
+<ul>
+<li><strong>Yes</strong> <span class="math inline">\rightarrow</span> Consider <strong>Synthetic DiD</strong> or <strong>TROP</strong>. These reweight controls to match the treated unit’s pre-treatment trajectory.</li>
+</ul>
+</section>
+<section id="when-results-should-agree" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="when-results-should-agree"><span class="header-section-number">2.3</span> When Results Should Agree</h2>
+<p>Under parallel trends and <em>homogeneous</em> treatment effects, all estimators should produce similar point estimates. When they diverge, it typically signals:</p>
+<ul>
+<li><strong>Treatment effect heterogeneity</strong> across cohorts or over time</li>
+<li><strong>Parallel trends violations</strong> (different estimators are more or less sensitive)</li>
+<li><strong>Different comparison populations</strong> (never-treated vs.&nbsp;not-yet-treated — more on this in <a href="#sec-control-group" class="quarto-xref">Section&nbsp;7</a>)</li>
+</ul>
+</section>
+</section>
+<section id="long-vs.-short-differences" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Long vs.&nbsp;Short Differences</h1>
+<p>Consider a simple 2-group DiD setup with treatment starting at <span class="math inline">t=0</span> and reference period <span class="math inline">t=-1</span>. Define the group difference at each time <span class="math inline">t</span>:</p>
+<p><span class="math display">\bar{Y}_t^{D} = \bar{Y}_t^{\text{treat}} - \bar{Y}_t^{\text{control}}</span></p>
+<p>Then there are two ways to build event study coefficients:</p>
+<p><strong>Long difference</strong> (relative to a <em>fixed</em> reference period):</p>
+<p><span class="math display">\hat{\beta}_t^{\text{long}} = \bar{Y}_t^D - \bar{Y}_{-1}^D</span></p>
+<p>Every period is compared to the <strong>same</strong> baseline (<span class="math inline">t=-1</span>). So <span class="math inline">\hat{\beta}_{-5}</span> answers: <em>“how different was the treated-control gap at <span class="math inline">t=-5</span> compared to <span class="math inline">t=-1</span>?”</em></p>
+<p><strong>Short difference</strong> (relative to the <em>preceding</em> period):</p>
+<p><span class="math display">\hat{\beta}_t^{\text{short}} = \bar{Y}_t^D - \bar{Y}_{t-1}^D</span></p>
+<p>Each period is compared to its <strong>immediate neighbor</strong>. So <span class="math inline">\hat{\beta}_{-5}</span> answers: <em>“how much did the treated-control gap</em> change <em>between <span class="math inline">t=-6</span> and <span class="math inline">t=-5</span>?“</em></p>
+<p>These are fundamentally different objects. Long differences cumulate deviations from a fixed point; short differences capture incremental changes.</p>
+<section id="numerical-example" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="numerical-example"><span class="header-section-number">3.1</span> Numerical Example</h2>
+<p>Let’s make this concrete. Suppose the treated-control gap <span class="math inline">\bar{Y}_t^D</span> grows linearly in the pre-treatment period, then jumps at <span class="math inline">t=0</span> due to a treatment effect:</p>
+<div id="numerical-example" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Concrete example: gap grows linearly, then treatment kicks in</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>periods <span class="op">=</span> np.array([<span class="op">-</span><span class="dv">5</span>, <span class="op">-</span><span class="dv">4</span>, <span class="op">-</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>Y_gap   <span class="op">=</span> np.array([<span class="fl">1.0</span>, <span class="fl">1.5</span>, <span class="fl">2.0</span>, <span class="fl">2.5</span>, <span class="fl">3.0</span>, <span class="fl">6.0</span>, <span class="fl">7.0</span>, <span class="fl">8.0</span>, <span class="fl">9.0</span>])</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ref <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ref_idx <span class="op">=</span> np.where(periods <span class="op">==</span> ref)[<span class="dv">0</span>][<span class="dv">0</span>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Long differences: each period vs fixed reference (t=-1)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>beta_long <span class="op">=</span> Y_gap <span class="op">-</span> Y_gap[ref_idx]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Short differences: each period vs its immediate predecessor</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>beta_short <span class="op">=</span> np.full(<span class="bu">len</span>(periods), np.nan)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(periods)):</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    beta_short[i] <span class="op">=</span> Y_gap[i] <span class="op">-</span> Y_gap[i<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>example <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'period'</span>: periods,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Y_gap'</span>: Y_gap,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'beta_long (vs t=-1)'</span>: beta_long,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'beta_short (vs t-1)'</span>: beta_short,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">period</th>
+<th data-quarto-table-cell-role="th">Y_gap</th>
+<th data-quarto-table-cell-role="th">beta_long (vs t=-1)</th>
+<th data-quarto-table-cell-role="th">beta_short (vs t-1)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>-5</td>
+<td>1.0</td>
+<td>-2.0</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-4</td>
+<td>1.5</td>
+<td>-1.5</td>
+<td>0.5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-3</td>
+<td>2.0</td>
+<td>-1.0</td>
+<td>0.5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-2</td>
+<td>2.5</td>
+<td>-0.5</td>
+<td>0.5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-1</td>
+<td>3.0</td>
+<td>0.0</td>
+<td>0.5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0</td>
+<td>6.0</td>
+<td>3.0</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>1</td>
+<td>7.0</td>
+<td>4.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>2</td>
+<td>8.0</td>
+<td>5.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>3</td>
+<td>9.0</td>
+<td>6.0</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Notice the key difference:</p>
+<ul>
+<li><strong>Long diffs</strong> (pre-treatment): <span class="math inline">-2.0, -1.5, -1.0, -0.5, 0</span> — a clear downward-to-zero slope revealing the linear pre-trend violation</li>
+<li><strong>Short diffs</strong> (pre-treatment): <span class="math inline">0.5, 0.5, 0.5, 0.5</span> — <em>constant</em> and seemingly harmless</li>
+</ul>
+<p>Both representations contain the same information, but the visual impression is very different. <strong>A linear pre-trend violation is immediately visible with long differences</strong> (the coefficients trend toward the reference), <strong>but hidden with short differences</strong> (the coefficients look flat).</p>
+<p>This distinction becomes critical when we mix estimators that use different constructions on the same plot.</p>
+<div id="cell-fig-long-short" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">5</span>), sharey<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Long differences</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ax.plot(periods, beta_long, <span class="st">'o-'</span>, color<span class="op">=</span><span class="st">'#2563eb'</span>, markersize<span class="op">=</span><span class="dv">8</span>, linewidth<span class="op">=</span><span class="dv">2</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ax.fill_between(periods, beta_long <span class="op">-</span> <span class="fl">0.3</span>, beta_long <span class="op">+</span> <span class="fl">0.3</span>, alpha<span class="op">=</span><span class="fl">0.15</span>, color<span class="op">=</span><span class="st">'#2563eb'</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="op">-</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Long Differences (vs. $t=-1$)'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Period'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'$</span><span class="ch">\\</span><span class="st">hat{</span><span class="ch">\\</span><span class="st">beta}_t$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="op">-</span><span class="fl">4.5</span>, <span class="op">-</span><span class="fl">1.5</span>, <span class="st">'Pre-trend</span><span class="ch">\n</span><span class="st">visible as slope'</span>, fontsize<span class="op">=</span><span class="dv">9</span>, style<span class="op">=</span><span class="st">'italic'</span>, color<span class="op">=</span><span class="st">'#2563eb'</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Short differences</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>ax.plot(periods[<span class="dv">1</span>:], beta_short[<span class="dv">1</span>:], <span class="st">'o-'</span>, color<span class="op">=</span><span class="st">'#dc2626'</span>, markersize<span class="op">=</span><span class="dv">8</span>, linewidth<span class="op">=</span><span class="dv">2</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>ax.fill_between(periods[<span class="dv">1</span>:], beta_short[<span class="dv">1</span>:] <span class="op">-</span> <span class="fl">0.3</span>, beta_short[<span class="dv">1</span>:] <span class="op">+</span> <span class="fl">0.3</span>, alpha<span class="op">=</span><span class="fl">0.15</span>, color<span class="op">=</span><span class="st">'#dc2626'</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="op">-</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Short Differences (vs. $t-1$)'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Period'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'$</span><span class="ch">\\</span><span class="st">hat{</span><span class="ch">\\</span><span class="st">beta}_t$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="op">-</span><span class="fl">4.5</span>, <span class="fl">2.5</span>, <span class="st">'Pre-trend</span><span class="ch">\n</span><span class="st">hidden (flat!)'</span>, fontsize<span class="op">=</span><span class="dv">9</span>, style<span class="op">=</span><span class="st">'italic'</span>, color<span class="op">=</span><span class="st">'#dc2626'</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-long-short" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-long-short-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="event_study_comparison_files/figure-html/fig-long-short-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-long-short-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Long differences (left) reveal the pre-trend violation as a slope; short differences (right) flatten it into a constant.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="how-each-estimator-constructs-event-study-coefficients" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> How Each Estimator Constructs Event Study Coefficients</h1>
+<p>All modern DiD estimators produce event study coefficients <span class="math inline">\hat{\beta}_e</span> indexed by relative time <span class="math inline">e</span> (periods relative to treatment). All normalize <span class="math inline">\hat{\beta}_{-1} = 0</span> at the reference period. But <strong>how they build the other coefficients differs</strong>.</p>
+<section id="dynamic-twfe" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="dynamic-twfe"><span class="header-section-number">4.1</span> Dynamic TWFE</h2>
+<p><strong>Reference</strong>: Last pre-period (<span class="math inline">e=-1</span>), dropped from the regression.</p>
+<p><strong>Method</strong>: OLS regression with period dummies:</p>
+<p><span class="math display">Y_{it} = \alpha_i + \gamma_t + \sum_{e \neq -1} \beta_e \cdot \mathbb{1}[t - g_i = e] + \varepsilon_{it}</span></p>
+<p>All <span class="math inline">\beta_e</span> coefficients (both pre and post) are <strong>long differences</strong> relative to <span class="math inline">e=-1</span>.</p>
+<p>Pre-treatment <span class="math inline">\hat{\beta}_{-3}</span> answers: <em>“how different was the gap at <span class="math inline">e=-3</span> vs.&nbsp;<span class="math inline">e=-1</span>?”</em></p>
+</section>
+<section id="sun-abraham" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sun-abraham"><span class="header-section-number">4.2</span> Sun-Abraham</h2>
+<p><strong>Reference</strong>: Also <span class="math inline">e=-1</span>, also dropped from the regression.</p>
+<p><strong>Method</strong>: Same regression structure as Dynamic TWFE, but with <strong>cohort-specific interactions</strong> to handle treatment effect heterogeneity:</p>
+<p><span class="math display">Y_{it} = \alpha_i + \gamma_t + \sum_{g} \sum_{e \neq -1} \delta_{g,e} \cdot \mathbb{1}[G_i = g] \cdot \mathbb{1}[t - g = e] + \varepsilon_{it}</span></p>
+<p>Then aggregates: <span class="math inline">\hat{\beta}_e = \sum_g w_{g,e} \cdot \hat{\delta}_{g,e}</span> (interaction-weighted average).</p>
+<p>All <span class="math inline">\beta_e</span> are still <strong>long differences</strong> relative to <span class="math inline">e=-1</span>, just with proper heterogeneity handling.</p>
+<p><strong>Bottom line</strong>: Sun-Abraham is TWFE done right. Same reference, same type of coefficient, same interpretation. “Dropping from regression” = normalizing to zero.</p>
+</section>
+<section id="callaway-santanna" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="callaway-santanna"><span class="header-section-number">4.3</span> Callaway-Sant’Anna</h2>
+<p><strong>Reference</strong>: <span class="math inline">e=-1</span> (the period before treatment for each cohort <span class="math inline">g</span>).</p>
+<p><strong>Method</strong>: Builds group-time ATTs <span class="math inline">\widehat{ATT}(g,t)</span> via 2$$2 DiD comparisons, then aggregates to an event study.</p>
+<p>Here is where it gets tricky: CS has two modes for the <strong>base period</strong>:</p>
+<section id="base_perioduniversal" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="base_perioduniversal"><span class="header-section-number">4.3.1</span> <code>base_period='universal'</code></h3>
+<p>ALL coefficients (pre and post) use <span class="math inline">t = g-1</span> as the comparison period:</p>
+<p><span class="math display">\hat{\beta}_e = \widehat{ATT}(g, g+e) \quad \text{where each ATT compares to } t=g-1</span></p>
+<p>This is a <strong>long difference</strong> — same as TWFE / Sun-Abraham. <strong>Comparable: Yes.</strong></p>
+</section>
+<section id="base_periodvarying-the-default" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="base_periodvarying-the-default"><span class="header-section-number">4.3.2</span> <code>base_period='varying'</code> (the default)</h3>
+<ul>
+<li><strong>Post-treatment</strong>: Uses <span class="math inline">t=g-1</span> as comparison <span class="math inline">\rightarrow</span> <strong>long difference</strong></li>
+<li><strong>Pre-treatment</strong>: Uses <span class="math inline">t-1</span> as comparison for each <span class="math inline">t</span> <span class="math inline">\rightarrow</span> <strong>short difference</strong></li>
+</ul>
+<p>This means pre- and post-treatment coefficients are constructed with <strong>different formulas</strong>. The pre-treatment coefficients answer a different question than the post-treatment ones.</p>
+<p><strong>Comparable: Only post-treatment.</strong> Pre-treatment coefficients are a fundamentally different quantity.</p>
+</section>
+</section>
+<section id="imputation-did-borusyak-jaravel-spiess-and-two-stage-did-gardner" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="imputation-did-borusyak-jaravel-spiess-and-two-stage-did-gardner"><span class="header-section-number">4.4</span> Imputation DiD (Borusyak-Jaravel-Spiess) and Two-Stage DiD (Gardner)</h2>
+<p>This one works completely differently from the others. No regression with period dummies at all.</p>
+<p><strong>Method</strong> (two steps):</p>
+<ol type="1">
+<li><p><strong>Estimate the counterfactual</strong>: Using <em>only untreated observations</em> (units before they get treated + never-treated), fit unit and time fixed effects: <span class="math display">\hat{Y}_{it}(0) = \hat{\alpha}_i + \hat{\gamma}_t</span> This gives a prediction of what <span class="math inline">Y</span> would have been <em>without treatment</em> for every unit-time.</p></li>
+<li><p><strong>Compute individual treatment effects</strong>: For each treated observation: <span class="math display">\hat{\tau}_{it} = Y_{it} - \hat{Y}_{it}(0) = Y_{it} - \hat{\alpha}_i - \hat{\gamma}_t</span></p></li>
+<li><p><strong>Aggregate by horizon</strong>: Group the <span class="math inline">\hat{\tau}_{it}</span> by relative time <span class="math inline">h = t - g_i</span> and average: <span class="math display">\hat{\beta}_h = \frac{1}{N_h} \sum_{i,t: t-g_i = h} \hat{\tau}_{it}</span></p></li>
+</ol>
+<p><strong>Reference period</strong>: BJS doesn’t naturally produce a coefficient at <span class="math inline">h=-1</span>. Since at <span class="math inline">h=-1</span> no unit is yet treated, there are no <span class="math inline">\hat{\tau}_{it}</span> to aggregate. The code <strong>manually sets</strong> <span class="math inline">\hat{\beta}_{-1} = 0</span> for plotting.</p>
+<p><strong>Pre-treatment coefficients</strong> (<span class="math inline">h &lt; -1</span>): These are <strong>placebo tests</strong> — they show <span class="math inline">Y - \hat{Y}(0)</span> for periods before treatment. If the model is correctly specified, these should be <span class="math inline">\approx 0</span>. They are not “differences relative to a reference period” — they are direct residuals from the counterfactual model.</p>
+<p><strong>Comparable</strong>: Post-treatment <strong>yes</strong> (same estimand: ATT at each relative time). Pre-treatment: similar scale but <strong>different interpretation</strong> (model specification test, not parallel trends relative to a reference).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Gardner’s Two-Stage DiD
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="https://arxiv.org/abs/2207.05943">Gardner (2022)</a> proposes an equivalent two-step procedure: (1) residualize outcomes using FE estimated on untreated observations, (2) regress residuals on treatment indicators. The <strong>point estimates are identical</strong> to Imputation DiD. The only difference is variance estimation: Gardner uses a GMM sandwich estimator (accounting for first-stage estimation error), while BJS uses a conservative variance (Theorem 3). For event study comparison purposes, they are interchangeable.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="the-kink-artifact" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> The “Kink” Artifact</h1>
+<p>Now that we understand the difference between long and short differences, let’s see why it matters visually.</p>
+<p>Consider a scenario with a <strong>linear pre-trend violation</strong> (the treated-control gap grows by 0.3 each period) but <strong>no treatment effect at all</strong>. The confounding trend continues smoothly through the treatment date — there is no break in the data-generating process.</p>
+<p>The question is: <strong>how does each estimator’s event study plot represent this smooth, continuous confound?</strong></p>
+<p><a href="https://doi.org/10.48550/arXiv.2401.12309">Roth (2026)</a> calls this the “kink” artifact: because CS (varying) uses short differences in the pre-treatment period but long differences in the post-treatment period, the <em>same</em> smooth linear confound produces a visual <strong>break</strong> at the treatment date — a kink that looks like a treatment effect, even though the underlying trend is continuous.</p>
+<div id="cell-fig-kink" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate: linear pre-trend violation, NO treatment effect</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>periods_sim <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">5</span>, <span class="dv">6</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>ref <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># True confounding: gap grows linearly at 0.3 per period</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># There is NO treatment effect -- just a trend violation</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>delta_true <span class="op">=</span> <span class="fl">0.3</span> <span class="op">*</span> periods_sim</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>se_sim <span class="op">=</span> np.full(<span class="bu">len</span>(periods_sim), <span class="fl">0.25</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>noise <span class="op">=</span> <span class="kw">lambda</span>: np.random.normal(<span class="dv">0</span>, <span class="fl">0.12</span>, <span class="bu">len</span>(periods_sim))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. TWFE: ALL coefficients are long diffs vs e=-1</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># beta_t = 0.3*t - 0.3*(-1) = 0.3*(t+1)</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>twfe_coefs <span class="op">=</span> delta_true <span class="op">-</span> delta_true[periods_sim <span class="op">==</span> ref][<span class="dv">0</span>] <span class="op">+</span> noise()</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>twfe_coefs[periods_sim <span class="op">==</span> ref] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. CS (varying): pre = SHORT diffs (constant), post = LONG diffs</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>cs_coefs <span class="op">=</span> np.zeros(<span class="bu">len</span>(periods_sim))</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, p <span class="kw">in</span> <span class="bu">enumerate</span>(periods_sim):</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">&lt;</span> ref:</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        cs_coefs[i] <span class="op">=</span> <span class="fl">0.3</span> <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.12</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> p <span class="op">==</span> ref:</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        cs_coefs[i] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        cs_coefs[i] <span class="op">=</span> <span class="fl">0.3</span> <span class="op">*</span> (p <span class="op">-</span> ref) <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.12</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Imputation (BJS): residuals from counterfactual model</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>avg_delta_pre <span class="op">=</span> np.mean(delta_true[periods_sim <span class="op">&lt;</span> <span class="dv">0</span>])</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>bjs_coefs <span class="op">=</span> delta_true <span class="op">-</span> avg_delta_pre <span class="op">+</span> noise()</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>bjs_coefs[periods_sim <span class="op">==</span> ref] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="fl">5.5</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [<span class="st">'#2563eb'</span>, <span class="st">'#dc2626'</span>, <span class="st">'#16a34a'</span>]</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>titles <span class="op">=</span> [</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">'TWFE</span><span class="ch">\n</span><span class="st">(long diffs: pre + post)'</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">'CS (varying base)</span><span class="ch">\n</span><span class="st">(short diffs pre, long diffs post)'</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Imputation (BJS)</span><span class="ch">\n</span><span class="st">(residuals from counterfactual)'</span>,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>coefs_list <span class="op">=</span> [twfe_coefs, cs_coefs, bjs_coefs]</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, coefs, title, color <span class="kw">in</span> <span class="bu">zip</span>(axes, coefs_list, titles, colors):</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    ax.fill_between(periods_sim, coefs <span class="op">-</span> <span class="fl">1.96</span><span class="op">*</span>se_sim, coefs <span class="op">+</span> <span class="fl">1.96</span><span class="op">*</span>se_sim,</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>                    alpha<span class="op">=</span><span class="fl">0.2</span>, color<span class="op">=</span>color)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    ax.plot(periods_sim, coefs, <span class="st">'o-'</span>, color<span class="op">=</span>color, markersize<span class="op">=</span><span class="dv">7</span>, linewidth<span class="op">=</span><span class="dv">2</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    ax.axvline(ref <span class="op">+</span> <span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">11</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Period Relative to Treatment'</span>)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ax <span class="op">==</span> axes[<span class="dv">0</span>]:</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        ax.set_ylabel(<span class="st">'Estimated Coefficient'</span>)</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">'TRUE EFFECT = 0 everywhere. Only a linear confounding trend exists.'</span>,</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>             fontsize<span class="op">=</span><span class="dv">13</span>, y<span class="op">=</span><span class="fl">1.03</span>, style<span class="op">=</span><span class="st">'italic'</span>)</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-kink" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-kink-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="event_study_comparison_files/figure-html/fig-kink-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kink-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The kink artifact: with no treatment effect and only a linear confounding trend, all panels show positive post-treatment coefficients (that’s the confound, not an effect). The key: TWFE shows a smooth continuous line with no break at the treatment date, while CS (varying) creates an artificial kink.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>What you see in <a href="#fig-kink" class="quarto-xref">Figure&nbsp;2</a> — remember, the <strong>true effect is zero</strong> in all three panels; the only thing happening is a linear confounding trend (gap grows by 0.3 per period, continuously through the treatment date):</p>
+<ul>
+<li><strong>TWFE</strong> (left): A smooth upward line passing through zero at the reference period. The trend is visible both pre- and post-treatment with <strong>no break</strong> at the treatment date. This correctly reveals the confound: “the gap was growing before treatment and kept growing after — there’s no discontinuity suggesting a treatment effect.”</li>
+<li><strong>CS (varying)</strong> (center): Flat pre-trends (<span class="math inline">\approx 0.3</span> each) then a sudden jump post-treatment. This <strong>looks like a treatment effect, but it’s entirely an artifact</strong>. Short differences flatten the linear trend into a constant in the pre-period, then the switch to long differences in the post-period creates a visual break. A researcher seeing “flat pre-trends + post-treatment jump” might wrongly conclude that treatment had an effect.</li>
+<li><strong>BJS</strong> (right): An upward trend both pre- and post-treatment, similar in shape to TWFE but normalized differently (centered around the counterfactual model’s average rather than the reference period). No break at the treatment date — correctly showing the continuous confound.</li>
+</ul>
+<p>The key visual diagnostic: under a pure linear confound with no treatment, the event study should show a <strong>smooth, continuous line</strong> with no break at <span class="math inline">t=0</span>. TWFE and BJS show this; CS (varying) does not.</p>
+</section>
+<section id="practical-guide-which-comparisons-are-fair" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Practical Guide: Which Comparisons Are Fair?</h1>
+<p>The following table summarizes the coefficient construction and control group of each estimator:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 16%">
+<col style="width: 17%">
+<col style="width: 16%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Estimator</th>
+<th>Reference</th>
+<th>Pre-treatment</th>
+<th>Post-treatment</th>
+<th>Control Group</th>
+<th>Comparable to TWFE?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Dynamic TWFE</strong></td>
+<td><span class="math inline">e=-1</span> (dropped)</td>
+<td>Long diff vs.&nbsp;<span class="math inline">e=-1</span></td>
+<td>Long diff vs.&nbsp;<span class="math inline">e=-1</span></td>
+<td>All controls</td>
+<td>Baseline</td>
+</tr>
+<tr class="even">
+<td><strong>Sun-Abraham</strong></td>
+<td><span class="math inline">e=-1</span> (dropped)</td>
+<td>Long diff vs.&nbsp;<span class="math inline">e=-1</span></td>
+<td>Long diff vs.&nbsp;<span class="math inline">e=-1</span></td>
+<td>Configurable</td>
+<td><strong>Yes</strong> (match control group)</td>
+</tr>
+<tr class="odd">
+<td><strong>CS (universal)</strong></td>
+<td><span class="math inline">e=-1</span> (fixed)</td>
+<td>Long diff vs.&nbsp;<span class="math inline">e=-1</span></td>
+<td>Long diff vs.&nbsp;<span class="math inline">e=-1</span></td>
+<td>Configurable</td>
+<td><strong>Yes</strong> (match control group)</td>
+</tr>
+<tr class="even">
+<td><strong>CS (varying)</strong></td>
+<td><span class="math inline">e=-1</span> (fixed)</td>
+<td><strong>Short diff</strong> (<span class="math inline">e</span> vs <span class="math inline">e-1</span>)</td>
+<td>Long diff vs.&nbsp;<span class="math inline">e=-1</span></td>
+<td>Configurable</td>
+<td><strong>Post only</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Imputation / BJS</strong></td>
+<td><span class="math inline">e=-1</span> (set to 0)</td>
+<td>Placebo residuals</td>
+<td>Imputed <span class="math inline">\hat{\tau}</span></td>
+<td>All untreated obs</td>
+<td><strong>Post yes</strong>, pre: different meaning</td>
+</tr>
+<tr class="even">
+<td><strong>Two-Stage DiD</strong></td>
+<td><span class="math inline">e=-1</span> (set to 0)</td>
+<td>Same as BJS</td>
+<td>Same as BJS</td>
+<td>All untreated obs</td>
+<td>Same as BJS</td>
+</tr>
+</tbody>
+</table>
+<section id="rules-of-thumb" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="rules-of-thumb"><span class="header-section-number">6.1</span> Rules of Thumb</h2>
+<p><strong>Safe multi-model overlays:</strong></p>
+<ul>
+<li><strong>TWFE + Sun-Abraham + CS (universal)</strong>: Fully comparable, <em>provided</em> CS and SA use the same <code>control_group</code>. All use long differences relative to the same reference period.</li>
+<li><strong>Adding Imputation (BJS) or Two-Stage DiD</strong>: Post-treatment coefficients are comparable (same estimand). Pre-treatment coefficients are on a similar scale but have a different interpretation. Note that BJS always uses all untreated observations — closest to <code>not_yet_treated</code>.</li>
+</ul>
+<p><strong>Comparisons that require caution:</strong></p>
+<ul>
+<li><strong>CS (varying) with any other estimator</strong>: Only post-treatment coefficients are comparable. Pre-treatment coefficients are short differences that will look different from everyone else’s long differences.</li>
+<li><strong>Mismatched control groups</strong>: If one estimator uses <code>never_treated</code> and another uses <code>not_yet_treated</code>, divergent results may reflect different comparison populations, not estimator disagreement.</li>
+</ul>
+<p><strong>Practical checklist before overlaying event studies:</strong></p>
+<ol type="1">
+<li>Set <code>base_period='universal'</code> for Callaway-Sant’Anna</li>
+<li>Match <code>control_group</code> across all estimators (CS, SA)</li>
+<li>Note that BJS/Two-Stage DiD always uses all untreated observations</li>
+<li>If using CS with <code>base_period='varying'</code>, annotate the plot and do not visually compare pre-treatment coefficients</li>
+</ol>
+<div id="cell-fig-overlay" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Overlay three estimators under a linear pre-trend violation</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>periods_overlay <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">5</span>, <span class="dv">6</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>ref <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> <span class="fl">0.3</span> <span class="op">*</span> periods_overlay  <span class="co"># linear confound, no treatment</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># TWFE: long diffs</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>twfe <span class="op">=</span> delta <span class="op">-</span> delta[periods_overlay <span class="op">==</span> ref][<span class="dv">0</span>] <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="bu">len</span>(periods_overlay))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>twfe[periods_overlay <span class="op">==</span> ref] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>twfe_se <span class="op">=</span> np.full(<span class="bu">len</span>(periods_overlay), <span class="fl">0.2</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Sun-Abraham: long diffs (similar to TWFE, slightly different noise)</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>sa <span class="op">=</span> delta <span class="op">-</span> delta[periods_overlay <span class="op">==</span> ref][<span class="dv">0</span>] <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="bu">len</span>(periods_overlay))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>sa[periods_overlay <span class="op">==</span> ref] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>sa_se <span class="op">=</span> np.full(<span class="bu">len</span>(periods_overlay), <span class="fl">0.22</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># CS (varying): short pre, long post</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>cs_var <span class="op">=</span> np.zeros(<span class="bu">len</span>(periods_overlay))</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, p <span class="kw">in</span> <span class="bu">enumerate</span>(periods_overlay):</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">&lt;</span> ref:</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        cs_var[i] <span class="op">=</span> <span class="fl">0.3</span> <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.1</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> p <span class="op">==</span> ref:</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        cs_var[i] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        cs_var[i] <span class="op">=</span> <span class="fl">0.3</span> <span class="op">*</span> (p <span class="op">-</span> ref) <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.1</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>cs_se <span class="op">=</span> np.full(<span class="bu">len</span>(periods_overlay), <span class="fl">0.25</span>)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">6</span>))</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Left: The misleading overlay</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>dodge <span class="op">=</span> <span class="fl">0.12</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>ax.errorbar(periods_overlay <span class="op">-</span> dodge, twfe, yerr<span class="op">=</span><span class="fl">1.96</span><span class="op">*</span>twfe_se, fmt<span class="op">=</span><span class="st">'o-'</span>,</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">'#2563eb'</span>, capsize<span class="op">=</span><span class="dv">3</span>, markersize<span class="op">=</span><span class="dv">6</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">'TWFE'</span>)</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>ax.errorbar(periods_overlay, sa, yerr<span class="op">=</span><span class="fl">1.96</span><span class="op">*</span>sa_se, fmt<span class="op">=</span><span class="st">'s-'</span>,</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">'#8b5cf6'</span>, capsize<span class="op">=</span><span class="dv">3</span>, markersize<span class="op">=</span><span class="dv">6</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">'Sun-Abraham'</span>)</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>ax.errorbar(periods_overlay <span class="op">+</span> dodge, cs_var, yerr<span class="op">=</span><span class="fl">1.96</span><span class="op">*</span>cs_se, fmt<span class="op">=</span><span class="st">'^-'</span>,</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">'#dc2626'</span>, capsize<span class="op">=</span><span class="dv">3</span>, markersize<span class="op">=</span><span class="dv">6</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">'CS (varying)'</span>)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="op">-</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Multi-Model Overlay (Misleading!)'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Period Relative to Treatment'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Estimated Coefficient'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">9</span>, loc<span class="op">=</span><span class="st">'upper left'</span>)</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotation box at bottom-right to avoid legend overlap</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">0.98</span>, <span class="fl">0.02</span>,</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Base reference:</span><span class="ch">\n</span><span class="st">TWFE: ref=e</span><span class="ch">\u2212</span><span class="st">1 (long diffs)</span><span class="ch">\n</span><span class="st">Sun-Abraham: ref=e</span><span class="ch">\u2212</span><span class="st">1 (long diffs)</span><span class="ch">\n</span><span class="st">CS (varying): ref=e</span><span class="ch">\u2212</span><span class="st">1 [ASYMMETRIC]'</span>,</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>        transform<span class="op">=</span>ax.transAxes, fontsize<span class="op">=</span><span class="fl">7.5</span>,</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>        verticalalignment<span class="op">=</span><span class="st">'bottom'</span>, horizontalalignment<span class="op">=</span><span class="st">'right'</span>,</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>        bbox<span class="op">=</span><span class="bu">dict</span>(boxstyle<span class="op">=</span><span class="st">'round,pad=0.4'</span>, facecolor<span class="op">=</span><span class="st">'lightyellow'</span>,</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>                  edgecolor<span class="op">=</span><span class="st">'orange'</span>, alpha<span class="op">=</span><span class="fl">0.85</span>), family<span class="op">=</span><span class="st">'monospace'</span>)</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Right: What a reader might wrongly conclude</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>ax.fill_between([<span class="op">-</span><span class="fl">5.5</span>, <span class="op">-</span><span class="fl">0.5</span>], [<span class="op">-</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">4</span>], alpha<span class="op">=</span><span class="fl">0.06</span>, color<span class="op">=</span><span class="st">'green'</span>)</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>ax.fill_between([<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">5.5</span>], [<span class="op">-</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">4</span>], alpha<span class="op">=</span><span class="fl">0.06</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="op">-</span><span class="dv">3</span>, <span class="fl">3.3</span>, <span class="st">'Pre-treatment'</span>, fontsize<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span><span class="st">'green'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, ha<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">2.5</span>, <span class="fl">3.3</span>, <span class="st">'Post-treatment'</span>, fontsize<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span><span class="st">'red'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, ha<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>ax.errorbar(periods_overlay, twfe, yerr<span class="op">=</span><span class="fl">1.96</span><span class="op">*</span>twfe_se, fmt<span class="op">=</span><span class="st">'o-'</span>,</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">'#2563eb'</span>, capsize<span class="op">=</span><span class="dv">3</span>, markersize<span class="op">=</span><span class="dv">5</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, label<span class="op">=</span><span class="st">'TWFE'</span>)</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>ax.errorbar(periods_overlay, cs_var, yerr<span class="op">=</span><span class="fl">1.96</span><span class="op">*</span>cs_se, fmt<span class="op">=</span><span class="st">'^-'</span>,</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">'#dc2626'</span>, capsize<span class="op">=</span><span class="dv">3</span>, markersize<span class="op">=</span><span class="dv">6</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'CS (varying)'</span>)</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="op">-</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">'"Flat pre-trends" +</span><span class="ch">\n</span><span class="st">"treatment effect"?'</span>,</span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>(<span class="dv">0</span>, cs_var[periods_overlay <span class="op">==</span> <span class="dv">0</span>][<span class="dv">0</span>]), xytext<span class="op">=</span>(<span class="dv">2</span>, <span class="op">-</span><span class="fl">1.5</span>),</span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>            fontsize<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span><span class="st">'#dc2626'</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>,</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">'-&gt;'</span>, color<span class="op">=</span><span class="st">'#dc2626'</span>, lw<span class="op">=</span><span class="fl">1.5</span>),</span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>            ha<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">'Actually: just</span><span class="ch">\n</span><span class="st">a pre-trend!'</span>,</span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>(<span class="op">-</span><span class="dv">3</span>, twfe[periods_overlay <span class="op">==</span> <span class="op">-</span><span class="dv">3</span>][<span class="dv">0</span>]), xytext<span class="op">=</span>(<span class="op">-</span><span class="fl">4.5</span>, <span class="fl">1.5</span>),</span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>            fontsize<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span><span class="st">'#2563eb'</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>,</span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>            arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">'-&gt;'</span>, color<span class="op">=</span><span class="st">'#2563eb'</span>, lw<span class="op">=</span><span class="fl">1.5</span>),</span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>            ha<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'True Effect = 0 Everywhere'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Period Relative to Treatment'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">9</span>, loc<span class="op">=</span><span class="st">'upper left'</span>)</span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-overlay" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-overlay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="event_study_comparison_files/figure-html/fig-overlay-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-overlay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Multi-model overlay: CS (varying) produces visually misleading pre-trends when compared against TWFE and Sun-Abraham, both of which correctly show the pre-trend violation.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-control-group" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Control Group Choice: Never-Treated vs.&nbsp;Not-Yet-Treated</h1>
+<p>Beyond coefficient construction, there is a second dimension that affects multi-model comparability: <strong>which units serve as controls?</strong></p>
+<p>Callaway-Sant’Anna and Sun-Abraham both offer a <code>control_group</code> parameter with two options:</p>
+<ul>
+<li><strong><code>'never_treated'</code></strong> (default): Only units that <em>never</em> receive treatment serve as controls. This is the most conservative choice — it avoids contamination from units that will later be treated.</li>
+<li><strong><code>'not_yet_treated'</code></strong>: Units that haven’t been treated <em>yet</em> at a given time serve as controls. This uses more data (especially useful when there are few never-treated units) but requires a stronger assumption: that treatment effects don’t spill over to future-treated units before they are treated.</li>
+</ul>
+<section id="why-this-matters-for-multi-model-comparisons" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="why-this-matters-for-multi-model-comparisons"><span class="header-section-number">7.1</span> Why This Matters for Multi-Model Comparisons</h2>
+<p>If you overlay two estimators that use <em>different</em> control groups, the estimates may diverge even if everything else is the same — because they are estimating treatment effects relative to <strong>different comparison populations</strong>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Estimator A</th>
+<th>Estimator B</th>
+<th>Comparable?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CS (<code>never_treated</code>)</td>
+<td>SA (<code>never_treated</code>)</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>CS (<code>not_yet_treated</code>)</td>
+<td>SA (<code>not_yet_treated</code>)</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>CS (<code>never_treated</code>)</td>
+<td>SA (<code>not_yet_treated</code>)</td>
+<td><strong>Caution</strong> — different comparison populations</td>
+</tr>
+<tr class="even">
+<td>Any staggered estimator</td>
+<td>Imputation DiD / Two-Stage DiD</td>
+<td><strong>Caution</strong> — BJS always uses all untreated observations (analogous to <code>not_yet_treated</code>)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="when-does-the-choice-matter" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="when-does-the-choice-matter"><span class="header-section-number">7.2</span> When Does the Choice Matter?</h2>
+<p>The two control groups give similar results when:</p>
+<ul>
+<li>There are many never-treated units (so the <code>not_yet_treated</code> pool is dominated by them)</li>
+<li>Treatment effects are homogeneous across cohorts</li>
+<li>There are no anticipation effects</li>
+</ul>
+<p>They diverge when:</p>
+<ul>
+<li><strong>Few never-treated units</strong>: <code>never_treated</code> has a small, potentially unrepresentative control pool</li>
+<li><strong>Heterogeneous effects by cohort</strong>: Future-treated units may have different outcome dynamics than never-treated units</li>
+<li><strong>Anticipation</strong>: If units respond before formal treatment, <code>not_yet_treated</code> controls are contaminated</li>
+</ul>
+</section>
+<section id="practical-recommendation" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="practical-recommendation"><span class="header-section-number">7.3</span> Practical Recommendation</h2>
+<p>When comparing across estimators, <strong>always match the control group</strong>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Consistent control group across estimators</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cs <span class="op">=</span> CallawaySantAnna(control_group<span class="op">=</span><span class="st">'never_treated'</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>sa <span class="op">=</span> SunAbraham(control_group<span class="op">=</span><span class="st">'never_treated'</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># BJS always uses all untreated obs — note this when comparing</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>bjs <span class="op">=</span> ImputationDiD()  <span class="co"># no control_group parameter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If your results are sensitive to the control group choice, that itself is informative — it suggests treatment effect heterogeneity or anticipation effects that warrant further investigation.</p>
+</section>
+</section>
+<section id="conclusions" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Conclusions</h1>
+<p>Event study plots from modern DiD estimators look similar, but the coefficients they produce can mean fundamentally different things. The key takeaways:</p>
+<ol type="1">
+<li><p><strong>Pick the right estimator for your design</strong>. Dynamic TWFE is fine for simultaneous adoption; for staggered designs, Imputation DiD or Two-Stage DiD offer the best efficiency, with CS and SA as robustness checks.</p></li>
+<li><p><strong>Know whether your estimator uses long or short differences</strong> in the pre-treatment period. This determines what the pre-trend test actually tests — and mixing them on the same plot creates the kink artifact.</p></li>
+<li><p><strong>The kink artifact is real</strong>: Callaway-Sant’Anna with <code>base_period='varying'</code> (the default) creates a visual break at the treatment date that can mimic a treatment effect where none exists.</p></li>
+<li><p><strong>Match control groups across estimators</strong>. Never-treated vs.&nbsp;not-yet-treated is a substantive choice that affects both the estimand and comparability. When comparing CS/SA with BJS, remember that BJS always uses all untreated observations.</p></li>
+<li><p><strong>Post-treatment coefficients are generally comparable</strong> across all estimators (they target the same estimand: the ATT at each relative time). <strong>Pre-treatment coefficients require more care</strong> — they may answer different questions depending on the estimator.</p></li>
+</ol>
+<p>As a rule: <strong>before overlaying event studies from different estimators, check that you’re comparing like with like</strong> — same coefficient construction, same control group, same reference period.</p>
+</section>
+<section id="references" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> References</h1>
+<ul>
+<li>Arkhangelsky, D., Athey, S., Hirshberg, D. A., Imbens, G. W., &amp; Wager, S. (2021). Synthetic Difference-in-Differences. <em>American Economic Review</em>, 111(12), 4088-4118.</li>
+<li>Borusyak, K., Jaravel, X., &amp; Spiess, J. (2024). Revisiting Event Study Designs: Robust and Efficient Estimation. <em>Review of Economic Studies</em>, 91(6), 3253-3285.</li>
+<li>Callaway, B., &amp; Sant’Anna, P. H. C. (2021). Difference-in-Differences with multiple time periods. <em>Journal of Econometrics</em>, 225(2), 200-230.</li>
+<li>Gardner, J. (2022). Two-stage differences in differences. <em>arXiv preprint arXiv:2207.05943</em>.</li>
+<li>Goodman-Bacon, A. (2021). Difference-in-Differences with Variation in Treatment Timing. <em>Journal of Econometrics</em>, 225(2), 254-277.</li>
+<li>Roth, J. (2026). Interpreting Event Studies from Recent Difference-in-Differences Methods. <em>arXiv preprint arXiv:2401.12309</em>.</li>
+<li>Sun, L., &amp; Abraham, S. (2021). Estimating Dynamic Treatment Effects in Event Studies with Heterogeneous Treatment Effects. <em>Journal of Econometrics</em>, 225(2), 175-199.</li>
+<li>Gerber, I. (2025). diff-diff: A comprehensive Python package for Difference-in-Differences. <a href="https://github.com/igerber/diff-diff">GitHub</a>.</li>
+</ul>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/dannyredel\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2026 Daniel Redel</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
