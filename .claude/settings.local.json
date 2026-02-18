@@ -7,7 +7,9 @@
       "WebFetch(domain:diff-diff.readthedocs.io)",
       "WebFetch(domain:grantmcdermott.com)",
       "WebFetch(domain:ccfang2.github.io)",
-      "Bash(where:*)"
+      "Bash(where:*)",
+      "Bash(python3:*)",
+      "Bash(python -c:*)"
     ]
   }
 }

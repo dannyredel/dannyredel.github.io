@@ -14,6 +14,13 @@ listing:
     fields: [title, description, image, categories, date]
     contents:
 
+    - title: "diff-diff: Visualization & Honest Inference Extensions"
+      description: "Contributing ggfixest-inspired plotting tools and honest inference layers to the diff-diff Python package. Features include ribbon/nested CIs, multi-model dodge & facet plots, simultaneous confidence bands, smoothest confounding paths, functional SCBs, and aggregate effect overlays."
+      categories: [Python, Causal Inference, Difference-in-Differences, Data Visualization, Open Source]
+      date: 2026-02-18
+      path: "https://github.com/igerber/diff-diff"
+      image: "assets/cover/diff-diff.png"
+
     - title: "Customer Segmentation & Recommendation Engine"
       description: "End-to-end ML system: PySpark feature engineering, BERT sentiment analysis, K-Means segmentation, and hybrid recommendation engine. Deployed as a live API on GCP Cloud Run with Airflow pipelines and CI/CD."
       categories: [Python, PySpark, Machine Learning, NLP, Docker, GCP, FastAPI, scikit-learn]

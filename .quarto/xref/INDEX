@@ -61,5 +61,8 @@
   },
   "posts/event_study_best_practices/event_study_best_practices.ipynb": {
     "event_study_best_practices.html": "19fadb53"
+  },
+  "posts/parallel_trends_sensitivity/parallel_trends_sensitivity.ipynb": {
+    "parallel_trends_sensitivity.html": "25f859ff"
   }
 }
