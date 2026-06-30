@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Daniel Redel">
+<meta name="dcterms.date" content="2026-06-30">
+<meta name="description" content="I built an experimentation platform where every estimator is certified against a known ground truth — because on real data, you can never check whether your A/B test is actually right.">
 
-<title>Daniel Redel — Applied Economist &amp; Data Scientist – Daniel Redel</title>
+<title>Lyra — Experimentation You Can Trust – Daniel Redel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,23 +26,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./myprofile.jpg" rel="icon" type="image/jpeg">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-3ad3898019ac633b5dc008510ac09064.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-76702eb7cada84b330ed18131569fa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../myprofile.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-3ad3898019ac633b5dc008510ac09064.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-76702eb7cada84b330ed18131569fa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,17 +72,60 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
 <body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Daniel Redel</span>
     </a>
   </div>
@@ -89,22 +136,22 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./myposts.html"> <i class="bi bi-pencil-square" role="img">
+    <a class="nav-link" href="../../myposts.html"> <i class="bi bi-pencil-square" role="img">
 </i> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./projects.html"> <i class="bi bi-folder" role="img">
+    <a class="nav-link" href="../../projects.html"> <i class="bi bi-folder" role="img">
 </i> 
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./research.html"> <i class="bi bi-journal-text" role="img">
+    <a class="nav-link" href="../../research.html"> <i class="bi bi-journal-text" role="img">
 </i> 
 <span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> <i class="bi bi-person" role="img">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-person" role="img">
 </i> 
 <span class="menu-text">About</span></a>
   </li>  
@@ -131,457 +178,112 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Lyra — Experimentation You Can Trust</h1>
+                  <div>
+        <div class="description">
+          I built an experimentation platform where every estimator is certified against a known ground truth — because on real data, you can never check whether your A/B test is actually right.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Causal Inference</div>
+                <div class="quarto-category">Experimentation</div>
+                <div class="quarto-category">A/B Testing</div>
+                <div class="quarto-category">Python</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Daniel Redel </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 30, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-it-is" id="toc-what-it-is" class="nav-link active" data-scroll-target="#what-it-is">What it is</a></li>
+  <li><a href="#a-concrete-example" id="toc-a-concrete-example" class="nav-link" data-scroll-target="#a-concrete-example">A concrete example</a></li>
+  <li><a href="#how-i-built-it" id="toc-how-i-built-it" class="nav-link" data-scroll-target="#how-i-built-it">How I built it</a></li>
+  <li><a href="#why-it-matters-to-me" id="toc-why-it-matters-to-me" class="nav-link" data-scroll-target="#why-it-matters-to-me">Why it matters to me</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
-<style>
-  /* Hide navbar's bottom shadow on the landing to let the hero breathe */
-  body.pc-landing-page .navbar { box-shadow: none; }
 
-  /* Full-viewport soft gradient background for the landing */
-  body.pc-landing-page {
-    background:
-      radial-gradient(1000px 620px at 8% 22%, rgba(191, 227, 245, 0.55), transparent 60%),
-      radial-gradient(900px 560px at 92% 80%, rgba(214, 231, 247, 0.55), transparent 60%),
-      #f8fafc;
-    background-attachment: fixed;
-    min-height: 100vh;
-  }
-
-  /* Hide the floating widget on the landing (conversation lives in the hero) */
-  body.pc-landing-page #pc-toggle,
-  body.pc-landing-page #pc-panel { display: none !important; }
-
-  /* Hide Quarto's title/header scaffolding on this page */
-  body.pc-landing-page #title-block-header,
-  body.pc-landing-page h1.title,
-  body.pc-landing-page .quarto-title-block { display: none !important; }
-  body.pc-landing-page main.content { padding-top: 0 !important; max-width: 100% !important; }
-
-  .pc-landing {
-    min-height: calc(100vh - 120px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 3rem 1.25rem 4rem;
-    position: relative;
-  }
-
-  .pc-avatar {
-    width: 128px; height: 128px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 0 6px 28px rgba(18, 33, 64, 0.18);
-    margin-bottom: 1.25rem;
-  }
-
-  .pc-greeting {
-    font-size: 0.95rem;
-    color: #4a5568;
-    margin: 0 0 0.35rem;
-    letter-spacing: 0.01em;
-  }
-  .pc-name {
-    font-family: 'Fraunces', Georgia, serif;
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 700;
-    color: #122140;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    margin: 0 0 0.4rem;
-  }
-  .pc-subtitle {
-    font-size: 1.05rem;
-    color: #6b7280;
-    margin: 0 0 0.65rem;
-    font-weight: 400;
-  }
-  .pc-pitch {
-    font-size: 0.95rem;
-    color: #4a5568;
-    font-style: italic;
-    max-width: 560px;
-    margin: 0 auto 2.25rem;
-    line-height: 1.5;
-  }
-  .pc-chips-lead {
-    font-size: 0.8rem;
-    color: #6b7280;
-    letter-spacing: 0.02em;
-    margin: 0 0 0.7rem;
-  }
-  .pc-escape {
-    margin: 1.75rem 0 0;
-    font-size: 0.82rem;
-    color: #6b7280;
-  }
-  .pc-escape a {
-    color: #1e6091;
-    text-decoration: none;
-    font-weight: 500;
-    margin: 0 0.15rem;
-  }
-  .pc-escape a:hover { text-decoration: underline; }
-
-  .pc-input-wrap {
-    width: 100%;
-    max-width: 620px;
-    position: relative;
-    margin-bottom: 1.5rem;
-  }
-  .pc-input {
-    width: 100%;
-    border: 1.5px solid #dce4ed;
-    border-radius: 999px;
-    padding: 1rem 4rem 1rem 1.5rem;
-    font-size: 1rem;
-    font-family: inherit;
-    background: #fff;
-    color: #1f2937;
-    transition: border-color 0.15s, box-shadow 0.2s;
-    box-shadow: 0 2px 10px rgba(18, 33, 64, 0.04);
-  }
-  .pc-input:focus {
-    outline: none;
-    border-color: #1e6091;
-    box-shadow: 0 0 0 4px rgba(30, 96, 145, 0.12), 0 2px 10px rgba(18, 33, 64, 0.06);
-  }
-  .pc-send {
-    position: absolute;
-    right: 0.4rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    border: none;
-    background: #1e6091;
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s, transform 0.15s;
-  }
-  .pc-send:hover:not(:disabled) { background: #164e7e; transform: translateY(-50%) scale(1.04); }
-  .pc-send:disabled { background: #9ca3af; cursor: not-allowed; }
-  .pc-send svg { width: 18px; height: 18px; }
-
-  .pc-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    justify-content: center;
-    max-width: 620px;
-  }
-  .pc-chip {
-    border: 1px solid #e2e8f0;
-    background: #fff;
-    color: #1f2937;
-    padding: 0.7rem 1.1rem;
-    border-radius: 12px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.82rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    transition: all 0.15s ease;
-    box-shadow: 0 1px 3px rgba(18, 33, 64, 0.03);
-  }
-  .pc-chip:hover {
-    border-color: #1e6091;
-    color: #1e6091;
-    background: #f0f9ff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(30, 96, 145, 0.12);
-  }
-  .pc-chip-icon { font-size: 1.05rem; line-height: 1; }
-
-  /* Inline conversation */
-  .pc-convo {
-    width: 100%;
-    max-width: 680px;
-    margin: 2.5rem auto 0;
-    display: none;
-    flex-direction: column;
-    gap: 0.75rem;
-    text-align: left;
-  }
-  .pc-convo.pc-open { display: flex; }
-
-  .pc-msg {
-    max-width: 92%;
-    padding: 0.75rem 1rem;
-    border-radius: 14px;
-    word-wrap: break-word;
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
-  .pc-msg-user {
-    align-self: flex-end;
-    background: #1e6091;
-    color: #fff;
-    border-bottom-right-radius: 4px;
-    white-space: pre-wrap;
-  }
-  .pc-msg-bot {
-    align-self: flex-start;
-    background: #fff;
-    color: #1f2937;
-    border: 1px solid #e8ecf1;
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 2px 8px rgba(18, 33, 64, 0.04);
-  }
-  .pc-msg-bot p { margin: 0 0 0.6rem 0; }
-  .pc-msg-bot p:last-child { margin-bottom: 0; }
-  .pc-msg-bot ul { margin: 0.35rem 0 0.15rem 0; padding-left: 1.2rem; }
-  .pc-msg-bot li { margin: 0.2rem 0; }
-  .pc-msg-bot strong { color: #122140; font-weight: 600; }
-  .pc-msg-bot em { font-style: italic; }
-  .pc-msg-bot a { color: #1e6091; text-decoration: underline; }
-  .pc-msg-bot a:hover { color: #164e7e; }
-
-  .pc-typing {
-    align-self: flex-start;
-    display: inline-flex;
-    gap: 4px;
-    padding: 0.7rem 1rem;
-    background: #fff;
-    border: 1px solid #e8ecf1;
-    border-radius: 14px;
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 2px 8px rgba(18, 33, 64, 0.04);
-  }
-  .pc-typing span {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #9ca3af;
-    animation: pc-bounce 1.2s infinite ease-in-out;
-  }
-  .pc-typing span:nth-child(2) { animation-delay: 0.15s; }
-  .pc-typing span:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes pc-bounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-    30% { transform: translateY(-5px); opacity: 1; }
-  }
-
-  .pc-reset {
-    margin: 1rem auto 0;
-    background: transparent;
-    border: 1px solid #e2e8f0;
-    color: #6b7280;
-    padding: 0.45rem 0.9rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.8rem;
-    transition: all 0.15s;
-  }
-  .pc-reset:hover { border-color: #1e6091; color: #1e6091; background: #f0f9ff; }
-
-  @media (max-width: 640px) {
-    .pc-landing { padding: 2rem 1rem 3rem; min-height: calc(100vh - 80px); }
-    .pc-avatar { width: 108px; height: 108px; }
-    .pc-name { font-size: 2.2rem; }
-    .pc-subtitle { font-size: 0.95rem; margin-bottom: 0.5rem; }
-    .pc-pitch { font-size: 0.88rem; margin-bottom: 1.5rem; }
-    .pc-input { padding: 0.85rem 3.6rem 0.85rem 1.2rem; font-size: 0.95rem; }
-    .pc-chips { gap: 0.4rem; }
-    .pc-chip { padding: 0.6rem 0.9rem; font-size: 0.78rem; }
-    .pc-escape { margin-top: 1.25rem; font-size: 0.78rem; }
-  }
-</style>
-
-<script>document.body.classList.add('pc-landing-page');</script>
-
-<section class="pc-landing">
-  <img src="myprofile.jpg" alt="Daniel Redel" class="pc-avatar">
-  <p class="pc-greeting">Hey, I'm Daniel 👋</p>
-  <h1 class="pc-name">Daniel Redel</h1>
-  <p class="pc-subtitle">Economist &amp; Data Scientist · Causal Inference · Berlin</p>
-  <p class="pc-pitch">Applied causal inference for competition policy, pricing, and tech.</p>
-
-  <form class="pc-input-wrap" id="pc-hero-form" autocomplete="off">
-    <input type="text" class="pc-input" id="pc-hero-input" placeholder="Ask me anything about Daniel's work…" aria-label="Ask about Daniel">
-    <button class="pc-send" type="submit" id="pc-hero-send" aria-label="Send">
-      <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-        <polyline points="12 5 19 12 12 19"></polyline>
-      </svg>
-    </button>
-  </form>
-
-  <p class="pc-chips-lead">Or try:</p>
-  <div class="pc-chips" id="pc-hero-chips">
-    <button class="pc-chip" data-q="Tell me about Daniel's background and experience."><span class="pc-chip-icon">🙋</span> Me</button>
-    <button class="pc-chip" data-q="What projects has Daniel shipped?"><span class="pc-chip-icon">💼</span> Projects</button>
-    <button class="pc-chip" data-q="What research and publications does Daniel have?"><span class="pc-chip-icon">📚</span> Research</button>
-    <button class="pc-chip" data-q="What are Daniel's technical skills and methods?"><span class="pc-chip-icon">🛠️</span> Skills</button>
-    <button class="pc-chip" data-q="What blog posts has Daniel written on causal inference?"><span class="pc-chip-icon">✍️</span> Blog</button>
-  </div>
-
-  <p class="pc-escape">Prefer to browse? <a href="myposts.html">Blog</a> · <a href="projects.html">Projects</a> · <a href="research.html">Research</a> · <a href="about.html">About</a></p>
-
-  <div class="pc-convo" id="pc-hero-convo" aria-live="polite"></div>
-
-  <button class="pc-reset" id="pc-hero-reset" style="display:none;">Start a new conversation</button>
+<blockquote class="blockquote">
+<p><strong><a href="https://lyra-five-sable.vercel.app">▶ Live demo</a></strong> · <strong><a href="https://lyra-docs-chi.vercel.app">📖 User guide</a></strong> · <strong><a href="https://github.com/dannyredel/lyra">💻 Code</a></strong></p>
+</blockquote>
+<p>Every experimentation platform faces the same uncomfortable problem: <strong>the treatment effect is never observed.</strong> You see an estimate and a confidence interval, but you can never check them against the truth — the counterfactual is missing by definition. So the most important question, <em>“is this estimator actually correct here?”</em>, is on real data simply <strong>unanswerable</strong>. Teams ship A/B results and <em>hope</em> the method was unbiased.</p>
+<p><strong>Lyra</strong> is my attempt to dissolve that problem by inverting it: instead of estimating an unknown effect, it runs every experiment on a <strong>simulator whose ground truth I set</strong>. The estimator sees only the observable data; a Monte-Carlo harness then checks whether it <strong>recovers the known effect with correct interval coverage</strong> — before the method is trusted.</p>
+<p><span class="math display">
+\text{coverage} = \Pr\big(\tau \in \widehat{\mathrm{CI}}_{1-\alpha}\big) \overset{!}{=} 1-\alpha
+</span></p>
+<p>That single check — uncheckable on real data — becomes the <strong>gate</strong>. An estimator that recovers the planted effect at its nominal rate earns a <code>certified</code> badge; one that doesn’t is flagged, and its bias becomes a <em>measured, asserted quantity</em> rather than a worry. It turns soft methodological debates (“is the naive A/B biased under marketplace interference?”) into hard pass/fail checks.</p>
+<section id="what-it-is" class="level2">
+<h2 class="anchored" data-anchor-id="what-it-is">What it is</h2>
+<p>Lyra has three layers, kept deliberately decoupled:</p>
+<ul>
+<li><strong>An inference engine</strong> — a 12-chapter curriculum of estimators, each built notebook-first then promoted behind a small <code>Estimator</code>/<code>DGP</code> contract and <strong>certified by the harness</strong>: doubly-robust DML, CUPED &amp; ratio-metric variance, cluster-robust standard errors, interference designs, switchback + variance reduction, always-valid (peek-safe) confidence sequences, power &amp; decision rules, CATE/heterogeneity, policy learning &amp; off-policy evaluation, observational sensitivity analysis, and incrementality — validated all the way to the real <strong>Criteo Uplift RCT (13.9M rows)</strong>.</li>
+<li><strong>A thin-but-real chassis</strong> (FastAPI) — deterministic assignment, a <strong>governed metric library</strong>, a lifecycle state machine, and a scorecard with the certified-vs-truth badge, an always-valid sequence, SRM, and portfolio FDR. The operative <em>create → run → decide</em> loop.</li>
+<li><strong>A React dashboard</strong> — six industry study cases, a four-step create wizard with a sample-size calculator and live, parameter-reactive distribution plots, and a detailed-analytics scorecard (the Monte-Carlo sampling distribution, a coverage caterpillar).</li>
+</ul>
+<p>The headline idea recurs everywhere: <strong>estimators <em>guess</em>, DGPs <em>know</em>, and the harness <em>certifies</em>.</strong> Build that loop once, and every method added later earns a “certified: yes/no” badge for free.</p>
 </section>
-
-<script>
-(function () {
-  var API_URL = (window.CHATBOT_API_URL || 'http://localhost:8000') + '/api/chat';
-
-  var form   = document.getElementById('pc-hero-form');
-  var input  = document.getElementById('pc-hero-input');
-  var send   = document.getElementById('pc-hero-send');
-  var chips  = document.getElementById('pc-hero-chips');
-  var convo  = document.getElementById('pc-hero-convo');
-  var reset  = document.getElementById('pc-hero-reset');
-
-  var busy = false;
-
-  function escapeHtml(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-  function renderInline(s) {
-    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (_m, t, u) {
-      return '<a href="' + u + '" target="_blank" rel="noopener noreferrer">' + t + '</a>';
-    });
-    s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    return s;
-  }
-  function mdToHtml(raw) {
-    var safe = escapeHtml(raw || '');
-    var blocks = safe.split(/\n\s*\n/);
-    var out = [];
-    for (var i = 0; i < blocks.length; i++) {
-      var block = blocks[i].replace(/^\n+|\n+$/g, '');
-      if (!block) continue;
-      var lines = block.split('\n');
-      var isList = lines.length > 0 && lines.every(function (l) { return /^\s*-\s+/.test(l); });
-      if (isList) {
-        var items = lines.map(function (l) {
-          return '<li>' + renderInline(l.replace(/^\s*-\s+/, '')) + '</li>';
-        }).join('');
-        out.push('<ul>' + items + '</ul>');
-      } else {
-        out.push('<p>' + renderInline(block).replace(/\n/g, '<br>') + '</p>');
-      }
-    }
-    return out.join('');
-  }
-
-  function addMessage(role, text) {
-    var el = document.createElement('div');
-    el.className = 'pc-msg pc-msg-' + role;
-    if (role === 'bot') el.innerHTML = mdToHtml(text);
-    else el.textContent = text;
-    convo.appendChild(el);
-    convo.classList.add('pc-open');
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    return el;
-  }
-  function addTyping() {
-    var el = document.createElement('div');
-    el.className = 'pc-typing';
-    el.innerHTML = '<span></span><span></span><span></span>';
-    convo.appendChild(el);
-    convo.classList.add('pc-open');
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    return el;
-  }
-
-  async function submit(question) {
-    if (busy || !question.trim()) return;
-    busy = true; send.disabled = true;
-    addMessage('user', question);
-    var typing = addTyping();
-    reset.style.display = 'inline-block';
-
-    var botEl = null, botText = '';
-    try {
-      var resp = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: question })
-      });
-      if (!resp.ok || !resp.body) {
-        typing.remove();
-        addMessage('bot', resp.status === 429
-          ? 'Rate limit reached — please wait a minute and try again.'
-          : 'Something went wrong. Try again, or reach Daniel via [LinkedIn](https://www.linkedin.com/in/daniel-redel-14b052b6/).');
-        return;
-      }
-      var reader = resp.body.getReader();
-      var decoder = new TextDecoder();
-      var buf = '';
-      while (true) {
-        var c = await reader.read();
-        if (c.done) break;
-        buf += decoder.decode(c.value, { stream: true });
-        var parts = buf.split('\n\n');
-        buf = parts.pop();
-        for (var i = 0; i < parts.length; i++) {
-          var line = parts[i].trim();
-          if (!line.startsWith('data:')) continue;
-          var payload;
-          try { payload = JSON.parse(line.slice(5).trim()); } catch (_) { continue; }
-          if (payload.type === 'token') {
-            if (!botEl) { typing.remove(); botEl = addMessage('bot', ''); }
-            botText += payload.text;
-            botEl.innerHTML = mdToHtml(botText);
-            botEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          } else if (payload.type === 'done') {
-            if (!botEl) { typing.remove(); addMessage('bot', 'No answer returned.'); }
-          }
-        }
-      }
-    } catch (err) {
-      typing.remove();
-      addMessage('bot', 'Connection error. Is the backend running? (Dev: start `uvicorn app.main:app --reload` in the portfolio-chatbot-api repo.)');
-    } finally {
-      busy = false; send.disabled = false; input.focus();
-    }
-  }
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var q = input.value;
-    input.value = '';
-    submit(q);
-  });
-
-  chips.addEventListener('click', function (e) {
-    var btn = e.target.closest('.pc-chip');
-    if (!btn) return;
-    submit(btn.dataset.q);
-  });
-
-  reset.addEventListener('click', function () {
-    convo.innerHTML = '';
-    convo.classList.remove('pc-open');
-    reset.style.display = 'none';
-    input.value = '';
-    input.focus();
-  });
-})();
-</script>
+<section id="a-concrete-example" class="level2">
+<h2 class="anchored" data-anchor-id="a-concrete-example">A concrete example</h2>
+<p>Spin up a <strong>marketplace A/B</strong> in the wizard with shared-budget cannibalization. The naive user-level test reads a confident, <em>wrong</em> uplift — and the scorecard flags it <strong>uncertified</strong> (its interval misses the planted truth). Switch to a cluster-safe design and the same harness shows it <strong>certified</strong>, recovering the true global effect. The bias isn’t argued; it’s <em>shown</em>, against a truth only the simulator knows.</p>
+</section>
+<section id="how-i-built-it" class="level2">
+<h2 class="anchored" data-anchor-id="how-i-built-it">How I built it</h2>
+<p>It’s Python (PyMC, econml, statsmodels) for the engine, FastAPI for the chassis, React + Vite for the dashboard, and Quarto for the documentation — with a test suite (65 passing) where <strong>every estimator ships with a recovery test</strong>, and the naive-bias / A-A-null controls are asserted, not assumed. I worked <strong>notebooks-first</strong>: each method is prototyped raw to see the mechanics, then hardened behind the protocol and the harness gate, then promoted. The companion <strong><a href="https://lyra-docs-chi.vercel.app">user guide</a></strong> writes each method up properly — the problem, the math, and the recovery evidence that certifies it.</p>
+</section>
+<section id="why-it-matters-to-me" class="level2">
+<h2 class="anchored" data-anchor-id="why-it-matters-to-me">Why it matters to me</h2>
+<p>Most of my work is causal inference and experimentation, and the thing I keep coming back to is <strong>epistemic honesty</strong>: knowing <em>whether</em> a number can be trusted, not just producing one. Lyra is that principle made into a product — a platform that can prove its own results are right, on every experiment, because it authored the world they live in.</p>
+<p><strong>Take a look:</strong> the <strong><a href="https://lyra-five-sable.vercel.app">live dashboard</a></strong> to click through it, the <strong><a href="https://lyra-docs-chi.vercel.app">user guide</a></strong> for the methods, and the <strong><a href="https://github.com/dannyredel/lyra">code on GitHub</a></strong>.</p>
 
 
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
@@ -990,5 +692,5 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

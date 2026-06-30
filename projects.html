@@ -81,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
     const options = {
       valueNames: ['listing-title','listing-description','listing-image','listing-categories','listing-date',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
       
-      searchColumns: ["listing-title","listing-description","listing-categories","listing-date","listing-image"],
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -197,7 +197,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-cloud"><div class="category" data-category="QSUyRkIlMjBUZXN0aW5n"><span class="quarto-category-count category-cloud-2">A/B Testing</span></div><div class="category" data-category="Q2F1c2FsJTIwSW5mZXJlbmNl"><span class="quarto-category-count category-cloud-2">Causal Inference</span></div><div class="category" data-category="Q29uam9pbnQlMjBBbmFseXNpcw=="><span class="quarto-category-count category-cloud-2">Conjoint Analysis</span></div><div class="category" data-category="RGF0YSUyMFZpc3VhbGl6YXRpb24="><span class="quarto-category-count category-cloud-2">Data Visualization</span></div><div class="category" data-category="RGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcw=="><span class="quarto-category-count category-cloud-2">Difference-in-Differences</span></div><div class="category" data-category="RGlzY3JldGUlMjBDaG9pY2U="><span class="quarto-category-count category-cloud-2">Discrete Choice</span></div><div class="category" data-category="RG9ja2Vy"><span class="quarto-category-count category-cloud-2">Docker</span></div><div class="category" data-category="RmFzdEFQSQ=="><span class="quarto-category-count category-cloud-4">FastAPI</span></div><div class="category" data-category="R0NQ"><span class="quarto-category-count category-cloud-2">GCP</span></div><div class="category" data-category="Z2VvcGFuZGFz"><span class="quarto-category-count category-cloud-2">geopandas</span></div><div class="category" data-category="R2Vvc3BhdGlhbCUyMEFuYWx5c2lz"><span class="quarto-category-count category-cloud-2">Geospatial Analysis</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n"><span class="quarto-category-count category-cloud-7">Machine Learning</span></div><div class="category" data-category="TkxQ"><span class="quarto-category-count category-cloud-2">NLP</span></div><div class="category" data-category="T3BlbiUyMFNvdXJjZQ=="><span class="quarto-category-count category-cloud-2">Open Source</span></div><div class="category" data-category="UHlCTFA="><span class="quarto-category-count category-cloud-2">PyBLP</span></div><div class="category" data-category="UHlTcGFyaw=="><span class="quarto-category-count category-cloud-2">PySpark</span></div><div class="category" data-category="UHl0aG9u"><span class="quarto-category-count category-cloud-9">Python</span></div><div class="category" data-category="UiUyMCUyNiUyMFJzdHVkaW8="><span class="quarto-category-count category-cloud-2">R &amp; Rstudio</span></div><div class="category" data-category="c2Npa2l0LWxlYXJu"><span class="quarto-category-count category-cloud-5">scikit-learn</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-cloud"><div class="category" data-category="QSUyRkIlMjBUZXN0aW5n"><span class="quarto-category-count category-cloud-3">A/B Testing</span></div><div class="category" data-category="Q2F1c2FsJTIwSW5mZXJlbmNl"><span class="quarto-category-count category-cloud-5">Causal Inference</span></div><div class="category" data-category="Q29uam9pbnQlMjBBbmFseXNpcw=="><span class="quarto-category-count category-cloud-2">Conjoint Analysis</span></div><div class="category" data-category="RGF0YSUyMFZpc3VhbGl6YXRpb24="><span class="quarto-category-count category-cloud-2">Data Visualization</span></div><div class="category" data-category="RGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcw=="><span class="quarto-category-count category-cloud-2">Difference-in-Differences</span></div><div class="category" data-category="RGlzY3JldGUlMjBDaG9pY2U="><span class="quarto-category-count category-cloud-2">Discrete Choice</span></div><div class="category" data-category="RG9ja2Vy"><span class="quarto-category-count category-cloud-2">Docker</span></div><div class="category" data-category="RXhwZXJpbWVudGF0aW9u"><span class="quarto-category-count category-cloud-2">Experimentation</span></div><div class="category" data-category="RmFzdEFQSQ=="><span class="quarto-category-count category-cloud-4">FastAPI</span></div><div class="category" data-category="R0NQ"><span class="quarto-category-count category-cloud-2">GCP</span></div><div class="category" data-category="Z2VvcGFuZGFz"><span class="quarto-category-count category-cloud-2">geopandas</span></div><div class="category" data-category="R2Vvc3BhdGlhbCUyMEFuYWx5c2lz"><span class="quarto-category-count category-cloud-2">Geospatial Analysis</span></div><div class="category" data-category="TExN"><span class="quarto-category-count category-cloud-2">LLM</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n"><span class="quarto-category-count category-cloud-7">Machine Learning</span></div><div class="category" data-category="TkxQ"><span class="quarto-category-count category-cloud-2">NLP</span></div><div class="category" data-category="T3BlbiUyMFNvdXJjZQ=="><span class="quarto-category-count category-cloud-2">Open Source</span></div><div class="category" data-category="UHJpY2luZw=="><span class="quarto-category-count category-cloud-2">Pricing</span></div><div class="category" data-category="UHlMb2dpdA=="><span class="quarto-category-count category-cloud-2">PyLogit</span></div><div class="category" data-category="UHlNQw=="><span class="quarto-category-count category-cloud-2">PyMC</span></div><div class="category" data-category="UHlTcGFyaw=="><span class="quarto-category-count category-cloud-2">PySpark</span></div><div class="category" data-category="UHl0aG9u"><span class="quarto-category-count category-cloud-9">Python</span></div><div class="category" data-category="UiUyMCUyNiUyMFJzdHVkaW8="><span class="quarto-category-count category-cloud-2">R &amp; Rstudio</span></div><div class="category" data-category="UmVhY3Q="><span class="quarto-category-count category-cloud-2">React</span></div><div class="category" data-category="UmVtb3RlJTIwU2Vuc2luZw=="><span class="quarto-category-count category-cloud-2">Remote Sensing</span></div><div class="category" data-category="c2Npa2l0LWxlYXJu"><span class="quarto-category-count category-cloud-4">scikit-learn</span></div><div class="category" data-category="U3BhdGlhbCUyMEFuYWx5c2lz"><span class="quarto-category-count category-cloud-2">Spatial Analysis</span></div><div class="category" data-category="WEdCb29zdA=="><span class="quarto-category-count category-cloud-2">XGBoost</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -248,7 +248,121 @@ window.Quarto = {
     </div>
 </div>
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="UHl0aG9uJTJDQ2F1c2FsJTIwSW5mZXJlbmNlJTJDRGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcyUyQ0RhdGElMjBWaXN1YWxpemF0aW9uJTJDT3BlbiUyMFNvdXJjZQ==" data-listing-date-sort="1771369200000">
+<div class="g-col-1" data-index="0" data-categories="UHl0aG9uJTJDQ2F1c2FsJTIwSW5mZXJlbmNlJTJDRXhwZXJpbWVudGF0aW9uJTJDQSUyRkIlMjBUZXN0aW5nJTJDRmFzdEFQSSUyQ1JlYWN0JTJDUHlNQw==" data-listing-date-sort="1782770400000" data-listing-file-modified-sort="1782808447692" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="601">
+<a href="./posts/lyra/lyra.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="posts/lyra/lyra_cover.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Lyra: Experimentation You Can Trust
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2F1c2FsJTIwSW5mZXJlbmNl'); return false;">Causal Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RXhwZXJpbWVudGF0aW9u'); return false;">Experimentation</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QSUyRkIlMjBUZXN0aW5n'); return false;">A/B Testing</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RmFzdEFQSQ=='); return false;">FastAPI</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmVhY3Q='); return false;">React</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHlNQw=='); return false;">PyMC</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>An experimentation platform where every estimator is certified against a known ground truth. A Monte-Carlo harness checks whether each method recovers a planted effect with…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+30 June 2026
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1" data-categories="UHl0aG9uJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDQ2F1c2FsJTIwSW5mZXJlbmNlJTJDU3BhdGlhbCUyMEFuYWx5c2lzJTJDUmVtb3RlJTIwU2Vuc2luZyUyQ1hHQm9vc3QlMkNGYXN0QVBJ" data-listing-date-sort="1777154400000">
+<a href="https://rentsignal.de" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="assets/cover/rentsignal.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+RentSignal: Regulated Rent Intelligence for the German Market
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">Machine Learning</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2F1c2FsJTIwSW5mZXJlbmNl'); return false;">Causal Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3BhdGlhbCUyMEFuYWx5c2lz'); return false;">Spatial Analysis</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UmVtb3RlJTIwU2Vuc2luZw=='); return false;">Remote Sensing</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('WEdCb29zdA=='); return false;">XGBoost</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RmFzdEFQSQ=='); return false;">FastAPI</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>A live AI rent-optimization engine for the German rental market, built around Comply · Optimize · Act. Combines Mietpreisbremse compliance checking, ML rent prediction…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+26 April 2026
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="2" data-categories="UHl0aG9uJTJDRGlzY3JldGUlMjBDaG9pY2UlMkNDb25qb2ludCUyMEFuYWx5c2lzJTJDTExNJTJDQ2F1c2FsJTIwSW5mZXJlbmNlJTJDUHJpY2luZyUyQ1B5TG9naXQ=" data-listing-date-sort="1773529200000">
+<a href="https://beesignal.ai" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="assets/cover/beesignal.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+BeeSignal: Synthetic Demand Estimation with LLM Consumers
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGlzY3JldGUlMjBDaG9pY2U='); return false;">Discrete Choice</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q29uam9pbnQlMjBBbmFseXNpcw=='); return false;">Conjoint Analysis</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2F1c2FsJTIwSW5mZXJlbmNl'); return false;">Causal Inference</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHJpY2luZw=='); return false;">Pricing</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHlMb2dpdA=='); return false;">PyLogit</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>A live pricing-research engine that uses LLM-generated synthetic consumers to run conjoint analysis and pricing experiments that traditionally cost $50K-200K — for about…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+15 March 2026
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="3" data-categories="UHl0aG9uJTJDQ2F1c2FsJTIwSW5mZXJlbmNlJTJDRGlmZmVyZW5jZS1pbi1EaWZmZXJlbmNlcyUyQ0RhdGElMjBWaXN1YWxpemF0aW9uJTJDT3BlbiUyMFNvdXJjZQ==" data-listing-date-sort="1771369200000">
 <a href="https://github.com/dannyredel/didkit" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -282,7 +396,7 @@ didkit: Enhanced Plotting &amp; Inference for Difference-in-Differences
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="1" data-categories="UHl0aG9uJTJDUHlTcGFyayUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ05MUCUyQ0RvY2tlciUyQ0dDUCUyQ0Zhc3RBUEklMkNzY2lraXQtbGVhcm4=" data-listing-date-sort="1739746800000">
+<div class="g-col-1" data-index="4" data-categories="UHl0aG9uJTJDUHlTcGFyayUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ05MUCUyQ0RvY2tlciUyQ0dDUCUyQ0Zhc3RBUEklMkNzY2lraXQtbGVhcm4=" data-listing-date-sort="1739746800000">
 <a href="https://github.com/dannyredel/customer-recommendation-engine" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -322,38 +436,7 @@ Customer Segmentation &amp; Recommendation Engine
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="2" data-categories="UHl0aG9uJTJDQ29uam9pbnQlMjBBbmFseXNpcyUyQ0Rpc2NyZXRlJTIwQ2hvaWNlJTJDUHlCTFAlMkNGYXN0QVBJ" data-listing-date-sort="1736895600000">
-<a href="https://github.com/dannyredel" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="assets/cover/pricescope.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-PriceScope: Open-Source Conjoint Analysis with Synthetic Respondents
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29uam9pbnQlMjBBbmFseXNpcw=='); return false;">Conjoint Analysis</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGlzY3JldGUlMjBDaG9pY2U='); return false;">Discrete Choice</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHlCTFA='); return false;">PyBLP</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RmFzdEFQSQ=='); return false;">FastAPI</div>
-
-</div>
-<div class="card-attribution card-text-small end">
-<div class="listing-date">
-15 January 2025
-</div>
-</div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="TWFjaGluZSUyMExlYXJuaW5nJTJDUHl0aG9uJTJDc2Npa2l0LWxlYXJu" data-listing-date-sort="1711753200000">
+<div class="g-col-1" data-index="5" data-categories="TWFjaGluZSUyMExlYXJuaW5nJTJDUHl0aG9uJTJDc2Npa2l0LWxlYXJu" data-listing-date-sort="1711753200000">
 <a href="https://gorgeous-hamster-347e8f.netlify.app/" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -380,7 +463,7 @@ Machine Learning with Python: A Quick Guide
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="4" data-categories="UHl0aG9uJTJDR2Vvc3BhdGlhbCUyMEFuYWx5c2lzJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDZ2VvcGFuZGFzJTJDc2Npa2l0LWxlYXJu" data-listing-date-sort="1710111600000">
+<div class="g-col-1" data-index="6" data-categories="UHl0aG9uJTJDR2Vvc3BhdGlhbCUyMEFuYWx5c2lzJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDZ2VvcGFuZGFzJTJDc2Npa2l0LWxlYXJu" data-listing-date-sort="1710111600000">
 <a href="https://stellar-stroopwafel-ef58af.netlify.app/" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -411,7 +494,7 @@ Amsterdam Airbnb Price Prediction: A Machine Learning Approach
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="5" data-categories="UiUyMCUyNiUyMFJzdHVkaW8lMkNBJTJGQiUyMFRlc3RpbmclMkNNYWNoaW5lJTIwTGVhcm5pbmc=" data-listing-date-sort="1669849200000">
+<div class="g-col-1" data-index="7" data-categories="UiUyMCUyNiUyMFJzdHVkaW8lMkNBJTJGQiUyMFRlc3RpbmclMkNNYWNoaW5lJTIwTGVhcm5pbmc=" data-listing-date-sort="1669849200000">
 <a href="https://preeminent-torte-37ddf4.netlify.app/" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -513,7 +596,7 @@ Customer Analytics with R
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/dannyredel\.github\.io\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

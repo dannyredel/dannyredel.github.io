@@ -1,42 +1,32 @@
 [
   {
+    "listing": "/myposts.html",
+    "items": [
+      "/posts/lyra/lyra.html",
+      "/posts/synthetic-pricing-rcts/synthetic-pricing-rcts.html",
+      "/posts/balcony-paradox-causal-rents/balcony-paradox-causal-rents.html",
+      "/posts/synthetic-consumers-perfect-separation/synthetic-consumers-perfect-separation.html",
+      "/posts/event_study_best_practices/event_study_best_practices.html",
+      "/posts/event_study_comparison/event_study_comparison.html",
+      "/posts/parallel_trends_sensitivity/parallel_trends_sensitivity.html",
+      "/posts/synthetic_did/synthetic_did.html",
+      "/posts/causal_forests/causal_forests.html",
+      "/posts/causal_arima/carima_data.html",
+      "/posts/ab_test_bayesian/bayesian_ab_test.html",
+      "/posts/merger_simulation/Assignment1.html",
+      "/posts/gasoline_merger_did/merger-report.html",
+      "/posts/ab_testing1/1_ab_testing.html",
+      "/posts/nonparametrics/nonparametrics.html"
+    ]
+  },
+  {
     "listing": "/research.html",
     "items": []
   },
   {
-    "listing": "/index.html",
-    "items": [
-      "/posts/event_study_best_practices/event_study_best_practices.html",
-      "/posts/event_study_comparison/event_study_comparison.html",
-      "/posts/parallel_trends_sensitivity/parallel_trends_sensitivity.html",
-      "/posts/synthetic_did/synthetic_did.html",
-      "/posts/causal_forests/causal_forests.html",
-      "/posts/causal_arima/carima_data.html",
-      "/posts/ab_test_bayesian/bayesian_ab_test.html",
-      "/posts/merger_simulation/Assignment1.html",
-      "/posts/gasoline_merger_did/merger-report.html",
-      "/posts/ab_testing1/1_ab_testing.html",
-      "/posts/nonparametrics/nonparametrics.html"
-    ]
-  },
-  {
-    "listing": "/myposts.html",
-    "items": [
-      "/posts/event_study_best_practices/event_study_best_practices.html",
-      "/posts/event_study_comparison/event_study_comparison.html",
-      "/posts/parallel_trends_sensitivity/parallel_trends_sensitivity.html",
-      "/posts/synthetic_did/synthetic_did.html",
-      "/posts/causal_forests/causal_forests.html",
-      "/posts/causal_arima/carima_data.html",
-      "/posts/ab_test_bayesian/bayesian_ab_test.html",
-      "/posts/merger_simulation/Assignment1.html",
-      "/posts/gasoline_merger_did/merger-report.html",
-      "/posts/ab_testing1/1_ab_testing.html",
-      "/posts/nonparametrics/nonparametrics.html"
-    ]
-  },
-  {
     "listing": "/projects.html",
-    "items": []
+    "items": [
+      "/posts/lyra/lyra.html"
+    ]
   }
 ]

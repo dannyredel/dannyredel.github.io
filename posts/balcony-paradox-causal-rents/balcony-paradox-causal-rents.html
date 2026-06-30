@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Daniel Redel">
+<meta name="dcterms.date" content="2026-06-24">
+<meta name="description" content="In Berlin’s rental data, apartments with a balcony rent for slightly less per square meter than apartments without one. Taken literally, that says rip the balcony off to charge more — obviously absurd. This is a story about why naive numbers lie, and how satellite imagery plus an AI that reads listing photos finally lets you measure what a balcony is really worth: the effect flips from −€0.72 to +€1.08/m².">
 
-<title>Daniel Redel — Applied Economist &amp; Data Scientist – Daniel Redel</title>
+<title>The Balcony Paradox: Causal Renovation Effects in Berlin Rents – Daniel Redel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,23 +26,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./myprofile.jpg" rel="icon" type="image/jpeg">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-3ad3898019ac633b5dc008510ac09064.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-76702eb7cada84b330ed18131569fa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../myprofile.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-3ad3898019ac633b5dc008510ac09064.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-76702eb7cada84b330ed18131569fa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,17 +72,60 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
 <body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Daniel Redel</span>
     </a>
   </div>
@@ -89,22 +136,22 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./myposts.html"> <i class="bi bi-pencil-square" role="img">
+    <a class="nav-link" href="../../myposts.html"> <i class="bi bi-pencil-square" role="img">
 </i> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./projects.html"> <i class="bi bi-folder" role="img">
+    <a class="nav-link" href="../../projects.html"> <i class="bi bi-folder" role="img">
 </i> 
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./research.html"> <i class="bi bi-journal-text" role="img">
+    <a class="nav-link" href="../../research.html"> <i class="bi bi-journal-text" role="img">
 </i> 
 <span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> <i class="bi bi-person" role="img">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-person" role="img">
 </i> 
 <span class="menu-text">About</span></a>
   </li>  
@@ -131,457 +178,150 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">The Balcony Paradox: Causal Renovation Effects in Berlin Rents</h1>
+                  <div>
+        <div class="description">
+          In Berlin’s rental data, apartments with a balcony rent for slightly less per square meter than apartments without one. Taken literally, that says rip the balcony off to charge more — obviously absurd. This is a story about why naive numbers lie, and how satellite imagery plus an AI that reads listing photos finally lets you measure what a balcony is really worth: the effect flips from −€0.72 to +€1.08/m².
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Causal Inference</div>
+                <div class="quarto-category">Machine Learning</div>
+                <div class="quarto-category">Real Estate</div>
+                <div class="quarto-category">Spatial Analysis</div>
+                <div class="quarto-category">Python</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Daniel Redel </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 24, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-the-naive-number-lies-a-two-minute-primer-on-confounding" id="toc-why-the-naive-number-lies-a-two-minute-primer-on-confounding" class="nav-link active" data-scroll-target="#why-the-naive-number-lies-a-two-minute-primer-on-confounding">Why the naive number lies: a two-minute primer on confounding</a></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">The data</a></li>
+  <li><a href="#the-design-matching-with-confounders-you-couldnt-see-before" id="toc-the-design-matching-with-confounders-you-couldnt-see-before" class="nav-link" data-scroll-target="#the-design-matching-with-confounders-you-couldnt-see-before">The design: matching, with confounders you couldn’t see before</a></li>
+  <li><a href="#the-paradox-resolved" id="toc-the-paradox-resolved" class="nav-link" data-scroll-target="#the-paradox-resolved">The paradox, resolved</a></li>
+  <li><a href="#new-premiums-you-couldnt-measure-before" id="toc-new-premiums-you-couldnt-measure-before" class="nav-link" data-scroll-target="#new-premiums-you-couldnt-measure-before">New premiums you couldn’t measure before</a></li>
+  <li><a href="#why-it-matters" id="toc-why-it-matters" class="nav-link" data-scroll-target="#why-it-matters">Why it matters</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
-<style>
-  /* Hide navbar's bottom shadow on the landing to let the hero breathe */
-  body.pc-landing-page .navbar { box-shadow: none; }
 
-  /* Full-viewport soft gradient background for the landing */
-  body.pc-landing-page {
-    background:
-      radial-gradient(1000px 620px at 8% 22%, rgba(191, 227, 245, 0.55), transparent 60%),
-      radial-gradient(900px 560px at 92% 80%, rgba(214, 231, 247, 0.55), transparent 60%),
-      #f8fafc;
-    background-attachment: fixed;
-    min-height: 100vh;
-  }
-
-  /* Hide the floating widget on the landing (conversation lives in the hero) */
-  body.pc-landing-page #pc-toggle,
-  body.pc-landing-page #pc-panel { display: none !important; }
-
-  /* Hide Quarto's title/header scaffolding on this page */
-  body.pc-landing-page #title-block-header,
-  body.pc-landing-page h1.title,
-  body.pc-landing-page .quarto-title-block { display: none !important; }
-  body.pc-landing-page main.content { padding-top: 0 !important; max-width: 100% !important; }
-
-  .pc-landing {
-    min-height: calc(100vh - 120px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 3rem 1.25rem 4rem;
-    position: relative;
-  }
-
-  .pc-avatar {
-    width: 128px; height: 128px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 0 6px 28px rgba(18, 33, 64, 0.18);
-    margin-bottom: 1.25rem;
-  }
-
-  .pc-greeting {
-    font-size: 0.95rem;
-    color: #4a5568;
-    margin: 0 0 0.35rem;
-    letter-spacing: 0.01em;
-  }
-  .pc-name {
-    font-family: 'Fraunces', Georgia, serif;
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 700;
-    color: #122140;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    margin: 0 0 0.4rem;
-  }
-  .pc-subtitle {
-    font-size: 1.05rem;
-    color: #6b7280;
-    margin: 0 0 0.65rem;
-    font-weight: 400;
-  }
-  .pc-pitch {
-    font-size: 0.95rem;
-    color: #4a5568;
-    font-style: italic;
-    max-width: 560px;
-    margin: 0 auto 2.25rem;
-    line-height: 1.5;
-  }
-  .pc-chips-lead {
-    font-size: 0.8rem;
-    color: #6b7280;
-    letter-spacing: 0.02em;
-    margin: 0 0 0.7rem;
-  }
-  .pc-escape {
-    margin: 1.75rem 0 0;
-    font-size: 0.82rem;
-    color: #6b7280;
-  }
-  .pc-escape a {
-    color: #1e6091;
-    text-decoration: none;
-    font-weight: 500;
-    margin: 0 0.15rem;
-  }
-  .pc-escape a:hover { text-decoration: underline; }
-
-  .pc-input-wrap {
-    width: 100%;
-    max-width: 620px;
-    position: relative;
-    margin-bottom: 1.5rem;
-  }
-  .pc-input {
-    width: 100%;
-    border: 1.5px solid #dce4ed;
-    border-radius: 999px;
-    padding: 1rem 4rem 1rem 1.5rem;
-    font-size: 1rem;
-    font-family: inherit;
-    background: #fff;
-    color: #1f2937;
-    transition: border-color 0.15s, box-shadow 0.2s;
-    box-shadow: 0 2px 10px rgba(18, 33, 64, 0.04);
-  }
-  .pc-input:focus {
-    outline: none;
-    border-color: #1e6091;
-    box-shadow: 0 0 0 4px rgba(30, 96, 145, 0.12), 0 2px 10px rgba(18, 33, 64, 0.06);
-  }
-  .pc-send {
-    position: absolute;
-    right: 0.4rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    border: none;
-    background: #1e6091;
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s, transform 0.15s;
-  }
-  .pc-send:hover:not(:disabled) { background: #164e7e; transform: translateY(-50%) scale(1.04); }
-  .pc-send:disabled { background: #9ca3af; cursor: not-allowed; }
-  .pc-send svg { width: 18px; height: 18px; }
-
-  .pc-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    justify-content: center;
-    max-width: 620px;
-  }
-  .pc-chip {
-    border: 1px solid #e2e8f0;
-    background: #fff;
-    color: #1f2937;
-    padding: 0.7rem 1.1rem;
-    border-radius: 12px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.82rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    transition: all 0.15s ease;
-    box-shadow: 0 1px 3px rgba(18, 33, 64, 0.03);
-  }
-  .pc-chip:hover {
-    border-color: #1e6091;
-    color: #1e6091;
-    background: #f0f9ff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(30, 96, 145, 0.12);
-  }
-  .pc-chip-icon { font-size: 1.05rem; line-height: 1; }
-
-  /* Inline conversation */
-  .pc-convo {
-    width: 100%;
-    max-width: 680px;
-    margin: 2.5rem auto 0;
-    display: none;
-    flex-direction: column;
-    gap: 0.75rem;
-    text-align: left;
-  }
-  .pc-convo.pc-open { display: flex; }
-
-  .pc-msg {
-    max-width: 92%;
-    padding: 0.75rem 1rem;
-    border-radius: 14px;
-    word-wrap: break-word;
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
-  .pc-msg-user {
-    align-self: flex-end;
-    background: #1e6091;
-    color: #fff;
-    border-bottom-right-radius: 4px;
-    white-space: pre-wrap;
-  }
-  .pc-msg-bot {
-    align-self: flex-start;
-    background: #fff;
-    color: #1f2937;
-    border: 1px solid #e8ecf1;
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 2px 8px rgba(18, 33, 64, 0.04);
-  }
-  .pc-msg-bot p { margin: 0 0 0.6rem 0; }
-  .pc-msg-bot p:last-child { margin-bottom: 0; }
-  .pc-msg-bot ul { margin: 0.35rem 0 0.15rem 0; padding-left: 1.2rem; }
-  .pc-msg-bot li { margin: 0.2rem 0; }
-  .pc-msg-bot strong { color: #122140; font-weight: 600; }
-  .pc-msg-bot em { font-style: italic; }
-  .pc-msg-bot a { color: #1e6091; text-decoration: underline; }
-  .pc-msg-bot a:hover { color: #164e7e; }
-
-  .pc-typing {
-    align-self: flex-start;
-    display: inline-flex;
-    gap: 4px;
-    padding: 0.7rem 1rem;
-    background: #fff;
-    border: 1px solid #e8ecf1;
-    border-radius: 14px;
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 2px 8px rgba(18, 33, 64, 0.04);
-  }
-  .pc-typing span {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #9ca3af;
-    animation: pc-bounce 1.2s infinite ease-in-out;
-  }
-  .pc-typing span:nth-child(2) { animation-delay: 0.15s; }
-  .pc-typing span:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes pc-bounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-    30% { transform: translateY(-5px); opacity: 1; }
-  }
-
-  .pc-reset {
-    margin: 1rem auto 0;
-    background: transparent;
-    border: 1px solid #e2e8f0;
-    color: #6b7280;
-    padding: 0.45rem 0.9rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.8rem;
-    transition: all 0.15s;
-  }
-  .pc-reset:hover { border-color: #1e6091; color: #1e6091; background: #f0f9ff; }
-
-  @media (max-width: 640px) {
-    .pc-landing { padding: 2rem 1rem 3rem; min-height: calc(100vh - 80px); }
-    .pc-avatar { width: 108px; height: 108px; }
-    .pc-name { font-size: 2.2rem; }
-    .pc-subtitle { font-size: 0.95rem; margin-bottom: 0.5rem; }
-    .pc-pitch { font-size: 0.88rem; margin-bottom: 1.5rem; }
-    .pc-input { padding: 0.85rem 3.6rem 0.85rem 1.2rem; font-size: 0.95rem; }
-    .pc-chips { gap: 0.4rem; }
-    .pc-chip { padding: 0.6rem 0.9rem; font-size: 0.78rem; }
-    .pc-escape { margin-top: 1.25rem; font-size: 0.78rem; }
-  }
-</style>
-
-<script>document.body.classList.add('pc-landing-page');</script>
-
-<section class="pc-landing">
-  <img src="myprofile.jpg" alt="Daniel Redel" class="pc-avatar">
-  <p class="pc-greeting">Hey, I'm Daniel 👋</p>
-  <h1 class="pc-name">Daniel Redel</h1>
-  <p class="pc-subtitle">Economist &amp; Data Scientist · Causal Inference · Berlin</p>
-  <p class="pc-pitch">Applied causal inference for competition policy, pricing, and tech.</p>
-
-  <form class="pc-input-wrap" id="pc-hero-form" autocomplete="off">
-    <input type="text" class="pc-input" id="pc-hero-input" placeholder="Ask me anything about Daniel's work…" aria-label="Ask about Daniel">
-    <button class="pc-send" type="submit" id="pc-hero-send" aria-label="Send">
-      <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-        <polyline points="12 5 19 12 12 19"></polyline>
-      </svg>
-    </button>
-  </form>
-
-  <p class="pc-chips-lead">Or try:</p>
-  <div class="pc-chips" id="pc-hero-chips">
-    <button class="pc-chip" data-q="Tell me about Daniel's background and experience."><span class="pc-chip-icon">🙋</span> Me</button>
-    <button class="pc-chip" data-q="What projects has Daniel shipped?"><span class="pc-chip-icon">💼</span> Projects</button>
-    <button class="pc-chip" data-q="What research and publications does Daniel have?"><span class="pc-chip-icon">📚</span> Research</button>
-    <button class="pc-chip" data-q="What are Daniel's technical skills and methods?"><span class="pc-chip-icon">🛠️</span> Skills</button>
-    <button class="pc-chip" data-q="What blog posts has Daniel written on causal inference?"><span class="pc-chip-icon">✍️</span> Blog</button>
-  </div>
-
-  <p class="pc-escape">Prefer to browse? <a href="myposts.html">Blog</a> · <a href="projects.html">Projects</a> · <a href="research.html">Research</a> · <a href="about.html">About</a></p>
-
-  <div class="pc-convo" id="pc-hero-convo" aria-live="polite"></div>
-
-  <button class="pc-reset" id="pc-hero-reset" style="display:none;">Start a new conversation</button>
+<blockquote class="blockquote">
+<p>Part of <a href="https://rentsignal.de"><strong>RentSignal</strong></a> — an AI rent-optimization engine for the German rental market.</p>
+</blockquote>
+<p>Here is a number that should bother you. In Berlin’s rental listings, apartments <em>with</em> a balcony rent for slightly <strong>less</strong> per square meter than apartments <em>without</em> one. Read literally, that advises a landlord to tear the balcony off and charge more. Obviously, nobody believes that. So what is a balcony actually worth — and why does the raw data insist on lying to us?</p>
+<p>The answer is a small masterclass in why <strong>correlation isn’t causation</strong>, and a demonstration that the fix sometimes requires data we simply couldn’t measure until very recently: satellite imagery and an AI that reads apartment photos.</p>
+<section id="why-the-naive-number-lies-a-two-minute-primer-on-confounding" class="level2">
+<h2 class="anchored" data-anchor-id="why-the-naive-number-lies-a-two-minute-primer-on-confounding">Why the naive number lies: a two-minute primer on confounding</h2>
+<p>Suppose you want to know the effect of a balcony on rent. The tempting move is to compare the average rent of apartments with balconies to those without. The problem is that <strong>balconies don’t get sprinkled onto apartments at random.</strong> They cluster in particular kinds of buildings — and in Berlin, that clustering runs the wrong way for a naive comparison. A great many balconies hang off older, less-renovated <em>Altbau</em> stock, or off 1960s blocks in less central locations. So the balcony apartment rents for less not <em>because</em> of the balcony, but because of everything the balcony quietly travels with: an older, shabbier, cheaper building.</p>
+<p>That lurking third factor — building quality — is a <strong>confounder</strong>: it influences both whether an apartment has a balcony <em>and</em> what it rents for, creating a fake correlation between them. The balcony takes the blame for its company.</p>
+<p>What we actually want is the effect of <em>adding a balcony while holding everything else fixed</em> — the <strong>average treatment effect on the treated</strong> (ATT):</p>
+<p><span class="math display">
+\text{ATT} = \mathbb{E}\big[\,Y(1) - Y(0)\,\big|\, T = 1\,\big],
+</span></p>
+<p>the difference between an apartment’s rent <em>with</em> the feature and what that very same apartment would have rented for <em>without</em> it. We never observe both worlds for one apartment, so the whole game is constructing a credible stand-in for the missing one — by comparing apartments that are alike on every confounder we can measure. The estimate is therefore only as honest as that confounder list. Miss building quality and the balcony stays framed.</p>
 </section>
-
-<script>
-(function () {
-  var API_URL = (window.CHATBOT_API_URL || 'http://localhost:8000') + '/api/chat';
-
-  var form   = document.getElementById('pc-hero-form');
-  var input  = document.getElementById('pc-hero-input');
-  var send   = document.getElementById('pc-hero-send');
-  var chips  = document.getElementById('pc-hero-chips');
-  var convo  = document.getElementById('pc-hero-convo');
-  var reset  = document.getElementById('pc-hero-reset');
-
-  var busy = false;
-
-  function escapeHtml(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-  function renderInline(s) {
-    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (_m, t, u) {
-      return '<a href="' + u + '" target="_blank" rel="noopener noreferrer">' + t + '</a>';
-    });
-    s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-    return s;
-  }
-  function mdToHtml(raw) {
-    var safe = escapeHtml(raw || '');
-    var blocks = safe.split(/\n\s*\n/);
-    var out = [];
-    for (var i = 0; i < blocks.length; i++) {
-      var block = blocks[i].replace(/^\n+|\n+$/g, '');
-      if (!block) continue;
-      var lines = block.split('\n');
-      var isList = lines.length > 0 && lines.every(function (l) { return /^\s*-\s+/.test(l); });
-      if (isList) {
-        var items = lines.map(function (l) {
-          return '<li>' + renderInline(l.replace(/^\s*-\s+/, '')) + '</li>';
-        }).join('');
-        out.push('<ul>' + items + '</ul>');
-      } else {
-        out.push('<p>' + renderInline(block).replace(/\n/g, '<br>') + '</p>');
-      }
-    }
-    return out.join('');
-  }
-
-  function addMessage(role, text) {
-    var el = document.createElement('div');
-    el.className = 'pc-msg pc-msg-' + role;
-    if (role === 'bot') el.innerHTML = mdToHtml(text);
-    else el.textContent = text;
-    convo.appendChild(el);
-    convo.classList.add('pc-open');
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    return el;
-  }
-  function addTyping() {
-    var el = document.createElement('div');
-    el.className = 'pc-typing';
-    el.innerHTML = '<span></span><span></span><span></span>';
-    convo.appendChild(el);
-    convo.classList.add('pc-open');
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    return el;
-  }
-
-  async function submit(question) {
-    if (busy || !question.trim()) return;
-    busy = true; send.disabled = true;
-    addMessage('user', question);
-    var typing = addTyping();
-    reset.style.display = 'inline-block';
-
-    var botEl = null, botText = '';
-    try {
-      var resp = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: question })
-      });
-      if (!resp.ok || !resp.body) {
-        typing.remove();
-        addMessage('bot', resp.status === 429
-          ? 'Rate limit reached — please wait a minute and try again.'
-          : 'Something went wrong. Try again, or reach Daniel via [LinkedIn](https://www.linkedin.com/in/daniel-redel-14b052b6/).');
-        return;
-      }
-      var reader = resp.body.getReader();
-      var decoder = new TextDecoder();
-      var buf = '';
-      while (true) {
-        var c = await reader.read();
-        if (c.done) break;
-        buf += decoder.decode(c.value, { stream: true });
-        var parts = buf.split('\n\n');
-        buf = parts.pop();
-        for (var i = 0; i < parts.length; i++) {
-          var line = parts[i].trim();
-          if (!line.startsWith('data:')) continue;
-          var payload;
-          try { payload = JSON.parse(line.slice(5).trim()); } catch (_) { continue; }
-          if (payload.type === 'token') {
-            if (!botEl) { typing.remove(); botEl = addMessage('bot', ''); }
-            botText += payload.text;
-            botEl.innerHTML = mdToHtml(botText);
-            botEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          } else if (payload.type === 'done') {
-            if (!botEl) { typing.remove(); addMessage('bot', 'No answer returned.'); }
-          }
-        }
-      }
-    } catch (err) {
-      typing.remove();
-      addMessage('bot', 'Connection error. Is the backend running? (Dev: start `uvicorn app.main:app --reload` in the portfolio-chatbot-api repo.)');
-    } finally {
-      busy = false; send.disabled = false; input.focus();
-    }
-  }
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var q = input.value;
-    input.value = '';
-    submit(q);
-  });
-
-  chips.addEventListener('click', function (e) {
-    var btn = e.target.closest('.pc-chip');
-    if (!btn) return;
-    submit(btn.dataset.q);
-  });
-
-  reset.addEventListener('click', function () {
-    convo.innerHTML = '';
-    convo.classList.remove('pc-open');
-    reset.style.display = 'none';
-    input.value = '';
-    input.focus();
-  });
-})();
-</script>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The data</h2>
+<p>I worked from a March 2026 scrape of ImmoScout24 Berlin — <strong>~8,000 listings</strong>, each geocoded and joined to its rent.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="map_berlin_rent.png" class="img-fluid figure-img"></p>
+<figcaption>Berlin rental listings, colored by rent per square meter. The expensive core (red) fades to cheaper outskirts (blue) — exactly the spatial structure a fair comparison has to control for.</figcaption>
+</figure>
+</div>
+<p>The first modeling decision was what to <em>throw away</em>. <strong>41.5%</strong> of the raw listings were <em>Tauschwohnungen</em> — apartment swaps offered at deliberately below-market rent (median €10.37/m² versus €19.00/m² for regular listings). Their price is set by rent control and swap dynamics, not amenities, so leaving them in would poison every estimate. Out they went, leaving <strong>~4,800 regular listings</strong>.</p>
+</section>
+<section id="the-design-matching-with-confounders-you-couldnt-see-before" class="level2">
+<h2 class="anchored" data-anchor-id="the-design-matching-with-confounders-you-couldnt-see-before">The design: matching, with confounders you couldn’t see before</h2>
+<p>The tool is <strong>propensity-score matching</strong>: for each apartment with a balcony, find an apartment <em>without</em> one that looks just like it across the confounders, compare their rents, and average those gaps. Simple in spirit; the magic is entirely in how rich the “looks just like it” can be made.</p>
+<p>This model matches on <strong>27 confounders</strong>, including two whole categories that a hedonic regression from a decade ago simply could not see:</p>
+<ul>
+<li><strong>Structural</strong> — size, rooms, building era, floor, condition.</li>
+<li><strong>Spatial</strong> — distance to the centre, to the U-Bahn, parks and water; counts of food/cafés/shops within 500–1000 m; and <strong>Sentinel-2 satellite indices</strong> for vegetation, water, and built-up density.</li>
+<li><strong>Visual, read from the listing photos by an AI</strong> — <code>renovation_level</code>, <code>interior_quality</code>, <code>brightness</code>, and <code>building_condition</code>, extracted by a Gemini vision model.</li>
+</ul>
+<p>That last group is the key that unlocks the paradox. A balcony correlates with older, less-renovated buildings — so unless you can actually <em>measure</em> renovation and interior quality, you can’t peel the balcony’s effect apart from the building’s. AI-extracted image features finally let you hold “how nice and renovated does this place look” constant while you vary the balcony alone.</p>
+</section>
+<section id="the-paradox-resolved" class="level2">
+<h2 class="anchored" data-anchor-id="the-paradox-resolved">The paradox, resolved</h2>
+<p>With the full confounder set, balance is excellent (all 30 covariates have a standardized mean difference below 0.1 on the matched balcony sample), and the balcony’s effect <strong>flips sign</strong>:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="balcony_flip.png" class="img-fluid figure-img"></p>
+<figcaption>With richer confounders — especially AI-read visual quality — the balcony effect flips from negative to positive.</figcaption>
+</figure>
+</div>
+<p>The earlier version of this analysis (older data, no image or spatial controls) faithfully reproduced the paradox: a <em>negative</em> balcony effect of −€0.72/m². Adding the renovation and interior-quality confounders does exactly what the theory promises. Once you stop letting “old and shabby” hide inside “has a balcony,” the balcony’s true premium surfaces: <strong>+€1.08/m²</strong>, with a 95% confidence interval (€0.21–€1.97) comfortably above zero. For a 75 m² apartment that’s about <strong>+€80/month</strong> that the naive number was throwing in the bin.</p>
+<p>Kitchen comes out as the single largest fitted premium at <strong>+€3.48/m²</strong>, and it’s heterogeneous across building eras — strongest in older and mid-century stock, near zero in post-2015 new-builds where a modern kitchen is simply assumed.</p>
+</section>
+<section id="new-premiums-you-couldnt-measure-before" class="level2">
+<h2 class="anchored" data-anchor-id="new-premiums-you-couldnt-measure-before">New premiums you couldn’t measure before</h2>
+<p>Here’s the part I find most fun. Because the confounders come from photos, the <em>treatments</em> can too. Beyond the classic four amenities, I estimated causal effects for features that only a vision model can reliably tag across thousands of listings:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="novel_effects.png" class="img-fluid figure-img"></p>
+<figcaption>Causal premiums for features detected by AI from listing photos, with 95% confidence intervals.</figcaption>
+</figure>
+</div>
+<p><strong>High ceilings (+€1.97/m²)</strong> and <strong>original Dielen plank floors (+€1.28/m²)</strong> — the signatures of desirable Berlin <em>Altbau</em> — carry real, identifiable premiums once you can <em>see</em> them at scale. The cellar’s negative sign is almost certainly residual confounding with older peripheral buildings (a healthy reminder that not every coefficient is a clean causal effect). As far as I can tell, using AI-extracted image features as the <em>treatment</em> in a hedonic matching design is genuinely novel: the photos become both the controls <em>and</em> the variables of interest.</p>
+</section>
+<section id="why-it-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-it-matters">Why it matters</h2>
+<p>Two takeaways, one for the method and one for the money.</p>
+<p><strong>For the method:</strong> the balcony paradox is a clean, visceral demonstration that <em>better confounders change conclusions</em> — not by a rounding error, but by flipping a sign. Multimodal data (satellite + vision) isn’t a garnish here; it’s the thing that makes the un-confounding possible at all. The missing variable was always “how renovated is this apartment,” and for the first time it’s measurable across an entire market.</p>
+<p><strong>For the money:</strong> to a rent-optimization product, the gap between “balconies cost you money” and “a balcony adds ~€80/month” is the gap between bad advice and good advice. When the output is a recommendation a landlord will act on, you want <em>causal</em> estimates — not raw correlations, and not even a black-box model’s feature importances.</p>
+<p>The naive number wasn’t wrong because the data was dirty. It was wrong because a balcony rarely travels alone.</p>
 
 
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
@@ -645,7 +385,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/dannyredel\.github\.io\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -990,5 +730,5 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

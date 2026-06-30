@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>BLP Demand Estimation with PyBLP – Daniel Redel</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../myprofile.jpg" rel="icon" type="image/jpeg">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3ad3898019ac633b5dc008510ac09064.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-76702eb7cada84b330ed18131569fa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Daniel Redel</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../myposts.html"> <i class="bi bi-pencil-square" role="img">
+</i> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../projects.html"> <i class="bi bi-folder" role="img">
+</i> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../research.html"> <i class="bi bi-journal-text" role="img">
+</i> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> <i class="bi bi-person" role="img">
+</i> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/dannyredel"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/daniel-redel-14b052b6/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/DannyRedel"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">BLP Demand Estimation with PyBLP</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Notes on the <strong>Berry, Levinsohn &amp; Pakes (1995)</strong> random coefficients logit model for demand estimation, implemented via the <a href="https://pyblp.readthedocs.io/en/stable/">PyBLP</a> Python package.</p>
+<p>BLP solves a fundamental problem in empirical IO: estimating demand for differentiated products using only <strong>market-level data</strong> (aggregate shares and prices), while allowing for <strong>heterogeneous consumer preferences</strong> and <strong>endogenous prices</strong>. The key insight is that unobserved product quality (<span class="math inline">\(\xi_j\)</span>) is correlated with price, so OLS is biased — BLP uses a GMM framework with instrumental variables to recover consistent estimates.</p>
+<p>We walk through the model using the <strong>Nevo (2000) fake cereal dataset</strong> — a panel of 24 cereal brands across 94 city-quarter markets.</p>
+<section id="the-model" class="level1">
+<h1>The Model</h1>
+<section id="consumer-utility" class="level2">
+<h2 class="anchored" data-anchor-id="consumer-utility">Consumer Utility</h2>
+<p>Consumer <span class="math inline">\(i\)</span> in market <span class="math inline">\(t\)</span> choosing product <span class="math inline">\(j\)</span> gets indirect utility:</p>
+<p><span class="math display">\[
+u_{ijt} = \underbrace{x_j' \beta_i - \alpha_i \, p_{jt} + \xi_{jt}}_{\text{mean + individual deviation}} + \epsilon_{ijt}
+\]</span></p>
+<p>where: - <span class="math inline">\(x_j\)</span> = observed product characteristics (sugar, mushiness, brand dummies) - <span class="math inline">\(p_{jt}\)</span> = price - <span class="math inline">\(\xi_{jt}\)</span> = unobserved product quality (the structural error) - <span class="math inline">\(\epsilon_{ijt} \sim\)</span> Type I Extreme Value (logit error) - <span class="math inline">\(\beta_i, \alpha_i\)</span> = consumer-specific taste parameters</p>
+<p>The outside option (not buying cereal) has utility <span class="math inline">\(u_{i0t} = \epsilon_{i0t}\)</span>, normalized to zero mean.</p>
+</section>
+<section id="random-coefficients" class="level2">
+<h2 class="anchored" data-anchor-id="random-coefficients">Random Coefficients</h2>
+<p>Taste heterogeneity is modeled as:</p>
+<p><span class="math display">\[
+\beta_i = \underbrace{\bar{\beta}}_{\text{mean taste}} + \underbrace{\Pi \, d_i}_{\text{demographic interaction}} + \underbrace{\Sigma \, \nu_i}_{\text{unobserved heterogeneity}}
+\]</span></p>
+<p>where <span class="math inline">\(d_i\)</span> are observed demographics (income, age, etc.) and <span class="math inline">\(\nu_i \sim N(0, I)\)</span> captures unobserved taste variation. The parameters to estimate are:</p>
+<ul>
+<li><span class="math inline">\(\bar{\beta}\)</span> — mean tastes (linear parameters)</li>
+<li><span class="math inline">\(\Pi\)</span> — how demographics shift tastes (K <span class="math inline">\(\times\)</span> D matrix)</li>
+<li><span class="math inline">\(\Sigma\)</span> — standard deviations of unobserved heterogeneity (K <span class="math inline">\(\times\)</span> K, often diagonal)</li>
+</ul>
+</section>
+<section id="market-shares" class="level2">
+<h2 class="anchored" data-anchor-id="market-shares">Market Shares</h2>
+<p>Integrating over the consumer distribution, the predicted market share of product <span class="math inline">\(j\)</span> is:</p>
+<p><span class="math display">\[
+s_{jt}(\delta, \theta_2) = \int \frac{\exp(\delta_{jt} + \mu_{ijt})}{1 + \sum_{k=1}^{J_t} \exp(\delta_{kt} + \mu_{ikt})} \, dF(\nu_i, d_i)
+\]</span></p>
+<p>where the <strong>mean utility</strong> is <span class="math inline">\(\delta_{jt} = x_j' \bar{\beta} - \bar{\alpha} \, p_{jt} + \xi_{jt}\)</span> and the <strong>individual deviation</strong> is <span class="math inline">\(\mu_{ijt} = x_j' (\Pi d_i + \Sigma \nu_i)\)</span>.</p>
+<p>This integral has no closed form — it’s approximated via simulation (Monte Carlo draws) or quadrature (product rules).</p>
+</section>
+<section id="berry-inversion" class="level2">
+<h2 class="anchored" data-anchor-id="berry-inversion">Berry Inversion</h2>
+<p>Given nonlinear parameters <span class="math inline">\(\theta_2 = (\Sigma, \Pi)\)</span> and observed shares <span class="math inline">\(S_{jt}\)</span>, the <strong>contraction mapping</strong> of Berry (1994) recovers the mean utility vector <span class="math inline">\(\delta\)</span> that rationalizes the data:</p>
+<p><span class="math display">\[
+\delta_{jt}^{(r+1)} = \delta_{jt}^{(r)} + \ln S_{jt} - \ln s_{jt}(\delta^{(r)}, \theta_2)
+\]</span></p>
+<p>This iterates until <span class="math inline">\(s(\delta, \theta_2) = S\)</span> (predicted = observed shares). The structural error is then <span class="math inline">\(\xi_{jt} = \delta_{jt} - x_j' \bar{\beta} + \bar{\alpha} \, p_{jt}\)</span>.</p>
+</section>
+<section id="gmm-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="gmm-estimation">GMM Estimation</h2>
+<p>The endogeneity problem: <span class="math inline">\(\text{Corr}(p_{jt}, \xi_{jt}) \neq 0\)</span> — firms set higher prices for products with higher unobserved quality.</p>
+<p><strong>Instruments</strong> <span class="math inline">\(Z\)</span> must satisfy <span class="math inline">\(\mathbb{E}[Z' \xi] = 0\)</span>. Common choices: - <strong>BLP instruments</strong>: sums of characteristics of other products by the same firm (cost shifters) - <strong>Differentiation instruments</strong>: functions of distance to rivals in characteristic space</p>
+<p>The GMM objective:</p>
+<p><span class="math display">\[
+\hat{\theta} = \arg\min_\theta \; \xi(\theta)' Z \, W \, Z' \xi(\theta)
+\]</span></p>
+<p>where <span class="math inline">\(W\)</span> is a weighting matrix (identity for 1-step, <span class="math inline">\(\widehat{\text{Var}}(Z'\xi)^{-1}\)</span> for 2-step efficient GMM).</p>
+</section>
+</section>
+<section id="setup-data-exploration" class="level1">
+<h1>Setup &amp; Data Exploration</h1>
+<div id="imports" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyblp</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>pyblp.options.digits <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>pyblp.options.verbose <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'PyBLP version: </span><span class="sc">{</span>pyblp<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>c:\Users\danny\anaconda3\Lib\site-packages\pandas\core\computation\expressions.py:22: UserWarning: Pandas requires version '2.10.2' or newer of 'numexpr' (version '2.8.7' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+c:\Users\danny\anaconda3\Lib\site-packages\pandas\core\arrays\masked.py:56: UserWarning: Pandas requires version '1.4.2' or newer of 'bottleneck' (version '1.3.7' currently installed).
+  from pandas.core import (</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>PyBLP version: 1.1.2</code></pre>
+</div>
+</div>
+<section id="nevo-2000-cereal-data" class="level2">
+<h2 class="anchored" data-anchor-id="nevo-2000-cereal-data">Nevo (2000) Cereal Data</h2>
+<p>The dataset contains 24 cereal brands observed across 94 city-quarter markets. Each observation is a product-market pair with: - <strong>shares</strong>: market share of the product - <strong>prices</strong>: price per serving - <strong>sugar</strong>: sugar content - <strong>mushy</strong>: indicator for mushy cereals - <strong>demand_instruments0–19</strong>: pre-computed BLP instruments - <strong>firm_ids</strong>: 5 firms (think Kellogg’s, General Mills, etc.) - <strong>product_ids</strong>: 24 brand identifiers</p>
+<div id="load-data" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load product-level data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>product_data <span class="op">=</span> pd.read_csv(pyblp.data.NEVO_PRODUCTS_LOCATION)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Shape: </span><span class="sc">{</span>product_data<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Markets: </span><span class="sc">{</span>product_data[<span class="st">"market_ids"</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Products: </span><span class="sc">{</span>product_data[<span class="st">"product_ids"</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Firms: </span><span class="sc">{</span>product_data[<span class="st">"firm_ids"</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Key columns</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>product_data[[<span class="st">'market_ids'</span>, <span class="st">'product_ids'</span>, <span class="st">'firm_ids'</span>, <span class="st">'shares'</span>, <span class="st">'prices'</span>, <span class="st">'sugar'</span>, <span class="st">'mushy'</span>]].head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Shape: (2256, 30)
+Markets: 94
+Products: 24
+Firms: 5
+</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">market_ids</th>
+<th data-quarto-table-cell-role="th">product_ids</th>
+<th data-quarto-table-cell-role="th">firm_ids</th>
+<th data-quarto-table-cell-role="th">shares</th>
+<th data-quarto-table-cell-role="th">prices</th>
+<th data-quarto-table-cell-role="th">sugar</th>
+<th data-quarto-table-cell-role="th">mushy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>C01Q1</td>
+<td>F1B04</td>
+<td>1</td>
+<td>0.012417</td>
+<td>0.072088</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>C01Q1</td>
+<td>F1B06</td>
+<td>1</td>
+<td>0.007809</td>
+<td>0.114178</td>
+<td>18</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>C01Q1</td>
+<td>F1B07</td>
+<td>1</td>
+<td>0.012995</td>
+<td>0.132391</td>
+<td>4</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>C01Q1</td>
+<td>F1B09</td>
+<td>1</td>
+<td>0.005770</td>
+<td>0.130344</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>C01Q1</td>
+<td>F1B11</td>
+<td>1</td>
+<td>0.017934</td>
+<td>0.154823</td>
+<td>12</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>C01Q1</td>
+<td>F1B13</td>
+<td>1</td>
+<td>0.026602</td>
+<td>0.137049</td>
+<td>14</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>C01Q1</td>
+<td>F1B17</td>
+<td>1</td>
+<td>0.025015</td>
+<td>0.144209</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>C01Q1</td>
+<td>F1B30</td>
+<td>1</td>
+<td>0.005058</td>
+<td>0.128191</td>
+<td>4</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>C01Q1</td>
+<td>F1B45</td>
+<td>1</td>
+<td>0.005332</td>
+<td>0.149611</td>
+<td>14</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>C01Q1</td>
+<td>F2B05</td>
+<td>2</td>
+<td>0.038068</td>
+<td>0.108514</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="data-summary" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>product_data[[<span class="st">'prices'</span>, <span class="st">'shares'</span>, <span class="st">'sugar'</span>, <span class="st">'mushy'</span>]].describe().<span class="bu">round</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">prices</th>
+<th data-quarto-table-cell-role="th">shares</th>
+<th data-quarto-table-cell-role="th">sugar</th>
+<th data-quarto-table-cell-role="th">mushy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>2256.0000</td>
+<td>2256.0000</td>
+<td>2256.0000</td>
+<td>2256.0000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>0.1257</td>
+<td>0.0198</td>
+<td>8.6250</td>
+<td>0.3333</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>0.0290</td>
+<td>0.0256</td>
+<td>5.7879</td>
+<td>0.4715</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>0.0455</td>
+<td>0.0002</td>
+<td>0.0000</td>
+<td>0.0000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>0.1055</td>
+<td>0.0052</td>
+<td>3.0000</td>
+<td>0.0000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>0.1238</td>
+<td>0.0111</td>
+<td>8.5000</td>
+<td>0.0000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>0.1433</td>
+<td>0.0246</td>
+<td>13.2500</td>
+<td>1.0000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>0.2257</td>
+<td>0.4469</td>
+<td>20.0000</td>
+<td>1.0000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="market-structure" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">4</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Price distribution</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].hist(product_data[<span class="st">'prices'</span>], bins<span class="op">=</span><span class="dv">30</span>, color<span class="op">=</span><span class="st">'#440154'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'Price'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Frequency'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Price Distribution'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Share distribution</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].hist(product_data[<span class="st">'shares'</span>], bins<span class="op">=</span><span class="dv">30</span>, color<span class="op">=</span><span class="st">'#31688e'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'Market Share'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Share Distribution'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Products per firm</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>firm_counts <span class="op">=</span> product_data.groupby(<span class="st">'firm_ids'</span>)[<span class="st">'product_ids'</span>].nunique()</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].bar(firm_counts.index.astype(<span class="bu">str</span>), firm_counts.values, </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>[<span class="st">'#440154'</span>, <span class="st">'#31688e'</span>, <span class="st">'#35b779'</span>, <span class="st">'#fde725'</span>, <span class="st">'#f97316'</span>], </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_xlabel(<span class="st">'Firm ID'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_ylabel(<span class="st">'Number of Products'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_title(<span class="st">'Products per Firm'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyblp_notes_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="agent-data" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load agent (consumer) demographic data</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>agent_data <span class="op">=</span> pd.read_csv(pyblp.data.NEVO_AGENTS_LOCATION)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Agent data shape: </span><span class="sc">{</span>agent_data<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Agents per market: </span><span class="sc">{</span>agent_data<span class="sc">.</span>groupby(<span class="st">"market_ids"</span>)<span class="sc">.</span>size()<span class="sc">.</span>iloc[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>agent_data[[<span class="st">'market_ids'</span>, <span class="st">'weights'</span>, <span class="st">'income'</span>, <span class="st">'income_squared'</span>, <span class="st">'age'</span>, <span class="st">'child'</span>]].describe().<span class="bu">round</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Agent data shape: (1880, 12)
+Agents per market: 20
+</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">weights</th>
+<th data-quarto-table-cell-role="th">income</th>
+<th data-quarto-table-cell-role="th">income_squared</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">child</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>1880.00</td>
+<td>1880.0000</td>
+<td>1880.0000</td>
+<td>1880.0000</td>
+<td>1880.0000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>0.05</td>
+<td>-0.0000</td>
+<td>0.0000</td>
+<td>-0.0000</td>
+<td>0.0000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>0.00</td>
+<td>0.9396</td>
+<td>16.0435</td>
+<td>0.9446</td>
+<td>0.4215</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>0.05</td>
+<td>-4.9382</td>
+<td>-65.9464</td>
+<td>-3.2258</td>
+<td>-0.2309</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>0.05</td>
+<td>-0.4282</td>
+<td>-8.4548</td>
+<td>-0.3926</td>
+<td>-0.2309</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>0.05</td>
+<td>0.1608</td>
+<td>2.0565</td>
+<td>0.2399</td>
+<td>-0.2309</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>0.05</td>
+<td>0.5887</td>
+<td>10.1278</td>
+<td>0.6454</td>
+<td>-0.2309</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>0.05</td>
+<td>2.3346</td>
+<td>46.8563</td>
+<td>1.2740</td>
+<td>0.7691</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-1-plain-logit" class="level1">
+<h1>Step 1: Plain Logit</h1>
+<p>The simplest demand model: all consumers have <strong>identical tastes</strong> (<span class="math inline">\(\Sigma = 0\)</span>, <span class="math inline">\(\Pi = 0\)</span>). The market share equation collapses to the familiar logit:</p>
+<p><span class="math display">\[
+\ln s_{jt} - \ln s_{0t} = x_j' \beta - \alpha \, p_{jt} + \xi_{jt}
+\]</span></p>
+<p>This is a linear IV regression of log share ratios on product characteristics and price. We absorb brand fixed effects (product dummies) and use the 20 pre-computed demand instruments.</p>
+<div id="logit-setup" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulation: price with product fixed effects absorbed</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>logit_formulation <span class="op">=</span> pyblp.Formulation(<span class="st">'prices'</span>, absorb<span class="op">=</span><span class="st">'C(product_ids)'</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>logit_problem <span class="op">=</span> pyblp.Problem(logit_formulation, product_data)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>logit_problem</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>Dimensions:
+================================
+ T    N     F    K1    MD    ED 
+---  ----  ---  ----  ----  ----
+94   2256   5    1     20    1  
+================================
+
+Formulations:
+==================================
+     Column Indices:          0   
+--------------------------  ------
+X1: Linear Characteristics  prices
+==================================</code></pre>
+</div>
+</div>
+<div id="logit-solve" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>logit_results <span class="op">=</span> logit_problem.solve()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>logit_results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>Problem Results Summary:
+==========================================
+GMM   Objective  Clipped  Weighting Matrix
+Step    Value    Shares   Condition Number
+----  ---------  -------  ----------------
+ 2    +1.9E+02      0         +5.7E+07    
+==========================================
+
+Cumulative Statistics:
+========================
+Computation   Objective 
+   Time      Evaluations
+-----------  -----------
+ 00:00:00         2     
+========================
+
+Beta Estimates (Robust SEs in Parentheses):
+==========
+  prices  
+----------
+ -3.0E+01 
+(+1.0E+00)
+==========</code></pre>
+</div>
+</div>
+<p>The price coefficient <span class="math inline">\(\hat{\alpha} \approx -30\)</span> is large and negative: higher prices reduce market share. But the plain logit imposes the <strong>IIA property</strong> — substitution patterns are proportional to market shares, regardless of product similarity. This is unrealistic: if Cheerios’ price rises, consumers are more likely to switch to similar cereals than to very different ones.</p>
+<div id="logit-elasticities" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute own-price elasticities</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>logit_elasticities <span class="op">=</span> logit_results.compute_elasticities()</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract own-price elasticities (diagonal)</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>logit_own <span class="op">=</span> logit_results.extract_diagonal_means(logit_elasticities)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Logit own-price elasticities:'</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'  Mean: </span><span class="sc">{</span>logit_own<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss">'</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'  Range: [</span><span class="sc">{</span>logit_own<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.3f}</span><span class="ss">, </span><span class="sc">{</span>logit_own<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.3f}</span><span class="ss">]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Logit own-price elasticities:
+  Mean: -3.706
+  Range: [-4.052, -3.289]</code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-random-coefficients-logit-blp" class="level1">
+<h1>Step 2: Random Coefficients Logit (BLP)</h1>
+<p>Now we add <strong>heterogeneous preferences</strong> via random coefficients on the constant (inside vs.&nbsp;outside good), price, sugar, and mushy. This breaks IIA: products with similar characteristics become closer substitutes.</p>
+<p>We need two formulations: - <strong>X1</strong> (linear, <span class="math inline">\(\bar{\beta}\)</span>): variables entering mean utility — price + product fixed effects - <strong>X2</strong> (nonlinear, <span class="math inline">\(\Sigma\)</span>): variables receiving random coefficients — constant, price, sugar, mushy</p>
+<p>Plus an agent formulation for demographics: income, income<span class="math inline">\(^2\)</span>, age, child.</p>
+<div id="blp-setup" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># X1: linear parameters (price + brand FE)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>X1 <span class="op">=</span> pyblp.Formulation(<span class="st">'0 + prices'</span>, absorb<span class="op">=</span><span class="st">'C(product_ids)'</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># X2: random coefficient variables</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> pyblp.Formulation(<span class="st">'1 + prices + sugar + mushy'</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Agent demographics formulation</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>agent_formulation <span class="op">=</span> pyblp.Formulation(<span class="st">'0 + income + income_squared + age + child'</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the problem</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>blp_problem <span class="op">=</span> pyblp.Problem(</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    (X1, X2),</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    product_data,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    agent_formulation,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    agent_data,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>blp_problem</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>Dimensions:
+=================================================
+ T    N     F    I     K1    K2    D    MD    ED 
+---  ----  ---  ----  ----  ----  ---  ----  ----
+94   2256   5   1880   1     4     4    20    1  
+=================================================
+
+Formulations:
+===================================================================
+       Column Indices:           0           1           2      3  
+-----------------------------  ------  --------------  -----  -----
+ X1: Linear Characteristics    prices                              
+X2: Nonlinear Characteristics    1         prices      sugar  mushy
+       d: Demographics         income  income_squared   age   child
+===================================================================</code></pre>
+</div>
+</div>
+<section id="initial-values-solving" class="level2">
+<h2 class="anchored" data-anchor-id="initial-values-solving">Initial Values &amp; Solving</h2>
+<p>The nonlinear GMM objective is non-convex, so starting values matter. We use values close to Nevo (2000)’s published estimates:</p>
+<ul>
+<li><span class="math inline">\(\Sigma_0\)</span> = diagonal matrix of standard deviations for (constant, price, sugar, mushy)</li>
+<li><span class="math inline">\(\Pi_0\)</span> = matrix of demographic interactions</li>
+</ul>
+<p>Zeros in <span class="math inline">\(\Sigma_0\)</span> or <span class="math inline">\(\Pi_0\)</span> are <strong>constrained to remain zero</strong> during optimization — this is how you restrict the model.</p>
+<div id="blp-solve" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial sigma (diagonal: std devs for constant, price, sugar, mushy)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>initial_sigma <span class="op">=</span> np.diag([<span class="fl">0.3302</span>, <span class="fl">2.4526</span>, <span class="fl">0.0163</span>, <span class="fl">0.2441</span>])</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial pi (K2 x D demographics interaction matrix)</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Rows: constant, price, sugar, mushy</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Cols: income, income_squared, age, child</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>initial_pi <span class="op">=</span> np.array([</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    [ <span class="fl">5.4819</span>,  <span class="dv">0</span>,       <span class="fl">0.2037</span>,  <span class="dv">0</span>     ],</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">15.8935</span>, <span class="op">-</span><span class="fl">1.2000</span>,  <span class="dv">0</span>,       <span class="fl">2.6342</span>],</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    [<span class="op">-</span><span class="fl">0.2506</span>,  <span class="dv">0</span>,       <span class="fl">0.0511</span>,  <span class="dv">0</span>     ],</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    [ <span class="fl">1.2650</span>,  <span class="dv">0</span>,      <span class="op">-</span><span class="fl">0.8091</span>,  <span class="dv">0</span>     ],</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve with BFGS optimizer, 1-step GMM</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>blp_results <span class="op">=</span> blp_problem.solve(</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    initial_sigma,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    initial_pi,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    optimization<span class="op">=</span>pyblp.Optimization(<span class="st">'bfgs'</span>, {<span class="st">'gtol'</span>: <span class="fl">1e-5</span>}),</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">'1s'</span>,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>blp_results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>Problem Results Summary:
+=======================================================================================================
+GMM   Objective  Gradient      Hessian         Hessian     Clipped  Weighting Matrix  Covariance Matrix
+Step    Value      Norm    Min Eigenvalue  Max Eigenvalue  Shares   Condition Number  Condition Number 
+----  ---------  --------  --------------  --------------  -------  ----------------  -----------------
+ 1    +4.6E+00   +6.9E-06     +2.3E-05        +1.6E+04        0         +6.9E+07          +8.4E+08     
+=======================================================================================================
+
+Cumulative Statistics:
+===========================================================================
+Computation  Optimizer  Optimization   Objective   Fixed Point  Contraction
+   Time      Converged   Iterations   Evaluations  Iterations   Evaluations
+-----------  ---------  ------------  -----------  -----------  -----------
+ 00:00:18       Yes          51           57          46371       143944   
+===========================================================================
+
+Nonlinear Coefficient Estimates (Robust SEs in Parentheses):
+=====================================================================================================================
+Sigma:      1         prices      sugar       mushy     |   Pi:      income    income_squared     age        child   
+------  ----------  ----------  ----------  ----------  |  ------  ----------  --------------  ----------  ----------
+  1      +5.6E-01                                       |    1      +2.3E+00      +0.0E+00      +1.3E+00    +0.0E+00 
+        (+1.6E-01)                                      |          (+1.2E+00)                  (+6.3E-01)            
+                                                        |                                                            
+prices   +0.0E+00    +3.3E+00                           |  prices   +5.9E+02      -3.0E+01      +0.0E+00    +1.1E+01 
+                    (+1.3E+00)                          |          (+2.7E+02)    (+1.4E+01)                (+4.1E+00)
+                                                        |                                                            
+sugar    +0.0E+00    +0.0E+00    -5.8E-03               |  sugar    -3.8E-01      +0.0E+00      +5.2E-02    +0.0E+00 
+                                (+1.4E-02)              |          (+1.2E-01)                  (+2.6E-02)            
+                                                        |                                                            
+mushy    +0.0E+00    +0.0E+00    +0.0E+00    +9.3E-02   |  mushy    +7.5E-01      +0.0E+00      -1.4E+00    +0.0E+00 
+                                            (+1.9E-01)  |          (+8.0E-01)                  (+6.7E-01)            
+=====================================================================================================================
+
+Beta Estimates (Robust SEs in Parentheses):
+==========
+  prices  
+----------
+ -6.3E+01 
+(+1.5E+01)
+==========</code></pre>
+</div>
+</div>
+<p><strong>Interpreting the results:</strong></p>
+<ul>
+<li><strong><span class="math inline">\(\hat{\Sigma}\)</span></strong> (Sigma): the Cholesky root of the unobserved heterogeneity covariance. Diagonal elements give the std dev of random coefficients.</li>
+<li><strong><span class="math inline">\(\hat{\Pi}\)</span></strong> (Pi): how demographics shift tastes. E.g., <span class="math inline">\(\Pi_{\text{price, income}} &gt; 0\)</span> means higher-income consumers are less price-sensitive.</li>
+<li><strong><span class="math inline">\(\hat{\beta}\)</span></strong> (Beta): the mean price coefficient (from X1).</li>
+<li>The GMM objective value measures fit; the weighting matrix condition number flags numerical issues.</li>
+</ul>
+</section>
+</section>
+<section id="post-estimation-analysis" class="level1">
+<h1>Post-Estimation Analysis</h1>
+<section id="own-price-elasticities" class="level2">
+<h2 class="anchored" data-anchor-id="own-price-elasticities">Own-Price Elasticities</h2>
+<p>The own-price elasticity measures the percentage change in market share for a 1% price increase:</p>
+<p><span class="math display">\[
+\varepsilon_{jj} = \frac{\partial s_j}{\partial p_j} \cdot \frac{p_j}{s_j}
+\]</span></p>
+<p>With random coefficients, these vary across products and markets (unlike logit, where <span class="math inline">\(\varepsilon_{jj} \approx \alpha \, p_j (1 - s_j)\)</span> for all products).</p>
+<div id="own-elasticities" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute full elasticity matrices (J x J for each market)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>elasticities <span class="op">=</span> blp_results.compute_elasticities()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract own-price elasticities (diagonal of each market's matrix)</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>own_elasticities <span class="op">=</span> blp_results.extract_diagonal_means(elasticities)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'BLP own-price elasticities:'</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'  Mean:   </span><span class="sc">{</span>own_elasticities<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss">'</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'  Median: </span><span class="sc">{</span>np<span class="sc">.</span>median(own_elasticities)<span class="sc">:.3f}</span><span class="ss">'</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'  Std:    </span><span class="sc">{</span>own_elasticities<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">'</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'  Range:  [</span><span class="sc">{</span>own_elasticities<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.3f}</span><span class="ss">, </span><span class="sc">{</span>own_elasticities<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.3f}</span><span class="ss">]'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>BLP own-price elasticities:
+  Mean:   -3.618
+  Median: -3.591
+  Std:    0.300
+  Range:  [-4.354, -3.073]</code></pre>
+</div>
+</div>
+<div id="elasticity-comparison" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Logit own-price elasticities (all products across markets)</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>logit_diag <span class="op">=</span> []</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>market_ids <span class="op">=</span> product_data[<span class="st">'market_ids'</span>].unique()</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m <span class="kw">in</span> market_ids:</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    n_j <span class="op">=</span> (product_data[<span class="st">'market_ids'</span>] <span class="op">==</span> m).<span class="bu">sum</span>()</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    mat <span class="op">=</span> logit_elasticities[idx:idx<span class="op">+</span>n_j]</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    logit_diag.extend(np.diag(mat).tolist())</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">+=</span> n_j</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co"># BLP own-price elasticities (same extraction)</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>blp_diag <span class="op">=</span> []</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m <span class="kw">in</span> market_ids:</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    n_j <span class="op">=</span> (product_data[<span class="st">'market_ids'</span>] <span class="op">==</span> m).<span class="bu">sum</span>()</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    mat <span class="op">=</span> elasticities[idx:idx<span class="op">+</span>n_j]</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    blp_diag.extend(np.diag(mat).tolist())</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">+=</span> n_j</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>ax.hist(logit_diag, bins<span class="op">=</span><span class="dv">40</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'#440154'</span>, label<span class="op">=</span><span class="st">'Logit'</span>, density<span class="op">=</span><span class="va">True</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>ax.hist(blp_diag, bins<span class="op">=</span><span class="dv">40</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'#35b779'</span>, label<span class="op">=</span><span class="st">'BLP (Random Coefficients)'</span>, density<span class="op">=</span><span class="va">True</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>ax.axvline(np.mean(logit_diag), color<span class="op">=</span><span class="st">'#440154'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>ax.axvline(np.mean(blp_diag), color<span class="op">=</span><span class="st">'#35b779'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Own-Price Elasticity'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Density'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Distribution of Own-Price Elasticities: Logit vs BLP'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyblp_notes_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="cross-price-elasticity-heatmap" class="level2">
+<h2 class="anchored" data-anchor-id="cross-price-elasticity-heatmap">Cross-Price Elasticity Heatmap</h2>
+<p>The cross-price elasticity <span class="math inline">\(\varepsilon_{jk} = \frac{\partial s_j}{\partial p_k} \cdot \frac{p_k}{s_j}\)</span> measures how product <span class="math inline">\(j\)</span>’s share responds to a change in product <span class="math inline">\(k\)</span>’s price.</p>
+<p>Under <strong>logit</strong>, all cross-elasticities with respect to product <span class="math inline">\(k\)</span> are proportional to <span class="math inline">\(s_k\)</span> — substitution is driven purely by market share, not similarity. Under <strong>BLP</strong>, cross-elasticities reflect product similarity through the random coefficients, producing richer substitution patterns.</p>
+<div id="cross-elasticity-heatmap" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick a single market</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>market <span class="op">=</span> <span class="st">'C01Q1'</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>market_mask <span class="op">=</span> product_data[<span class="st">'market_ids'</span>] <span class="op">==</span> market</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>n_products <span class="op">=</span> market_mask.<span class="bu">sum</span>()</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>product_labels <span class="op">=</span> product_data.loc[market_mask, <span class="st">'product_ids'</span>].values</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract elasticity matrix for this market</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>market_idx <span class="op">=</span> np.where(market_mask)[<span class="dv">0</span>]</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> market_idx[<span class="dv">0</span>]</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>elast_matrix_logit <span class="op">=</span> logit_elasticities[start:start<span class="op">+</span>n_products, :n_products]</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>elast_matrix_blp <span class="op">=</span> elasticities[start:start<span class="op">+</span>n_products, :n_products]</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">7</span>))</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Logit</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>im1 <span class="op">=</span> axes[<span class="dv">0</span>].imshow(elast_matrix_logit, cmap<span class="op">=</span><span class="st">'RdBu_r'</span>, aspect<span class="op">=</span><span class="st">'auto'</span>, </span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>                      vmin<span class="op">=-</span><span class="dv">6</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xticks(<span class="bu">range</span>(n_products))</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_yticks(<span class="bu">range</span>(n_products))</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xticklabels(product_labels, rotation<span class="op">=</span><span class="dv">90</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_yticklabels(product_labels, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Logit Elasticities'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'Price of product $k$'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Share of product $j$'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im1, ax<span class="op">=</span>axes[<span class="dv">0</span>], shrink<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co"># BLP</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>im2 <span class="op">=</span> axes[<span class="dv">1</span>].imshow(elast_matrix_blp, cmap<span class="op">=</span><span class="st">'RdBu_r'</span>, aspect<span class="op">=</span><span class="st">'auto'</span>, </span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>                      vmin<span class="op">=-</span><span class="dv">6</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xticks(<span class="bu">range</span>(n_products))</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_yticks(<span class="bu">range</span>(n_products))</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xticklabels(product_labels, rotation<span class="op">=</span><span class="dv">90</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_yticklabels(product_labels, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'BLP Elasticities (Random Coefficients)'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'Price of product $k$'</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im2, ax<span class="op">=</span>axes[<span class="dv">1</span>], shrink<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="ss">f'Cross-Price Elasticity Matrix — Market </span><span class="sc">{</span>market<span class="sc">}</span><span class="ss">'</span>, fontsize<span class="op">=</span><span class="dv">15</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyblp_notes_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cross-elasticity-seaborn" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seaborn heatmap with annotations for BLP cross-elasticities</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>elast_df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    elast_matrix_blp, </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>product_labels, </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>product_labels</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">10</span>))</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>sns.heatmap(</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    elast_df, </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">'RdBu_r'</span>, </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    center<span class="op">=</span><span class="dv">0</span>, </span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    annot<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">=</span><span class="st">'.2f'</span>, </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    linewidths<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    linecolor<span class="op">=</span><span class="st">'white'</span>,</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    annot_kws<span class="op">=</span>{<span class="st">'size'</span>: <span class="dv">7</span>},</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    cbar_kws<span class="op">=</span>{<span class="st">'label'</span>: <span class="st">'Elasticity'</span>, <span class="st">'shrink'</span>: <span class="fl">0.8</span>},</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f'BLP Cross-Price Elasticity Matrix — Market </span><span class="sc">{</span>market<span class="sc">}</span><span class="ss">'</span>, fontsize<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Price of product $k$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Share of product $j$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyblp_notes_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="diversion-ratios" class="level2">
+<h2 class="anchored" data-anchor-id="diversion-ratios">Diversion Ratios</h2>
+<p>The diversion ratio from product <span class="math inline">\(j\)</span> to product <span class="math inline">\(k\)</span> measures what fraction of <span class="math inline">\(j\)</span>’s lost sales go to <span class="math inline">\(k\)</span> when <span class="math inline">\(j\)</span>’s price increases:</p>
+<p><span class="math display">\[
+D_{jk} = -\frac{\partial s_k / \partial p_j}{\partial s_j / \partial p_j}
+\]</span></p>
+<p>Diversion ratios are central to <strong>merger analysis</strong>: if two merging firms’ products have high diversion ratios to each other, the merger raises greater competitive concerns.</p>
+<div id="diversion-heatmap" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute diversion ratios</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>diversions <span class="op">=</span> blp_results.compute_diversion_ratios()</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract for our market</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>div_matrix <span class="op">=</span> diversions[start:start<span class="op">+</span>n_products, :n_products]</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>div_df <span class="op">=</span> pd.DataFrame(div_matrix, index<span class="op">=</span>product_labels, columns<span class="op">=</span>product_labels)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">10</span>))</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>sns.heatmap(</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    div_df, </span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">'YlOrRd'</span>, </span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    annot<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">=</span><span class="st">'.2f'</span>, </span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    linewidths<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    linecolor<span class="op">=</span><span class="st">'white'</span>,</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    annot_kws<span class="op">=</span>{<span class="st">'size'</span>: <span class="dv">7</span>},</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    cbar_kws<span class="op">=</span>{<span class="st">'label'</span>: <span class="st">'Diversion Ratio'</span>, <span class="st">'shrink'</span>: <span class="fl">0.8</span>},</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    vmin<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f'BLP Diversion Ratios — Market </span><span class="sc">{</span>market<span class="sc">}</span><span class="ss">'</span>, fontsize<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Destination product $k$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Source product $j$ (price increase)'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyblp_notes_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="marginal-costs-markups" class="level2">
+<h2 class="anchored" data-anchor-id="marginal-costs-markups">Marginal Costs &amp; Markups</h2>
+<p>Given estimated demand and the assumption of multi-product Bertrand-Nash pricing, we can back out implied marginal costs from the first-order conditions:</p>
+<p><span class="math display">\[
+p = c + \underbrace{(\Omega \odot \Delta)^{-1} s}_{\text{markup}}
+\]</span></p>
+<p>where <span class="math inline">\(\Omega\)</span> is the ownership matrix and <span class="math inline">\(\Delta_{jk} = -\partial s_k / \partial p_j\)</span> is the demand Jacobian.</p>
+<div id="costs-markups" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute marginal costs and markups</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>costs <span class="op">=</span> blp_results.compute_costs()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>markups <span class="op">=</span> blp_results.compute_markups(costs<span class="op">=</span>costs)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">5</span>))</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Marginal costs</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].hist(costs.flatten(), bins<span class="op">=</span><span class="dv">40</span>, color<span class="op">=</span><span class="st">'#31688e'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axvline(costs.mean(), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, </span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="ss">f'Mean: </span><span class="sc">{</span>costs<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'Marginal Cost'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Frequency'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Distribution of Marginal Costs'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].legend(fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Markups</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].hist(markups.flatten(), bins<span class="op">=</span><span class="dv">40</span>, color<span class="op">=</span><span class="st">'#35b779'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axvline(markups.mean(), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="ss">f'Mean: </span><span class="sc">{</span>markups<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'Markup ($p - c$) / $p$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_ylabel(<span class="st">'Frequency'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Distribution of Markups (Lerner Index)'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].legend(fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Marginal cost — Mean: </span><span class="sc">{</span>costs<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">, Median: </span><span class="sc">{</span>np<span class="sc">.</span>median(costs)<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Markup (Lerner) — Mean: </span><span class="sc">{</span>markups<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">, Median: </span><span class="sc">{</span>np<span class="sc">.</span>median(markups)<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyblp_notes_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marginal cost — Mean: 0.0824, Median: 0.0812
+Markup (Lerner) — Mean: 0.3639, Median: 0.3371</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="merger-simulation" class="level1">
+<h1>Merger Simulation</h1>
+<p>A core application of BLP: simulate the price effects of a <strong>hypothetical merger</strong>. The idea is simple:</p>
+<ol type="1">
+<li>Estimate demand and recover pre-merger marginal costs <span class="math inline">\(c_j\)</span></li>
+<li>Change the <strong>ownership matrix</strong> <span class="math inline">\(\Omega\)</span> to reflect the merger (merging firms now internalize pricing externalities)</li>
+<li>Solve for new <strong>Nash equilibrium prices</strong> given the new <span class="math inline">\(\Omega\)</span> but the same <span class="math inline">\(c_j\)</span></li>
+<li>Compare pre-merger vs.&nbsp;post-merger outcomes</li>
+</ol>
+<p>We simulate a merger between Firm 1 and Firm 2 (the two largest firms, with 9 products each).</p>
+<div id="merger-setup" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create post-merger firm IDs: Firm 2 becomes part of Firm 1</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>product_data[<span class="st">'merger_ids'</span>] <span class="op">=</span> product_data[<span class="st">'firm_ids'</span>].replace(<span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Pre-merger firm structure:'</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(product_data.groupby(<span class="st">'firm_ids'</span>)[<span class="st">'product_ids'</span>].nunique().to_string())</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Post-merger firm structure:'</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(product_data.groupby(<span class="st">'merger_ids'</span>)[<span class="st">'product_ids'</span>].nunique().to_string())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pre-merger firm structure:
+firm_ids
+1    9
+2    9
+3    2
+4    3
+6    1
+
+Post-merger firm structure:
+merger_ids
+1    18
+3     2
+4     3
+6     1</code></pre>
+</div>
+</div>
+<div id="merger-compute" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pre-merger benchmarks</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>pre_hhi <span class="op">=</span> blp_results.compute_hhi()</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>pre_profits <span class="op">=</span> blp_results.compute_profits(costs<span class="op">=</span>costs)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>pre_cs <span class="op">=</span> blp_results.compute_consumer_surpluses()</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Post-merger equilibrium prices</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>post_prices <span class="op">=</span> blp_results.compute_prices(</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    firm_ids<span class="op">=</span>product_data[<span class="st">'merger_ids'</span>],</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    costs<span class="op">=</span>costs,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Post-merger outcomes</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>post_shares <span class="op">=</span> blp_results.compute_shares(post_prices)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>post_hhi <span class="op">=</span> blp_results.compute_hhi(</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    firm_ids<span class="op">=</span>product_data[<span class="st">'merger_ids'</span>],</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    shares<span class="op">=</span>post_shares,</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>post_markups <span class="op">=</span> blp_results.compute_markups(post_prices, costs<span class="op">=</span>costs)</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>post_profits <span class="op">=</span> blp_results.compute_profits(post_prices, post_shares, costs)</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>post_cs <span class="op">=</span> blp_results.compute_consumer_surpluses(post_prices)</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Price changes</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>price_changes <span class="op">=</span> (post_prices <span class="op">-</span> product_data[<span class="st">'prices'</span>].values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="op">/</span> product_data[<span class="st">'prices'</span>].values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'=== Merger Simulation: Firm 1 + Firm 2 ==='</span>)</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Price change (%):     Mean = </span><span class="sc">{</span>price_changes<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">%, Median = </span><span class="sc">{</span>np<span class="sc">.</span>median(price_changes)<span class="sc">:.2f}</span><span class="ss">%'</span>)</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'HHI change:           Mean = </span><span class="sc">{</span>(post_hhi <span class="op">-</span> pre_hhi)<span class="sc">.</span>mean()<span class="sc">:.1f}</span><span class="ss">'</span>)</span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Consumer surplus ($/person):'</span>)</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'  Pre-merger:  </span><span class="sc">{</span>pre_cs<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'  Post-merger: </span><span class="sc">{</span>post_cs<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'  Change:      </span><span class="sc">{</span>(post_cs <span class="op">-</span> pre_cs)<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>=== Merger Simulation: Firm 1 + Firm 2 ===
+Price change (%):     Mean = 10.16%, Median = 9.41%
+HHI change:           Mean = 1790.8
+Consumer surplus ($/person):
+  Pre-merger:  0.0342
+  Post-merger: 0.0296
+  Change:      -0.0047</code></pre>
+</div>
+</div>
+<div id="merger-viz" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">5</span>))</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Price changes</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].hist(price_changes.flatten(), bins<span class="op">=</span><span class="dv">40</span>, color<span class="op">=</span><span class="st">'#440154'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axvline(price_changes.mean(), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="ss">f'Mean: </span><span class="sc">{</span>price_changes<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">%'</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'Price Change (%)'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Frequency'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Post-Merger Price Changes'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].legend(fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="co"># HHI changes</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>hhi_change <span class="op">=</span> (post_hhi <span class="op">-</span> pre_hhi).flatten()</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].hist(hhi_change, bins<span class="op">=</span><span class="dv">40</span>, color<span class="op">=</span><span class="st">'#f97316'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axvline(hhi_change.mean(), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="ss">f'Mean: </span><span class="sc">{</span>hhi_change<span class="sc">.</span>mean()<span class="sc">:.0f}</span><span class="ss">'</span>)</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'$</span><span class="er">\</span><span class="st">Delta$ HHI'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Change in Market Concentration'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].legend(fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Consumer surplus changes</span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>cs_change <span class="op">=</span> (post_cs <span class="op">-</span> pre_cs).flatten()</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].hist(cs_change, bins<span class="op">=</span><span class="dv">40</span>, color<span class="op">=</span><span class="st">'#31688e'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].axvline(cs_change.mean(), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="ss">f'Mean: </span><span class="sc">{</span>cs_change<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_xlabel(<span class="st">'$</span><span class="er">\</span><span class="st">Delta$ Consumer Surplus'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_title(<span class="st">'Change in Consumer Surplus'</span>, fontsize<span class="op">=</span><span class="dv">13</span>)</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].legend(fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Merger Impact: Firm 1 + Firm 2'</span>, fontsize<span class="op">=</span><span class="dv">15</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyblp_notes_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="merger-by-firm" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Price changes by firm (who benefits from the merger?)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>price_change_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'firm_id'</span>: product_data[<span class="st">'firm_ids'</span>],</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'product_id'</span>: product_data[<span class="st">'product_ids'</span>],</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'pre_price'</span>: product_data[<span class="st">'prices'</span>],</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'post_price'</span>: post_prices.flatten(),</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'price_change_pct'</span>: price_changes.flatten(),</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'merging'</span>: product_data[<span class="st">'firm_ids'</span>].isin([<span class="dv">1</span>, <span class="dv">2</span>]),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>merging <span class="op">=</span> price_change_df[price_change_df[<span class="st">'merging'</span>]]</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>non_merging <span class="op">=</span> price_change_df[<span class="op">~</span>price_change_df[<span class="st">'merging'</span>]]</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>ax.hist(merging[<span class="st">'price_change_pct'</span>], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'#440154'</span>, </span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="ss">f'Merging firms (mean: </span><span class="sc">{</span>merging[<span class="st">"price_change_pct"</span>]<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">%)'</span>, </span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>        density<span class="op">=</span><span class="va">True</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>ax.hist(non_merging[<span class="st">'price_change_pct'</span>], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'#35b779'</span>, </span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="ss">f'Non-merging firms (mean: </span><span class="sc">{</span>non_merging[<span class="st">"price_change_pct"</span>]<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">%)'</span>, </span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>        density<span class="op">=</span><span class="va">True</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Price Change (%)'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Density'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Post-Merger Price Changes: Merging vs Non-Merging Firms'</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyblp_notes_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="micro-moments-incorporating-individual-level-data" class="level1">
+<h1>Micro Moments: Incorporating Individual-Level Data</h1>
+<section id="demographics-vs.-micro-moments" class="level2">
+<h2 class="anchored" data-anchor-id="demographics-vs.-micro-moments">Demographics vs.&nbsp;Micro Moments</h2>
+<p>A common point of confusion: the <strong>agent demographics</strong> we used above (<span class="math inline">\(d_i\)</span> = income, age, child) are <em>not</em> micro moments. They play very different roles:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Agent Demographics</strong> (<span class="math inline">\(\Pi d_i\)</span>)</th>
+<th><strong>Micro Moments</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>What they are</strong></td>
+<td>Draws from the population distribution of consumer types</td>
+<td>Empirical statistics computed from individual-level survey data</td>
+</tr>
+<tr class="even">
+<td><strong>Role in estimation</strong></td>
+<td>Define the integration measure for computing predicted shares</td>
+<td>Provide <strong>additional moment conditions</strong> in the GMM objective</td>
+</tr>
+<tr class="odd">
+<td><strong>What they match</strong></td>
+<td>Nothing directly — they specify <em>how</em> to integrate over heterogeneity</td>
+<td>Match model-predicted statistics to observed survey statistics</td>
+</tr>
+<tr class="even">
+<td><strong>Example</strong></td>
+<td>“20 draws of (income, age) per market, used to approximate the share integral”</td>
+<td>“The average income of consumers who bought brand X is $45,000”</td>
+</tr>
+<tr class="odd">
+<td><strong>Identification</strong></td>
+<td>Help compute <span class="math inline">\(s_j(\delta, \theta_2)\)</span> but don’t add moment conditions</td>
+<td>Add new moments <span class="math inline">\(\bar{g}_M\)</span> that help pin down <span class="math inline">\(\Sigma\)</span> and <span class="math inline">\(\Pi\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key insight</strong>: In the standard BLP setup, the <em>only</em> moments matched are the demand-side conditions <span class="math inline">\(\mathbb{E}[Z'\xi] = 0\)</span> (instruments orthogonal to the structural error). Demographics help <em>compute</em> predicted shares, but they don’t provide additional <em>data</em> to match. Micro moments add extra targets: they say “the model must also predict that the average age of mushy cereal buyers is 35 and that high-income consumers are 20% more likely to buy premium brands.”</p>
+</section>
+<section id="the-math" class="level2">
+<h2 class="anchored" data-anchor-id="the-math">The Math</h2>
+<p>The standard BLP GMM stacks demand (and possibly supply) moments:</p>
+<p><span class="math display">\[
+\bar{g} = \begin{bmatrix} \bar{g}_D \end{bmatrix} = \begin{bmatrix} Z'\xi(\theta) / N \end{bmatrix}
+\]</span></p>
+<p>With micro moments, we augment the moment vector:</p>
+<p><span class="math display">\[
+\bar{g} = \begin{bmatrix} \bar{g}_D \\ \bar{g}_M \end{bmatrix}, \quad \bar{g}_{M,m} = f_m(\bar{v}) - f_m(v(\theta))
+\]</span></p>
+<p>where <span class="math inline">\(f_m(\bar{v})\)</span> is the observed statistic from survey data (e.g., <span class="math inline">\(\mathbb{E}[\text{income} \mid \text{bought mushy cereal}] = 0.35\)</span>) and <span class="math inline">\(f_m(v(\theta))\)</span> is the model-predicted equivalent.</p>
+<p>Each micro moment part <span class="math inline">\(v_p\)</span> is a weighted average over agents, products, and markets:</p>
+<p><span class="math display">\[
+v_p(\theta) = \frac{\sum_{t} \sum_{i \in I_t} \sum_{j \in J_t \cup \{0\}} w_{it} \, s_{ijt}(\theta) \, w^d_{pijt} \, v_{pijt}}{\sum_{t} \sum_{i \in I_t} \sum_{j \in J_t \cup \{0\}} w_{it} \, s_{ijt}(\theta) \, w^d_{pijt}}
+\]</span></p>
+<p>where <span class="math inline">\(s_{ijt}(\theta)\)</span> is the model-predicted probability that agent <span class="math inline">\(i\)</span> buys product <span class="math inline">\(j\)</span> in market <span class="math inline">\(t\)</span>, and <span class="math inline">\(w^d_{pijt}\)</span> and <span class="math inline">\(v_{pijt}\)</span> are dataset-specific weights and values.</p>
+</section>
+<section id="types-of-micro-data" class="level2">
+<h2 class="anchored" data-anchor-id="types-of-micro-data">Types of Micro Data</h2>
+<p>Common sources of micro moments include:</p>
+<ol type="1">
+<li><strong>Consumer surveys</strong> (e.g., Consumer Expenditure Survey): “What is the average income of buyers of product category X?”</li>
+<li><strong>Scanner data with demographics</strong>: “What fraction of high-income households buy premium brands?”</li>
+<li><strong>Second-choice data</strong>: “Among consumers who bought brand A, what fraction would have bought brand B as their second choice?” (very powerful for identifying substitution patterns)</li>
+<li><strong>Purchase probabilities by segment</strong>: “What is the probability a household with children buys a sugary cereal?”</li>
+</ol>
+</section>
+<section id="why-micro-moments-help" class="level2">
+<h2 class="anchored" data-anchor-id="why-micro-moments-help">Why Micro Moments Help</h2>
+<p>Market-level shares alone may not strongly identify the nonlinear parameters <span class="math inline">\((\Sigma, \Pi)\)</span>. Many combinations of <span class="math inline">\((\Sigma, \Pi)\)</span> can generate similar aggregate shares. Micro moments break this degeneracy by providing additional targets:</p>
+<ul>
+<li><strong><span class="math inline">\(\Sigma\)</span> identification</strong>: Conditional purchase probabilities by product type pin down how much <em>unobserved</em> heterogeneity there is.</li>
+<li><strong><span class="math inline">\(\Pi\)</span> identification</strong>: Conditional demographic means (e.g., average age of mushy cereal buyers) directly inform how demographics shift tastes.</li>
+<li><strong>Substitution patterns</strong>: Second-choice data directly constrains cross-elasticities, which are otherwise weakly identified from shares alone.</li>
+</ul>
+</section>
+<section id="example-micro-moments-with-nevo-data" class="level2">
+<h2 class="anchored" data-anchor-id="example-micro-moments-with-nevo-data">Example: Micro Moments with Nevo Data</h2>
+<p>Since we don’t have real survey data for these cereals, we’ll use a practical workflow: <em>simulate</em> micro data from our estimated model, then use those simulated statistics as targets for re-estimation. This demonstrates the full PyBLP micro moments API.</p>
+<p>The idea: use <code>simulate_micro_data()</code> to generate individual-level purchase records consistent with our estimates, compute statistics from them, then pass those as micro moment targets.</p>
+<p>We’ll construct two types of micro moments: 1. <strong>Conditional demographic means</strong>: <span class="math inline">\(\mathbb{E}[\text{income} \mid \text{bought mushy cereal}]\)</span> 2. <strong>Purchase probability by segment</strong>: <span class="math inline">\(\mathbb{E}[\mathbf{1}\{\text{bought any cereal}\} \mid \text{has children}]\)</span></p>
+<div id="zo8sw2chlfh" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Define a micro dataset</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This represents a hypothetical consumer survey of 5,000 observations</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># compute_weights returns a (I_t x 1+J_t) matrix of sampling weights</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Here: all agent-product pairs are equally likely to be sampled</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>micro_dataset <span class="op">=</span> pyblp.MicroDataset(</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"Consumer Survey"</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    observations<span class="op">=</span><span class="dv">5000</span>,</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    compute_weights<span class="op">=</span><span class="kw">lambda</span> t, p, a: np.ones((a.size, <span class="dv">1</span> <span class="op">+</span> p.size)),</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Simulate micro data from our BLP estimates</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co"># This generates individual purchase records consistent with the model</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>micro_data <span class="op">=</span> blp_results.simulate_micro_data(dataset<span class="op">=</span>micro_dataset, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>micro_df <span class="op">=</span> pd.DataFrame(pyblp.data_to_dict(micro_data))</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Simulated micro data: </span><span class="sc">{</span>micro_df<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> observations'</span>)</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Columns: </span><span class="sc">{</span><span class="bu">list</span>(micro_df.columns)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Outside option (choice=0): </span><span class="sc">{</span>(micro_df[<span class="st">"choice_indices"</span>] <span class="op">==</span> <span class="dv">0</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(micro_df)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>micro_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simulated micro data: 5000 observations
+Columns: ['micro_ids', 'market_ids', 'agent_indices', 'choice_indices']
+Outside option (choice=0): 2594 / 5000</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">micro_ids</th>
+<th data-quarto-table-cell-role="th">market_ids</th>
+<th data-quarto-table-cell-role="th">agent_indices</th>
+<th data-quarto-table-cell-role="th">choice_indices</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>C26Q2</td>
+<td>4</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>C61Q2</td>
+<td>7</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2</td>
+<td>C45Q1</td>
+<td>16</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3</td>
+<td>C38Q1</td>
+<td>5</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>4</td>
+<td>C12Q1</td>
+<td>13</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="ahucjb0rd58" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Compute target statistics from simulated micro data</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># In practice, these would come from a real consumer survey (e.g., CEX, Nielsen).</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we merge the simulated purchase records with agent demographics and</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># product characteristics to compute conditional means.</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Add agent demographics</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>agent_indexed <span class="op">=</span> agent_data.copy()</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>agent_indexed[<span class="st">'agent_idx'</span>] <span class="op">=</span> agent_indexed.groupby(<span class="st">'market_ids'</span>).cumcount()</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>micro_enriched <span class="op">=</span> micro_df.merge(</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    agent_indexed[[<span class="st">'market_ids'</span>, <span class="st">'agent_idx'</span>, <span class="st">'income'</span>, <span class="st">'age'</span>, <span class="st">'child'</span>]],</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span>[<span class="st">'market_ids'</span>, <span class="st">'agent_indices'</span>],</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    right_on<span class="op">=</span>[<span class="st">'market_ids'</span>, <span class="st">'agent_idx'</span>],</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">'left'</span>,</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Add product characteristics (choice_indices: 0 = outside, 1-24 = inside products)</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>prod_indexed <span class="op">=</span> product_data.copy()</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>prod_indexed[<span class="st">'prod_idx'</span>] <span class="op">=</span> prod_indexed.groupby(<span class="st">'market_ids'</span>).cumcount() <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>micro_enriched <span class="op">=</span> micro_enriched.merge(</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    prod_indexed[[<span class="st">'market_ids'</span>, <span class="st">'prod_idx'</span>, <span class="st">'sugar'</span>, <span class="st">'mushy'</span>]],</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span>[<span class="st">'market_ids'</span>, <span class="st">'choice_indices'</span>],</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>    right_on<span class="op">=</span>[<span class="st">'market_ids'</span>, <span class="st">'prod_idx'</span>],</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">'left'</span>,</span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>micro_enriched[<span class="st">'sugar'</span>] <span class="op">=</span> micro_enriched[<span class="st">'sugar'</span>].fillna(<span class="dv">0</span>)</span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>micro_enriched[<span class="st">'mushy'</span>] <span class="op">=</span> micro_enriched[<span class="st">'mushy'</span>].fillna(<span class="dv">0</span>)</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute conditional means — these are our "survey statistics"</span></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>buyers_mushy <span class="op">=</span> micro_enriched[micro_enriched[<span class="st">'mushy'</span>] <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>buyers_sugary <span class="op">=</span> micro_enriched[micro_enriched[<span class="st">'sugar'</span>] <span class="op">&gt;</span> <span class="dv">10</span>]</span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>target_income_mushy <span class="op">=</span> buyers_mushy[<span class="st">'income'</span>].mean()</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>target_income_sugary <span class="op">=</span> buyers_sugary[<span class="st">'income'</span>].mean()</span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>target_age_mushy <span class="op">=</span> buyers_mushy[<span class="st">'age'</span>].mean()</span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Target statistics from simulated micro data:"</span>)</span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  E[income | mushy cereal]:  </span><span class="sc">{</span>target_income_mushy<span class="sc">:.4f}</span><span class="ss">  (n=</span><span class="sc">{</span><span class="bu">len</span>(buyers_mushy)<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  E[income | sugary cereal]: </span><span class="sc">{</span>target_income_sugary<span class="sc">:.4f}</span><span class="ss">  (n=</span><span class="sc">{</span><span class="bu">len</span>(buyers_sugary)<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  E[age | mushy cereal]:     </span><span class="sc">{</span>target_age_mushy<span class="sc">:.4f}</span><span class="ss">  (n=</span><span class="sc">{</span><span class="bu">len</span>(buyers_mushy)<span class="sc">}</span><span class="ss">)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Target statistics from simulated micro data:
+  E[income | mushy cereal]:  0.4387  (n=874)
+  E[income | sugary cereal]: 0.1991  (n=1344)
+  E[age | mushy cereal]:     -0.0636  (n=874)</code></pre>
+</div>
+</div>
+<div id="9kxw7wtdqdj" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Define MicroParts and assemble MicroMoments</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Each conditional moment E[X|Y] = E[X*Y] / E[Y] requires:</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   - A numerator MicroPart computing E[X_i * Y_j] across (agent, product) pairs</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   - A denominator MicroPart computing E[Y_j]</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># compute_values returns an (I_t x 1+J_t) matrix:</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   - rows = agents (I_t per market)</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   - cols = outside option (col 0) + J_t inside products</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   - np.r_[0, ...] prepends a 0 for the outside option</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="co"># --- MicroParts ---</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Numerator: income_i * mushy_j</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>income_mushy_part <span class="op">=</span> pyblp.MicroPart(</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"E[income * mushy]"</span>, dataset<span class="op">=</span>micro_dataset,</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>    compute_values<span class="op">=</span><span class="kw">lambda</span> t, p, a: np.outer(</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>        a.demographics[:, <span class="dv">0</span>],     <span class="co"># income</span></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>        np.r_[<span class="dv">0</span>, p.X2[:, <span class="dv">3</span>]],     <span class="co"># mushy indicators (0 for outside option)</span></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Denominator: mushy_j</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>mushy_part <span class="op">=</span> pyblp.MicroPart(</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"E[mushy]"</span>, dataset<span class="op">=</span>micro_dataset,</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>    compute_values<span class="op">=</span><span class="kw">lambda</span> t, p, a: np.outer(</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>        np.ones(a.size),</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>        np.r_[<span class="dv">0</span>, p.X2[:, <span class="dv">3</span>]],</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Numerator: income_i * high_sugar_j</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>income_sugary_part <span class="op">=</span> pyblp.MicroPart(</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"E[income * high_sugar]"</span>, dataset<span class="op">=</span>micro_dataset,</span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>    compute_values<span class="op">=</span><span class="kw">lambda</span> t, p, a: np.outer(</span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>        a.demographics[:, <span class="dv">0</span>],</span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>        np.r_[<span class="dv">0</span>, (p.X2[:, <span class="dv">2</span>] <span class="op">&gt;</span> <span class="dv">10</span>).astype(<span class="bu">float</span>)],</span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Denominator: high_sugar_j</span></span>
+<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a>sugary_part <span class="op">=</span> pyblp.MicroPart(</span>
+<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"E[high_sugar]"</span>, dataset<span class="op">=</span>micro_dataset,</span>
+<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a>    compute_values<span class="op">=</span><span class="kw">lambda</span> t, p, a: np.outer(</span>
+<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a>        np.ones(a.size),</span>
+<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a>        np.r_[<span class="dv">0</span>, (p.X2[:, <span class="dv">2</span>] <span class="op">&gt;</span> <span class="dv">10</span>).astype(<span class="bu">float</span>)],</span>
+<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Numerator: age_i * mushy_j</span></span>
+<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a>age_mushy_part <span class="op">=</span> pyblp.MicroPart(</span>
+<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"E[age * mushy]"</span>, dataset<span class="op">=</span>micro_dataset,</span>
+<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a>    compute_values<span class="op">=</span><span class="kw">lambda</span> t, p, a: np.outer(</span>
+<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a>        a.demographics[:, <span class="dv">2</span>],     <span class="co"># age</span></span>
+<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a>        np.r_[<span class="dv">0</span>, p.X2[:, <span class="dv">3</span>]],</span>
+<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Assemble MicroMoments ---</span></span>
+<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper for conditional expectation: f(v) = v[0] / v[1]</span></span>
+<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a>compute_ratio <span class="op">=</span> <span class="kw">lambda</span> v: v[<span class="dv">0</span>] <span class="op">/</span> v[<span class="dv">1</span>]</span>
+<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a>compute_ratio_gradient <span class="op">=</span> <span class="kw">lambda</span> v: [<span class="dv">1</span> <span class="op">/</span> v[<span class="dv">1</span>], <span class="op">-</span>v[<span class="dv">0</span>] <span class="op">/</span> v[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span>]</span>
+<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a>micro_moments <span class="op">=</span> [</span>
+<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a>    pyblp.MicroMoment(</span>
+<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">"E[income | mushy cereal]"</span>,</span>
+<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a>        value<span class="op">=</span>target_income_mushy,</span>
+<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a>        parts<span class="op">=</span>[income_mushy_part, mushy_part],</span>
+<span id="cb38-64"><a href="#cb38-64" aria-hidden="true" tabindex="-1"></a>        compute_value<span class="op">=</span>compute_ratio,</span>
+<span id="cb38-65"><a href="#cb38-65" aria-hidden="true" tabindex="-1"></a>        compute_gradient<span class="op">=</span>compute_ratio_gradient,</span>
+<span id="cb38-66"><a href="#cb38-66" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-67"><a href="#cb38-67" aria-hidden="true" tabindex="-1"></a>    pyblp.MicroMoment(</span>
+<span id="cb38-68"><a href="#cb38-68" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">"E[income | sugary cereal]"</span>,</span>
+<span id="cb38-69"><a href="#cb38-69" aria-hidden="true" tabindex="-1"></a>        value<span class="op">=</span>target_income_sugary,</span>
+<span id="cb38-70"><a href="#cb38-70" aria-hidden="true" tabindex="-1"></a>        parts<span class="op">=</span>[income_sugary_part, sugary_part],</span>
+<span id="cb38-71"><a href="#cb38-71" aria-hidden="true" tabindex="-1"></a>        compute_value<span class="op">=</span>compute_ratio,</span>
+<span id="cb38-72"><a href="#cb38-72" aria-hidden="true" tabindex="-1"></a>        compute_gradient<span class="op">=</span>compute_ratio_gradient,</span>
+<span id="cb38-73"><a href="#cb38-73" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-74"><a href="#cb38-74" aria-hidden="true" tabindex="-1"></a>    pyblp.MicroMoment(</span>
+<span id="cb38-75"><a href="#cb38-75" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">"E[age | mushy cereal]"</span>,</span>
+<span id="cb38-76"><a href="#cb38-76" aria-hidden="true" tabindex="-1"></a>        value<span class="op">=</span>target_age_mushy,</span>
+<span id="cb38-77"><a href="#cb38-77" aria-hidden="true" tabindex="-1"></a>        parts<span class="op">=</span>[age_mushy_part, mushy_part],</span>
+<span id="cb38-78"><a href="#cb38-78" aria-hidden="true" tabindex="-1"></a>        compute_value<span class="op">=</span>compute_ratio,</span>
+<span id="cb38-79"><a href="#cb38-79" aria-hidden="true" tabindex="-1"></a>        compute_gradient<span class="op">=</span>compute_ratio_gradient,</span>
+<span id="cb38-80"><a href="#cb38-80" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb38-81"><a href="#cb38-81" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb38-82"><a href="#cb38-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-83"><a href="#cb38-83" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(micro_moments)<span class="sc">}</span><span class="ss"> micro moments configured:"</span>)</span>
+<span id="cb38-84"><a href="#cb38-84" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> mm <span class="kw">in</span> micro_moments:</span>
+<span id="cb38-85"><a href="#cb38-85" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>mm<span class="sc">.</span>name<span class="sc">}</span><span class="ss">: target = </span><span class="sc">{</span>mm<span class="sc">.</span>value<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3 micro moments configured:
+  E[income | mushy cereal]: target = 0.4387
+  E[income | sugary cereal]: target = 0.1991
+  E[age | mushy cereal]: target = -0.0636</code></pre>
+</div>
+</div>
+<div id="9n9wwzc7t8" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Re-estimate with micro moments</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The micro moments are passed to solve() as additional moment conditions</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>blp_micro_results <span class="op">=</span> blp_problem.solve(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    initial_sigma,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    initial_pi,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    optimization<span class="op">=</span>pyblp.Optimization(<span class="st">'bfgs'</span>, {<span class="st">'gtol'</span>: <span class="fl">1e-5</span>}),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">'1s'</span>,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    micro_moments<span class="op">=</span>micro_moments,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>blp_micro_results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<pre><code>Problem Results Summary:
+=======================================================================================================
+GMM   Objective  Gradient      Hessian         Hessian     Clipped  Weighting Matrix  Covariance Matrix
+Step    Value      Norm    Min Eigenvalue  Max Eigenvalue  Shares   Condition Number  Condition Number 
+----  ---------  --------  --------------  --------------  -------  ----------------  -----------------
+ 1    +7.9E+00   +2.2E-06     +1.8E-04        +4.9E+04        0         +5.9E+07          +4.3E+08     
+=======================================================================================================
+
+Cumulative Statistics:
+===========================================================================
+Computation  Optimizer  Optimization   Objective   Fixed Point  Contraction
+   Time      Converged   Iterations   Evaluations  Iterations   Evaluations
+-----------  ---------  ------------  -----------  -----------  -----------
+ 00:00:28       Yes          57           67          49350       153614   
+===========================================================================
+
+Nonlinear Coefficient Estimates (Robust SEs in Parentheses):
+=====================================================================================================================
+Sigma:      1         prices      sugar       mushy     |   Pi:      income    income_squared     age        child   
+------  ----------  ----------  ----------  ----------  |  ------  ----------  --------------  ----------  ----------
+  1      +5.6E-01                                       |    1      +2.2E+00      +0.0E+00      +1.4E+00    +0.0E+00 
+        (+1.4E-01)                                      |          (+9.5E-01)                  (+3.7E-01)            
+                                                        |                                                            
+prices   +0.0E+00    +3.2E+00                           |  prices   +6.0E+02      -3.1E+01      +0.0E+00    +1.2E+01 
+                    (+1.0E+00)                          |          (+1.4E+02)    (+7.2E+00)                (+3.6E+00)
+                                                        |                                                            
+sugar    +0.0E+00    +0.0E+00    -6.4E-03               |  sugar    -3.8E-01      +0.0E+00      +5.2E-02    +0.0E+00 
+                                (+1.2E-02)              |          (+5.8E-02)                  (+2.3E-02)            
+                                                        |                                                            
+mushy    +0.0E+00    +0.0E+00    +0.0E+00    +7.4E-02   |  mushy    +6.0E-01      +0.0E+00      -1.4E+00    +0.0E+00 
+                                            (+1.9E-01)  |          (+2.8E-01)                  (+3.0E-01)            
+=====================================================================================================================
+
+Beta Estimates (Robust SEs in Parentheses):
+==========
+  prices  
+----------
+ -6.3E+01 
+(+8.1E+00)
+==========
+
+Estimated Micro Moments:
+==========================================================================================================================
+Observed  Estimated  Difference           Moment                     Part               Dataset      Observations  Markets
+--------  ---------  ----------  -------------------------  ----------------------  ---------------  ------------  -------
++4.4E-01  +4.4E-01    -1.3E-03   E[income | mushy cereal]     E[income * mushy]     Consumer Survey      5000        All  
+                                                                   E[mushy]         Consumer Survey      5000        All  
++2.0E-01  +2.0E-01    +1.0E-03   E[income | sugary cereal]  E[income * high_sugar]  Consumer Survey      5000        All  
+                                                                E[high_sugar]       Consumer Survey      5000        All  
+-6.4E-02  -6.3E-02    -2.9E-04     E[age | mushy cereal]        E[age * mushy]      Consumer Survey      5000        All  
+                                                                   E[mushy]         Consumer Survey      5000        All  
+==========================================================================================================================</code></pre>
+</div>
+</div>
+<div id="fthmz02qcyh" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 6: Compare BLP vs BLP + Micro Moments</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"="</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Parameter Comparison: BLP vs BLP + Micro Moments"</span>)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"="</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Sigma diagonal</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Sigma (diagonal — std devs of random coefficients):"</span>)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="st">'constant'</span>, <span class="st">'price'</span>, <span class="st">'sugar'</span>, <span class="st">'mushy'</span>]</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, label <span class="kw">in</span> <span class="bu">enumerate</span>(labels):</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>label<span class="sc">:10s}</span><span class="ss">: BLP = </span><span class="sc">{</span>blp_results<span class="sc">.</span>sigma[i,i]<span class="sc">:+.4f}</span><span class="ss">  |  +Micro = </span><span class="sc">{</span>blp_micro_results<span class="sc">.</span>sigma[i,i]<span class="sc">:+.4f}</span><span class="ss">"</span>)</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Beta</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Beta (price): BLP = </span><span class="sc">{</span><span class="bu">float</span>(blp_results.beta[<span class="dv">0</span>])<span class="sc">:+.4f}</span><span class="ss">  |  +Micro = </span><span class="sc">{</span><span class="bu">float</span>(blp_micro_results.beta[<span class="dv">0</span>])<span class="sc">:+.4f}</span><span class="ss">"</span>)</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Objective</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">GMM Objective: BLP = </span><span class="sc">{</span><span class="bu">float</span>(blp_results.objective)<span class="sc">:.4f}</span><span class="ss">  |  +Micro = </span><span class="sc">{</span><span class="bu">float</span>(blp_micro_results.objective)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"  (Higher objective expected — more moments to match)"</span>)</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Own-price elasticities comparison</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>micro_elasticities <span class="op">=</span> blp_micro_results.compute_elasticities()</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>micro_own <span class="op">=</span> blp_micro_results.extract_diagonal_means(micro_elasticities)</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Mean own-price elasticity: BLP = </span><span class="sc">{</span>own_elasticities<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss">  |  +Micro = </span><span class="sc">{</span>micro_own<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>============================================================
+Parameter Comparison: BLP vs BLP + Micro Moments
+============================================================
+
+Sigma (diagonal — std devs of random coefficients):
+  constant  : BLP = +0.5581  |  +Micro = +0.5644
+  price     : BLP = +3.3125  |  +Micro = +3.2430
+  sugar     : BLP = -0.0058  |  +Micro = -0.0064
+  mushy     : BLP = +0.0934  |  +Micro = +0.0739
+
+Beta (price): BLP = -62.7299  |  +Micro = -63.2512
+
+GMM Objective: BLP = 4.5615  |  +Micro = 7.8621
+  (Higher objective expected — more moments to match)
+
+Mean own-price elasticity: BLP = -3.618  |  +Micro = -3.612</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Logit</strong></th>
+<th><strong>BLP (Random Coefficients)</strong></th>
+<th><strong>BLP + Micro Moments</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Consumer heterogeneity</strong></td>
+<td>None (representative consumer)</td>
+<td>Random coefficients + demographics</td>
+<td>Same, but better identified</td>
+</tr>
+<tr class="even">
+<td><strong>Substitution pattern</strong></td>
+<td>IIA: proportional to market shares</td>
+<td>Flexible: driven by product similarity</td>
+<td>Same, more precise</td>
+</tr>
+<tr class="odd">
+<td><strong>Data used</strong></td>
+<td>Market shares only</td>
+<td>Market shares + demographic draws</td>
+<td>+ Individual-level survey data</td>
+</tr>
+<tr class="even">
+<td><strong>Moment conditions</strong></td>
+<td><span class="math inline">\(\mathbb{E}[Z'\xi] = 0\)</span></td>
+<td><span class="math inline">\(\mathbb{E}[Z'\xi] = 0\)</span></td>
+<td><span class="math inline">\(\mathbb{E}[Z'\xi] = 0\)</span> + <span class="math inline">\(\bar{g}_M\)</span></td>
+</tr>
+<tr class="odd">
+<td><strong>Estimation</strong></td>
+<td>Linear IV</td>
+<td>Nonlinear GMM with contraction mapping</td>
+<td>Same + micro moment matching</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key takeaways:</strong></p>
+<ol type="1">
+<li><strong>Logit</strong> is fast and easy but imposes unrealistic substitution patterns (IIA). All products are equally substitutable conditional on shares.</li>
+<li><strong>BLP</strong> breaks IIA via random coefficients: products similar in characteristics are closer substitutes. This is critical for realistic merger simulation and pricing counterfactuals.</li>
+<li><strong>Agent demographics</strong> (<span class="math inline">\(\Pi d_i\)</span>) are part of the model specification — they define the integration measure for computing predicted shares, but they don’t add moment conditions.</li>
+<li><strong>Micro moments</strong> are <em>additional data</em> from individual-level surveys that provide extra moment conditions in the GMM objective. They improve identification of <span class="math inline">\(\Sigma\)</span> and <span class="math inline">\(\Pi\)</span> by matching conditional statistics like “average income of mushy cereal buyers.”</li>
+<li><strong>Post-estimation</strong> is where BLP earns its keep: elasticity matrices, diversion ratios, markups, and full merger simulations with equilibrium price recomputation.</li>
+</ol>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<ul>
+<li>Berry, S. T. (1994). Estimating Discrete-Choice Models of Product Differentiation. <em>RAND Journal of Economics</em>, 25(2), 242–262.</li>
+<li>Berry, S., Levinsohn, J., &amp; Pakes, A. (1995). Automobile Prices in Market Equilibrium. <em>Econometrica</em>, 63(4), 841–890.</li>
+<li>Berry, S., Levinsohn, J., &amp; Pakes, A. (2004). Differentiated Products Demand Systems from a Combination of Micro and Macro Data: The New Car Market. <em>Journal of Political Economy</em>, 112(1), 68–105.</li>
+<li>Petrin, A. (2002). Quantifying the Benefits of New Products: The Case of the Minivan. <em>Journal of Political Economy</em>, 110(4), 705–729.</li>
+<li>Nevo, A. (2000). A Practitioner’s Guide to Estimation of Random-Coefficients Logit Models of Demand. <em>Journal of Economics &amp; Management Strategy</em>, 9(4), 513–548.</li>
+<li>Conlon, C., &amp; Gortmaker, J. (2020). Best Practices for Differentiated Products Demand Estimation with PyBLP. <em>RAND Journal of Economics</em>, 51(4), 1108–1161.</li>
+<li>Conlon, C., &amp; Gortmaker, J. (2023). Incorporating Micro Data into Differentiated Products Demand Estimation with PyBLP. Working Paper.</li>
+<li><a href="https://pyblp.readthedocs.io/en/stable/">PyBLP Documentation</a></li>
+</ul>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/dannyredel\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2026 Daniel Redel</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
