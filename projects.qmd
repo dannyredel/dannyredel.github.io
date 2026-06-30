@@ -21,6 +21,20 @@ listing:
       path: "posts/lyra/lyra.qmd"
       image: "posts/lyra/lyra_cover.png"
 
+    - title: "RentSignal: Regulated Rent Intelligence for the German Market"
+      description: "A live AI rent-optimization engine for the German rental market, built around Comply · Optimize · Act. Combines Mietpreisbremse compliance checking, ML rent prediction (XGBoost + SHAP), satellite-derived spatial features (Sentinel-2 + OSM), Gemini multimodal image features, and dual-method renovation impact estimation (causal matching + synthetic conjoint)."
+      categories: [Python, Machine Learning, Causal Inference, Spatial Analysis, Remote Sensing, XGBoost, FastAPI]
+      date: 2026-04-26
+      path: "https://rentsignal.de"
+      image: "assets/cover/rentsignal.png"
+
+    - title: "BeeSignal: Synthetic Demand Estimation with LLM Consumers"
+      description: "A live pricing-research engine that uses LLM-generated synthetic consumers to run conjoint analysis and pricing experiments that traditionally cost $50K-200K — for about $0.50 and minutes. Discrete-choice (MNL) estimation, D-optimal design, WTP and elasticities, and vignette RCTs; validated against real published studies (correlations up to r = 0.92)."
+      categories: [Python, Discrete Choice, Conjoint Analysis, LLM, Causal Inference, Pricing, PyLogit]
+      date: 2026-03-15
+      path: "https://beesignal.ai"
+      image: "assets/cover/beesignal.png"
+
     - title: "didkit: Enhanced Plotting & Inference for Difference-in-Differences"
       description: "A Python package bringing R's ggfixest plotting capabilities and HonestDiD inference tools to Python. Features event study plots with nested CIs, simultaneous confidence bands, pre-trend testing, smoothest confounding paths, and multi-model comparisons. Companion library to diff-diff."
       categories: [Python, Causal Inference, Difference-in-Differences, Data Visualization, Open Source]
