@@ -35,12 +35,6 @@ listing:
       path: "https://github.com/dannyredel/customer-recommendation-engine"
       image: "assets/cover/customer-recommendation-pic.png"
 
-    - title: "PriceScope: Open-Source Conjoint Analysis with Synthetic Respondents"
-      categories: [Python, Conjoint Analysis, Discrete Choice, PyBLP, FastAPI]
-      date: 2025-01-15
-      path: "https://github.com/dannyredel"
-      image: "assets/cover/pricescope.png"
-
     - title: "Machine Learning with Python: A Quick Guide"
       #description: "A concise and practical introduction to main machine learning algorithms."
       categories: [Machine Learning, Python, scikit-learn]
