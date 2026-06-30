@@ -1,2 +1,5 @@
 /.quarto/
 quarto-1.4.553-linux-amd64.deb
+
+# RAG knowledge base (local only — contains internal strategy/salary notes in update_june2026/; never publish)
+knowledge/
