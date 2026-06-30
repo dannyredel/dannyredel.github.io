@@ -1,6 +1,13 @@
 project:
   type: website
-  
+  render:
+    - "*.qmd"
+    - "*.ipynb"
+    - "!knowledge/"
+  # Chatbot widget disabled until backend is deployed — re-enable with include-after-body below.
+  # resources:
+  #   - "chatbot/widget.html"
+
 website:
   title: "Daniel Redel"
   favicon: myprofile.jpg
@@ -37,3 +44,7 @@ format:
     theme: [flatly, styles.scss]
     code-link: true
     smooth-scroll: true
+    # Chatbot widget disabled until the backend is deployed (defaults to localhost:8000).
+    # Re-enable this and the `resources:` block above when the Railway backend is live.
+    # include-after-body:
+    #   - chatbot/widget.html
