@@ -1,0 +1,105 @@
+---
+title: "Two Pricing RCTs, Zero Real Customers"
+author: Daniel Redel
+date: "2026-06-26"
+description: "Two questions every SaaS team argues about: can we raise the price, and should we push annual billing? Instead of guessing — or risking real revenue — I ran both as randomized controlled trials on LLM-simulated buyers. The synthetic consumers reproduce textbook human behavior (price sensitivity, commitment framing), and the revenue math says one nudge pays off while the other quietly bleeds money."
+categories: [Causal Inference, Experimentation, A/B Testing, LLM, Pricing, Python]
+image: "cover.png"
+format:
+  html:
+    toc: true
+    code-fold: false
+    html-math-method: katex
+freeze: true
+---
+
+> Part of [**BeeSignal**](https://beesignal.ai) — a pricing-research engine that runs experiments on LLM-generated synthetic consumers.
+
+Every SaaS team has the same two arguments on repeat. *Can we raise the price without bleeding users?* And *should we push everyone toward annual billing?* The usual answers are a confident PM's gut, a competitor screenshot, or — if you're disciplined — a live experiment that puts real revenue at risk for a month.
+
+[BeeSignal](https://beesignal.ai) offers a third option: run the experiment on **synthetic consumers** first. Here I take a real product (Loom, the async-video tool) and answer both questions with two randomized controlled trials on LLM-simulated buyers — for about the price of a coffee. The interesting part isn't just the recommendations; it's that the synthetic respondents reproduce *known human behavior*, which is exactly the validation that makes the method trustworthy.
+
+## The design (shared by both trials)
+
+Both studies are **between-subjects vignette RCTs**, the synthetic analogue of a clean A/B test:
+
+- **200 personas per study**, sampled across four buyer segments — solo creators, sales teams, marketing teams, and enterprise IT — each with their own budgets, priorities, and pain points.
+- **Random assignment to one arm**, stratified by segment so the arms are balanced ($\chi^2$ balance check: $p = 0.998$).
+- Each persona, played by a frontier LLM at **temperature 1.0**, reads *one* vignette and reports three outcomes: purchase intent, churn risk, and max willingness-to-pay. (Temperature 1.0 is deliberate — [run these personas too cold and the estimation collapses entirely](../synthetic-consumers-perfect-separation/synthetic-consumers-perfect-separation.qmd).)
+- Effects are estimated with **OLS and heteroskedasticity-robust (HC1/HC3) standard errors**, bootstrap confidence intervals, and a **causal forest** for heterogeneous effects by segment.
+
+The estimand is the standard average treatment effect — but because assignment is randomized, it's identified by simple arm differences:
+
+$$
+\text{ATE} = \mathbb{E}[Y \mid \text{treatment}] - \mathbb{E}[Y \mid \text{control}].
+$$
+
+Outcomes are measured on a 1–5 scale via *semantic similarity rating* (SSR), which maps each persona's free-text answer onto a distribution over the scale rather than forcing a single number.
+
+## RCT 1 — Can Loom raise its price 20%?
+
+**The treatment:** Business tier from **\$15/mo → \$18/mo** (a 20% increase). Control sees \$15, treatment sees \$18, everything else identical.
+
+The demand response is exactly what economics predicts — and precisely estimated:
+
+| Outcome | ATE | % of baseline | Significance | Cohen's *d* |
+|---|---|---|---|---|
+| Purchase intent | **−0.205** | −5.6% | *p* < 0.001 | −0.56 |
+| Churn risk | **+0.204** | +6.4% | *p* < 0.001 | +0.88 |
+| Stated max WTP | −0.49 | — | n.s. | — |
+
+Six of seven effects are significant; the bootstrap CI on purchase intent is $[-0.31, -0.11]$. Raising the price makes buyers less keen and more likely to leave — no surprise. The **real** question is whether the 20% more you charge survivors outweighs the ones you lose.
+
+So I translate intent into money. The break-even churn for a 20% increase is
+
+$$
+\text{break-even churn} = 1 - \frac{15}{18} = 16.7\%,
+$$
+
+map the SSR churn scores to churn probabilities through a calibrated curve, and propagate the causal-forest CIs all the way to revenue:
+
+| Segment | Weight | Revenue Δ (per 1,000 users) | 95% CI | Verdict |
+|---|---|---|---|---|
+| enterprise_it | 15% | +\$81 | [+78, +84] | SAFE |
+| marketing_team | 20% | +\$127 | [+124, +130] | SAFE |
+| sales_team | 30% | +\$144 | [+139, +149] | SAFE |
+| solo_creator | 35% | +\$135 | [+131, +139] | SAFE |
+| **Total** | | **+\$487/mo (+5.4%)** | [+472, +501] | **SAFE** |
+
+**The verdict: raise it.** Even after losing ~74 of 1,000 users, the flat \$18 price is revenue-positive in *every* segment, with a confidence interval that never crosses zero. The heterogeneity is sensible too — solo creators are the most price-sensitive (−7.6% intent), sales teams the least (−3.0%), because the tool is mission-critical to the latter.
+
+## RCT 2 — Should Loom push annual billing?
+
+**The treatment:** the *same product*, framed two ways — **\$18/mo month-to-month** (control) vs **\$180/yr = \$15/mo effective** with a 12-month commitment (treatment). Same dollars in play; the only thing that changes is the billing frame and the \$3/mo "annual discount."
+
+Here the synthetic buyers reveal a genuine *behavioral* effect:
+
+| Outcome | ATE | % of baseline | Significance |
+|---|---|---|---|
+| Purchase intent | **+0.182** | +5.1% | *p* < 0.001 |
+| Churn risk | **−0.109** | −3.4% | *p* < 0.001 |
+| Stated max WTP | −1.33 | — | *p* = 0.004 |
+
+Annual framing makes buyers **more likely to commit and less likely to churn** — the commitment-and-discount effect that behavioral economics documents in real humans, reproduced here without a single real respondent. The heterogeneity is striking: **enterprise IT (+11.7%)** and **solo creators (+9.0%)** love the annual deal, while sales and marketing teams shrug (+0.6%, +1.0%) — they were already going to buy.
+
+And that heterogeneity is the whole story, because the revenue math delivers a **twist**:
+
+| Segment | Revenue Δ (per 1,000 users) | 95% CI | Verdict |
+|---|---|---|---|
+| enterprise_it | +\$10 | [−194, +208] | MIXED |
+| marketing_team | −\$277 | [−386, −173] | MONTHLY |
+| sales_team | −\$496 | [−649, −349] | MONTHLY |
+| solo_creator | +\$20 | [−252, +278] | MIXED |
+| **Total** | **−\$743/mo (−8.0%)** | [−1,481, −37] | **REJECT (flat annual)** |
+
+**The verdict: do *not* default everyone to the annual discount.** Yes, it lifts conversion and retention — but sales and marketing teams already convert at ~89% on monthly, so handing them a 20% discount is pure giveaway. The right move is **monthly \$18 as the default, annual as an opt-in** that self-selects commitment-oriented buyers, and the \$3/mo gap reframed not as a discount but as a **20% lock-in premium** people pay for month-to-month flexibility. If you test the annual nudge anywhere, test it on enterprise IT and solo creators — the only two segments whose CI even touches positive.
+
+## Why these two belong together
+
+Run alone, each trial is a tidy result. Run together, they make a sharper point: **identical methodology, opposite recommendations.** A 20% price hike — which *feels* aggressive — is safe and revenue-positive. An annual discount — which *feels* generous and customer-friendly — destroys margin everywhere except two segments. Intuition gets both backwards; the randomized design and the revenue translation get both right.
+
+And the credibility comes from the behavior, not the prose. The synthetic buyers show **downward-sloping demand** in RCT 1 and **commitment-framing effects** in RCT 2 — two well-established human patterns — with effect sizes large enough to estimate cleanly and segment heterogeneity that matches business intuition. That's the bar a synthetic-respondent method has to clear before anyone should trust it: not "did it produce a number," but "did it reproduce a known effect."
+
+## Honest limitations
+
+These are simulated consumers, not humans, and I'd treat the output as **directional decision support, not ground truth**. The revenue layer leans on a calibrated SSR → churn/conversion mapping that is itself an assumption. WTP behaves oddly in RCT 2 (the annual arm states a *lower* max WTP even while it converts better — a reminder that stated WTP and revealed choice diverge, in synthetic respondents as in real ones). What synthetic RCTs buy you is **speed and safety**: you can pre-screen a dozen pricing ideas for a few dollars, kill the obviously bad ones, and walk into a real experiment already knowing which lever to pull — instead of spending a quarter and real customer goodwill to learn the annual discount was a mistake.
