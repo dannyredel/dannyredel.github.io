@@ -1116,6 +1116,468 @@ Table&nbsp;1: Monte Carlo results: Bias, RMSE, and coverage across 200 replicati
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<!--
+  Portfolio AI Chatbot widget.
+  Self-contained: injected into every page via _quarto.yml → include-after-body.
+  Backend: portfolio-chatbot-api (sibling repo, deployed to Railway).
+  Set window.CHATBOT_API_URL before this script runs to override the default.
+-->
+<style>
+  :root {
+    --pc-primary: #122140;
+    --pc-accent: #1e6091;
+    --pc-accent-hover: #164e7e;
+    --pc-surface: #ffffff;
+    --pc-body-bg: #f8fafc;
+    --pc-text: #1f2937;
+    --pc-muted: #6b7280;
+    --pc-border: #e8ecf1;
+    --pc-user-bubble: #1e6091;
+    --pc-bot-bubble: #f0f4f8;
+  }
+
+  #pc-toggle {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 9998;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: var(--pc-primary);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(18, 33, 64, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background 0.2s ease;
+    font-family: 'Commissioner', -apple-system, sans-serif;
+  }
+  #pc-toggle:hover { transform: scale(1.05); background: #1a2d54; }
+  #pc-toggle svg { width: 24px; height: 24px; }
+
+  #pc-panel {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 5.5rem;
+    z-index: 9999;
+    width: 380px;
+    height: 540px;
+    max-height: calc(100vh - 7rem);
+    background: var(--pc-surface);
+    border: 1px solid var(--pc-border);
+    border-radius: 14px;
+    box-shadow: 0 16px 48px rgba(18, 33, 64, 0.2);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--pc-text);
+    animation: pc-fade-in 0.18s ease-out;
+  }
+  #pc-panel.pc-open { display: flex; }
+
+  @keyframes pc-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .pc-header {
+    background: var(--pc-primary);
+    color: #fff;
+    padding: 0.9rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pc-header-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .pc-header-sub {
+    font-size: 0.72rem;
+    opacity: 0.75;
+    margin-top: 2px;
+  }
+  .pc-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    opacity: 0.85;
+  }
+  .pc-close:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+
+  #pc-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background: var(--pc-body-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .pc-msg {
+    max-width: 85%;
+    padding: 0.6rem 0.85rem;
+    border-radius: 12px;
+    word-wrap: break-word;
+  }
+  .pc-msg-user {
+    align-self: flex-end;
+    background: var(--pc-user-bubble);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+    white-space: pre-wrap;
+  }
+  .pc-msg-bot {
+    align-self: flex-start;
+    background: var(--pc-bot-bubble);
+    color: var(--pc-text);
+    border-bottom-left-radius: 4px;
+  }
+  .pc-msg-bot p { margin: 0 0 0.55rem 0; }
+  .pc-msg-bot p:last-child { margin-bottom: 0; }
+  .pc-msg-bot ul { margin: 0.3rem 0 0.1rem 0; padding-left: 1.15rem; }
+  .pc-msg-bot li { margin: 0.15rem 0; }
+  .pc-msg-bot strong { color: var(--pc-primary); font-weight: 600; }
+  .pc-msg-bot em { font-style: italic; }
+  .pc-msg-bot a { color: var(--pc-accent); text-decoration: underline; }
+  .pc-msg-bot a:hover { color: var(--pc-accent-hover); }
+
+  .pc-starter-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.25rem 0;
+  }
+  .pc-starter-hint {
+    font-size: 0.78rem;
+    color: var(--pc-muted);
+    margin-bottom: 0.2rem;
+  }
+  .pc-starter {
+    text-align: left;
+    background: #fff;
+    border: 1px solid var(--pc-border);
+    color: var(--pc-text);
+    border-radius: 10px;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    font-family: inherit;
+  }
+  .pc-starter:hover { border-color: var(--pc-accent); background: #f0f9ff; }
+
+  .pc-typing {
+    display: inline-flex;
+    gap: 3px;
+    padding: 0.5rem 0.75rem;
+    align-self: flex-start;
+    background: var(--pc-bot-bubble);
+    border-radius: 12px;
+    border-bottom-left-radius: 4px;
+  }
+  .pc-typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--pc-muted);
+    animation: pc-bounce 1.2s infinite ease-in-out;
+  }
+  .pc-typing span:nth-child(2) { animation-delay: 0.15s; }
+  .pc-typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes pc-bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  .pc-input-row {
+    border-top: 1px solid var(--pc-border);
+    padding: 0.6rem;
+    display: flex;
+    gap: 0.4rem;
+    background: #fff;
+  }
+  #pc-input {
+    flex: 1;
+    border: 1px solid var(--pc-border);
+    border-radius: 8px;
+    padding: 0.5rem 0.7rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: none;
+    color: var(--pc-text);
+    background: #fff;
+    max-height: 100px;
+  }
+  #pc-input:focus { outline: none; border-color: var(--pc-accent); }
+  #pc-send {
+    background: var(--pc-accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background 0.15s;
+  }
+  #pc-send:hover:not(:disabled) { background: var(--pc-accent-hover); }
+  #pc-send:disabled { background: #9ca3af; cursor: not-allowed; }
+
+  .pc-footer {
+    font-size: 0.68rem;
+    text-align: center;
+    color: var(--pc-muted);
+    padding: 0.35rem;
+    background: #fff;
+    border-top: 1px solid var(--pc-border);
+  }
+
+  @media (max-width: 640px) {
+    #pc-panel {
+      right: 0; bottom: 0;
+      width: 100%;
+      height: 85vh;
+      max-height: 85vh;
+      border-radius: 14px 14px 0 0;
+    }
+    #pc-toggle { right: 1rem; bottom: 1rem; width: 52px; height: 52px; }
+  }
+</style>
+
+<button id="pc-toggle" aria-label="Open chat" title="Ask about Daniel">
+  <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+  </svg>
+</button>
+
+<div id="pc-panel" role="dialog" aria-label="Portfolio assistant">
+  <div class="pc-header">
+    <div>
+      <div class="pc-header-title">Ask about Daniel</div>
+      <div class="pc-header-sub">Skills · projects · research</div>
+    </div>
+    <button class="pc-close" id="pc-close" aria-label="Close chat">
+      <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <div id="pc-messages"></div>
+
+  <div class="pc-input-row">
+    <textarea id="pc-input" rows="1" placeholder="Ask a question…" aria-label="Your question"></textarea>
+    <button id="pc-send" aria-label="Send">Send</button>
+  </div>
+  <div class="pc-footer">Powered by AI · grounded in Daniel's portfolio</div>
+</div>
+
+<script>
+(function () {
+  // Production backend (Railway). Override for local dev by setting
+  // window.CHATBOT_API_URL = 'http://localhost:8000' before this script runs.
+  var API_URL = (window.CHATBOT_API_URL || 'https://web-production-df6e66.up.railway.app') + '/api/chat';
+
+  var STARTERS = [
+    "What are Daniel's key technical skills?",
+    "Tell me about his work at Compass Lexecon.",
+    "Has he worked on causal inference?",
+    "What projects has he shipped?"
+  ];
+
+  var panel    = document.getElementById('pc-panel');
+  var toggle   = document.getElementById('pc-toggle');
+  var closeBtn = document.getElementById('pc-close');
+  var messages = document.getElementById('pc-messages');
+  var input    = document.getElementById('pc-input');
+  var sendBtn  = document.getElementById('pc-send');
+
+  var busy = false;
+  var starterShown = false;
+
+  function openPanel() {
+    panel.classList.add('pc-open');
+    if (!starterShown) renderStarters();
+    setTimeout(function () { input.focus(); }, 50);
+  }
+  function closePanel() { panel.classList.remove('pc-open'); }
+
+  toggle.addEventListener('click', function () {
+    panel.classList.contains('pc-open') ? closePanel() : openPanel();
+  });
+  closeBtn.addEventListener('click', closePanel);
+
+  function renderStarters() {
+    starterShown = true;
+    var wrap = document.createElement('div');
+    wrap.className = 'pc-starter-wrap';
+    var hint = document.createElement('div');
+    hint.className = 'pc-starter-hint';
+    hint.textContent = 'Try one of these:';
+    wrap.appendChild(hint);
+    STARTERS.forEach(function (q) {
+      var b = document.createElement('button');
+      b.className = 'pc-starter';
+      b.textContent = q;
+      b.addEventListener('click', function () {
+        wrap.remove();
+        submit(q);
+      });
+      wrap.appendChild(b);
+    });
+    messages.appendChild(wrap);
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function renderInline(s) {
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (_m, t, u) {
+      return '<a href="' + u + '" target="_blank" rel="noopener noreferrer">' + t + '</a>';
+    });
+    s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    return s;
+  }
+
+  function mdToHtml(raw) {
+    var safe = escapeHtml(raw || '');
+    var blocks = safe.split(/\n\s*\n/);
+    var out = [];
+    for (var i = 0; i < blocks.length; i++) {
+      var block = blocks[i].replace(/^\n+|\n+$/g, '');
+      if (!block) continue;
+      var lines = block.split('\n');
+      var isList = lines.length > 0 && lines.every(function (l) { return /^\s*-\s+/.test(l); });
+      if (isList) {
+        var items = lines.map(function (l) {
+          return '<li>' + renderInline(l.replace(/^\s*-\s+/, '')) + '</li>';
+        }).join('');
+        out.push('<ul>' + items + '</ul>');
+      } else {
+        out.push('<p>' + renderInline(block).replace(/\n/g, '<br>') + '</p>');
+      }
+    }
+    return out.join('');
+  }
+
+  function addMessage(role, text) {
+    var el = document.createElement('div');
+    el.className = 'pc-msg pc-msg-' + role;
+    if (role === 'bot') {
+      el.innerHTML = mdToHtml(text);
+    } else {
+      el.textContent = text;
+    }
+    messages.appendChild(el);
+    messages.scrollTop = messages.scrollHeight;
+    return el;
+  }
+
+  function addTypingIndicator() {
+    var el = document.createElement('div');
+    el.className = 'pc-typing';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    messages.appendChild(el);
+    messages.scrollTop = messages.scrollHeight;
+    return el;
+  }
+
+  async function submit(question) {
+    if (busy || !question.trim()) return;
+    busy = true;
+    sendBtn.disabled = true;
+    addMessage('user', question);
+    var typing = addTypingIndicator();
+
+    var botEl = null;
+    var botText = '';
+
+    try {
+      var resp = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: question })
+      });
+
+      if (!resp.ok || !resp.body) {
+        typing.remove();
+        addMessage('bot', resp.status === 429
+          ? 'Rate limit reached — please wait a minute and try again.'
+          : 'Something went wrong. Try again, or reach Daniel via LinkedIn.');
+        return;
+      }
+
+      var reader = resp.body.getReader();
+      var decoder = new TextDecoder();
+      var buffer = '';
+
+      while (true) {
+        var chunk = await reader.read();
+        if (chunk.done) break;
+        buffer += decoder.decode(chunk.value, { stream: true });
+        var parts = buffer.split('\n\n');
+        buffer = parts.pop();
+        for (var i = 0; i < parts.length; i++) {
+          var line = parts[i].trim();
+          if (!line.startsWith('data:')) continue;
+          var payload;
+          try { payload = JSON.parse(line.slice(5).trim()); } catch (_) { continue; }
+          if (payload.type === 'token') {
+            if (!botEl) { typing.remove(); botEl = addMessage('bot', ''); }
+            botText += payload.text;
+            botEl.innerHTML = mdToHtml(botText);
+            messages.scrollTop = messages.scrollHeight;
+          } else if (payload.type === 'done') {
+            if (!botEl) { typing.remove(); addMessage('bot', 'No answer returned.'); }
+          }
+        }
+      }
+    } catch (err) {
+      typing.remove();
+      addMessage('bot', 'Connection error. Please try again.');
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  sendBtn.addEventListener('click', function () {
+    var q = input.value;
+    input.value = '';
+    submit(q);
+  });
+
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      var q = input.value;
+      input.value = '';
+      submit(q);
+    }
+  });
+
+  input.addEventListener('input', function () {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 100) + 'px';
+  });
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

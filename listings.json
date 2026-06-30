@@ -1,5 +1,11 @@
 [
   {
+    "listing": "/projects.html",
+    "items": [
+      "/posts/lyra/lyra.html"
+    ]
+  },
+  {
     "listing": "/myposts.html",
     "items": [
       "/posts/lyra/lyra.html",
@@ -22,11 +28,5 @@
   {
     "listing": "/research.html",
     "items": []
-  },
-  {
-    "listing": "/projects.html",
-    "items": [
-      "/posts/lyra/lyra.html"
-    ]
   }
 ]
