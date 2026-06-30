@@ -14,6 +14,13 @@ listing:
     fields: [title, description, image, categories, date]
     contents:
 
+    - title: "Lyra: Experimentation You Can Trust"
+      description: "An experimentation platform where every estimator is certified against a known ground truth. A Monte-Carlo harness checks whether each method recovers a planted effect with correct interval coverage before it's trusted — turning 'is this A/B test actually right?' into a hard pass/fail check. Python inference engine (DML, CUPED, interference, always-valid sequences), FastAPI chassis, and a React dashboard."
+      categories: [Python, Causal Inference, Experimentation, A/B Testing, FastAPI, React, PyMC]
+      date: 2026-06-30
+      path: "posts/lyra/lyra.qmd"
+      image: "posts/lyra/lyra_cover.png"
+
     - title: "didkit: Enhanced Plotting & Inference for Difference-in-Differences"
       description: "A Python package bringing R's ggfixest plotting capabilities and HonestDiD inference tools to Python. Features event study plots with nested CIs, simultaneous confidence bands, pre-trend testing, smoothest confounding paths, and multi-model comparisons. Companion library to diff-diff."
       categories: [Python, Causal Inference, Difference-in-Differences, Data Visualization, Open Source]
