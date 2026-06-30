@@ -438,7 +438,9 @@ ul.task-list li input[type="checkbox"] {
 
 <script>
 (function () {
-  var API_URL = (window.CHATBOT_API_URL || 'http://localhost:8000') + '/api/chat';
+  // Production backend (Railway). Override for local dev by setting
+  // window.CHATBOT_API_URL = 'http://localhost:8000' before this script runs.
+  var API_URL = (window.CHATBOT_API_URL || 'https://web-production-df6e66.up.railway.app') + '/api/chat';
 
   var form   = document.getElementById('pc-hero-form');
   var input  = document.getElementById('pc-hero-input');
